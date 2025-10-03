@@ -1,0 +1,876 @@
+/* ============================================
+   SOBRE NOS PAGE STYLES - ENHANCED
+   ============================================ */
+
+.sobre-nos-page {
+  width: 100%;
+  overflow-x: hidden;
+  background: #ffffff;
+  font-family: "Nunito", sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* ============================================
+   HERO CAROUSEL - MATCHING HOME
+   ============================================ */
+
+.sobre-nos-page .hero-carousel {
+  margin-top: 0;
+  position: relative;
+}
+
+.sobre-nos-page .carousel-inner img {
+  max-height: 750px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.sobre-nos-page .carousel-caption {
+  bottom: 50px;
+}
+
+.sobre-nos-page .carousel-caption h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.sobre-nos-page .carousel-caption h2.carrossel {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+}
+
+.sobre-nos-page .carousel-caption p {
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Hero buttons matching Home.css style */
+.sobre-nos-page .hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+.sobre-nos-page .carousel-caption .btn {
+  padding: 12px 30px;
+  font-size: 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.sobre-nos-page .carousel-caption .btn:hover {
+  background: white;
+  color: #244a96;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* SOBRE NÓS - Indicators personalizados */
+.carousel-indicators {
+    bottom: 20px;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    background-color: transparent;
+    opacity: 0.7;
+    margin: 0 8px;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+    background-color: #ffffff;
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.carousel-indicators button:hover {
+    opacity: 0.9;
+}
+
+/* Carousel Controls */
+.sobre-nos-page .carousel-control-prev,
+.sobre-nos-page .carousel-control-next {
+  width: 5%;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.sobre-nos-page .carousel-control-prev:hover,
+.sobre-nos-page .carousel-control-next:hover {
+  opacity: 1;
+}
+
+.sobre-nos-page .carousel-control-prev-icon,
+.sobre-nos-page .carousel-control-next-icon {
+  width: 40px;
+  height: 40px;
+  background-size: 100%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* ============================================
+   SECTION TITLES - MATCHING HOME
+   ============================================ */
+
+.sobre-nos-page .section-title {
+  color: #1a1a1a;
+  font-size: 2.75rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 70px;
+  position: relative;
+  padding-bottom: 24px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sobre-nos-page .section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 5px;
+  background: linear-gradient(90deg, #244a96 0%, #1a3a7a 100%);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(36, 74, 150, 0.3);
+}
+
+.sobre-nos-page .section-subtitle {
+  text-align: center;
+  color: #4a5568;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: -50px auto 60px;
+}
+
+/* ============================================
+   HISTÓRIA SECTION - ENHANCED
+   ============================================ */
+
+.sobre-nos-page .historia {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fb 50%, #ffffff 100%);
+  position: relative;
+}
+
+.sobre-nos-page .historia::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(36, 74, 150, 0.2), transparent);
+}
+
+.sobre-nos-page .historia-content {
+  background: white;
+  padding: 50px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border-left: 6px solid #244a96;
+  position: relative;
+  overflow: hidden;
+}
+
+.sobre-nos-page .historia-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.02), transparent);
+  pointer-events: none;
+}
+
+.sobre-nos-page .historia-content p {
+  color: #4a5568;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+  text-align: justify;
+  position: relative;
+}
+
+.sobre-nos-page .historia-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================
+   PERFIS INDIVIDUAIS - ENHANCED CAROUSEL
+   ============================================ */
+
+.sobre-nos-page .perfis-individuais {
+  padding: 120px 0;
+  background: white;
+  position: relative;
+}
+
+.sobre-nos-page .team-section-title {
+  color: #244a96;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+  letter-spacing: -0.01em;
+}
+
+/* Enhanced carousel container matching Home.css patterns */
+.sobre-nos-page .team-carousel-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  padding: 40px 30px 30px 30px;
+  margin-bottom: 50px;
+  border-top: 6px solid #244a96;
+}
+
+.sobre-nos-page .team-carousel {
+  overflow: hidden;
+  width: 100%;
+}
+
+.sobre-nos-page .carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 20px;
+}
+
+.sobre-nos-page .carousel-track .perfil-card {
+  flex: 0 0 calc(33.333% - 14px);
+  min-width: 280px;
+  margin: 0;
+}
+
+/* Enhanced perfil cards matching Home.css card design */
+.sobre-nos-page .perfil-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-left: 4px solid #244a96;
+  position: relative;
+}
+
+.sobre-nos-page .perfil-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.02), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.sobre-nos-page .perfil-card:hover::before {
+  opacity: 1;
+}
+
+.sobre-nos-page .perfil-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(36, 74, 150, 0.18);
+  border-left-width: 6px;
+}
+
+.sobre-nos-page .perfil-image {
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sobre-nos-page .perfil-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sobre-nos-page .perfil-card:hover .perfil-image img {
+  transform: scale(1.08);
+}
+
+.sobre-nos-page .perfil-content {
+  padding: 28px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sobre-nos-page .perfil-content h4 {
+  color: #244a96;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.sobre-nos-page .perfil-role {
+  color: #6c757d;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sobre-nos-page .perfil-description {
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.sobre-nos-page .perfil-social {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: auto;
+}
+
+/* Enhanced social links matching Home.css button styles */
+.sobre-nos-page .social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+.sobre-nos-page .social-link:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.4);
+  color: white;
+}
+
+.sobre-nos-page .social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Enhanced carousel controls matching Home.css */
+.sobre-nos-page .carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.sobre-nos-page .carousel-btn {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border: none;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+.sobre-nos-page .carousel-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.4);
+}
+
+.sobre-nos-page .carousel-btn:active {
+  transform: translateY(0) scale(1);
+}
+
+.sobre-nos-page .carousel-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+}
+
+.sobre-nos-page .carousel-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   INTEGRANTES (TEAM PHOTO) - ENHANCED
+   ============================================ */
+
+.sobre-nos-page .integrantes {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);
+  position: relative;
+}
+
+.sobre-nos-page .team-photo {
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+  height: auto;
+}
+
+.sobre-nos-page .team-photo:hover {
+  transform: scale(1.02);
+  box-shadow: 0 24px 80px rgba(36, 74, 150, 0.25);
+}
+
+.sobre-nos-page .team-photo-caption {
+  margin-top: 24px;
+  color: #4a5568;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* ============================================
+   MISSÃO, VISÃO E VALORES - ENHANCED
+   ============================================ */
+
+.sobre-nos-page .missao-visao-valores {
+  padding: 120px 0;
+  background: white;
+  position: relative;
+}
+
+/* Enhanced MVV cards matching Home.css card patterns */
+.sobre-nos-page .mvv-card {
+  background: white;
+  padding: 45px 35px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  position: relative;
+  border-top: 6px solid #244a96;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sobre-nos-page .mvv-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(36, 74, 150, 0.03), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sobre-nos-page .mvv-card:hover::before {
+  opacity: 1;
+}
+
+.sobre-nos-page .mvv-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 24px 60px rgba(36, 74, 150, 0.18);
+}
+
+.sobre-nos-page .mvv-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.08), rgba(26, 58, 122, 0.12));
+  border-radius: 50%;
+  color: #244a96;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(36, 74, 150, 0.1);
+}
+
+.sobre-nos-page .mvv-card:hover .mvv-icon {
+  transform: scale(1.15) rotate(5deg);
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.3);
+}
+
+.sobre-nos-page .mvv-card h3 {
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.sobre-nos-page .mvv-card p {
+  color: #4a5568;
+  line-height: 1.75;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+}
+
+.sobre-nos-page .valores-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.sobre-nos-page .valores-list li {
+  color: #4a5568;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  padding: 12px 0 12px 35px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sobre-nos-page .valores-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.1), rgba(26, 58, 122, 0.15));
+  color: #244a96;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.sobre-nos-page .valores-list li:hover {
+  color: #1a1a1a;
+  padding-left: 40px;
+}
+
+.sobre-nos-page .valores-list li:hover::before {
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  color: white;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.sobre-nos-page .valores-list li strong {
+  color: #244a96;
+  font-weight: 700;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - MATCHING HOME
+   ============================================ */
+
+@media (max-width: 1199.98px) {
+  .sobre-nos-page .carousel-track .perfil-card {
+    flex: 0 0 calc(33.333% - 14px);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .sobre-nos-page .carousel-inner img {
+    max-height: 600px;
+  }
+
+  .sobre-nos-page .section-title {
+    font-size: 2.25rem;
+    margin-bottom: 50px;
+  }
+
+  .sobre-nos-page .section-subtitle {
+    font-size: 1.15rem;
+    margin-bottom: 50px;
+  }
+
+  .sobre-nos-page .historia,
+  .sobre-nos-page .perfis-individuais,
+  .sobre-nos-page .integrantes,
+  .sobre-nos-page .missao-visao-valores {
+    padding: 90px 0;
+  }
+
+  .sobre-nos-page .historia-content {
+    padding: 40px;
+  }
+
+  .sobre-nos-page .perfil-image {
+    height: 220px;
+  }
+
+  .sobre-nos-page .perfil-content {
+    padding: 22px;
+  }
+
+  .sobre-nos-page .perfil-content h4 {
+    font-size: 1.2rem;
+  }
+
+  .sobre-nos-page .carousel-track .perfil-card {
+    flex: 0 0 calc(50% - 10px);
+    min-width: 250px;
+  }
+
+  .sobre-nos-page .team-carousel-container {
+    padding: 30px 20px 20px 20px;
+  }
+
+  .sobre-nos-page .mvv-card {
+    padding: 35px 28px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .sobre-nos-page .carousel-inner img {
+    max-height: 550px;
+  }
+
+  .sobre-nos-page .carousel-caption h2 {
+    font-size: 1.8rem;
+  }
+
+  .sobre-nos-page .carousel-caption p {
+    font-size: 1rem;
+  }
+
+  .sobre-nos-page .carousel-caption .btn {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+  }
+
+  .sobre-nos-page .hero-buttons {
+    gap: 12px;
+  }
+
+  .sobre-nos-page .section-title {
+    font-size: 2rem;
+  }
+
+  .sobre-nos-page .section-subtitle {
+    font-size: 1.05rem;
+  }
+
+  .sobre-nos-page .historia,
+  .sobre-nos-page .perfis-individuais,
+  .sobre-nos-page .integrantes,
+  .sobre-nos-page .missao-visao-valores {
+    padding: 70px 0;
+  }
+
+  .sobre-nos-page .historia-content {
+    padding: 30px;
+  }
+
+  .sobre-nos-page .carousel-track .perfil-card {
+    flex: 0 0 100%;
+    min-width: 100%;
+  }
+
+  .sobre-nos-page .team-carousel-container {
+    padding: 25px 15px 15px 15px;
+  }
+
+  .sobre-nos-page .mvv-card {
+    padding: 30px 24px;
+  }
+
+  .sobre-nos-page .mvv-icon {
+    width: 75px;
+    height: 75px;
+  }
+
+  .sobre-nos-page .mvv-card h3 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sobre-nos-page .carousel-inner img {
+    max-height: 500px;
+  }
+
+  .sobre-nos-page .carousel-caption h2 {
+    font-size: 1.5rem;
+  }
+
+  .sobre-nos-page .carousel-caption p {
+    font-size: 0.9rem;
+  }
+
+  .sobre-nos-page .carousel-caption .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .sobre-nos-page .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sobre-nos-page .section-title {
+    font-size: 1.75rem;
+    margin-bottom: 40px;
+  }
+
+  .sobre-nos-page .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+
+  .sobre-nos-page .historia,
+  .sobre-nos-page .perfis-individuais,
+  .sobre-nos-page .integrantes,
+  .sobre-nos-page .missao-visao-valores {
+    padding: 60px 0;
+  }
+
+  .sobre-nos-page .historia-content {
+    padding: 25px;
+  }
+
+  .sobre-nos-page .historia-content p {
+    font-size: 1rem;
+  }
+
+  .sobre-nos-page .perfil-image {
+    height: 200px;
+  }
+
+  .sobre-nos-page .perfil-content {
+    padding: 18px;
+  }
+
+  .sobre-nos-page .perfil-content h4 {
+    font-size: 1.1rem;
+  }
+
+  .sobre-nos-page .perfil-role {
+    font-size: 0.85rem;
+  }
+
+  .sobre-nos-page .perfil-description {
+    font-size: 0.9rem;
+  }
+
+  .sobre-nos-page .social-link {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sobre-nos-page .social-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sobre-nos-page .team-carousel-container {
+    padding: 20px 10px 10px 10px;
+  }
+
+  .sobre-nos-page .carousel-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .sobre-nos-page .carousel-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sobre-nos-page .mvv-card {
+    padding: 28px 20px;
+  }
+
+  .sobre-nos-page .mvv-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .sobre-nos-page .mvv-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .sobre-nos-page .mvv-card p,
+  .sobre-nos-page .valores-list li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .sobre-nos-page .carousel-inner img {
+    max-height: 450px;
+  }
+
+  .sobre-nos-page .carousel-caption h2 {
+    font-size: 1.3rem;
+  }
+
+  .sobre-nos-page .carousel-caption p {
+    font-size: 0.8rem;
+  }
+
+  .sobre-nos-page .carousel-caption .btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .sobre-nos-page .section-title {
+    font-size: 1.5rem;
+  }
+
+  .sobre-nos-page .perfil-image {
+    height: 180px;
+  }
+}
+
+/* ============================================
+   ANIMATIONS AND TRANSITIONS
+   ============================================ */
+
+.sobre-nos-page [data-aos] {
+  transition-duration: 0.8s;
+}
+
+.sobre-nos-page .text-muted {
+  color: #6c757d !important;
+}
+
+.sobre-nos-page .bg-light {
+  background-color: #f8f9fb !important;
+}

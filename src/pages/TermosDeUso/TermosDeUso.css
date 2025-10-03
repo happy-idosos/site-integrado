@@ -1,0 +1,534 @@
+/* Escopo completo para evitar conflitos com outras páginas */
+.termos-de-uso-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-family: "Nunito", sans-serif;
+  color: #333;
+  line-height: 1.6;
+  padding: 2rem 0;
+}
+
+.termos-de-uso-back-btn {
+  position: fixed;
+  top: 90px;
+  left: 1.5rem;
+  background: white;
+  border: 2px solid #244a96;
+  color: #244a96;
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15);
+}
+
+.termos-de-uso-back-btn:hover {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25);
+}
+
+.termos-de-uso-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.termos-de-uso-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 35px rgba(36, 74, 150, 0.1);
+  border: 1px solid rgba(36, 74, 150, 0.1);
+}
+
+.termos-de-uso-logo {
+  height: 90px;
+  width: auto;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 12px rgba(36, 74, 150, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.termos-de-uso-logo:hover {
+  transform: scale(1.05);
+}
+
+.termos-de-uso-header h1 {
+  color: #244a96;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.termos-de-uso-header p {
+  color: #666;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.termos-de-uso-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.termos-de-uso-update {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(36, 74, 150, 0.2);
+}
+
+.termos-de-uso-content-container {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 35px rgba(36, 74, 150, 0.1);
+  border: 1px solid rgba(36, 74, 150, 0.1);
+  position: relative;
+}
+
+.termos-de-uso-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.termos-de-uso-nav {
+  position: sticky;
+  top: 120px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  border-left: 4px solid #244a96;
+  box-shadow: 0 4px 12px rgba(36, 74, 150, 0.08);
+}
+
+.termos-de-uso-nav h3 {
+  color: #244a96;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.termos-de-uso-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.termos-de-uso-nav li {
+  margin-bottom: 0.5rem;
+}
+
+.termos-de-uso-nav a {
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: block;
+  border-left: 3px solid transparent;
+}
+
+.termos-de-uso-nav a:hover {
+  color: #244a96;
+  background: rgba(36, 74, 150, 0.05);
+  border-left-color: #244a96;
+  transform: translateX(5px);
+}
+
+.termos-de-uso-article {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.termos-de-uso-article::-webkit-scrollbar {
+  width: 6px;
+}
+
+.termos-de-uso-article::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.termos-de-uso-article::-webkit-scrollbar-thumb {
+  background: #244a96;
+  border-radius: 10px;
+}
+
+.termos-de-uso-article::-webkit-scrollbar-thumb:hover {
+  background: #1a3a7a;
+}
+
+.termos-de-uso-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.termos-de-uso-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.termos-de-uso-section h2 {
+  color: #244a96;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #244a96;
+}
+
+.termos-de-uso-section h3 {
+  color: #244a96;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.termos-de-uso-section p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.termos-de-uso-section ul {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.termos-de-uso-section li {
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+
+.termos-de-uso-section strong {
+  color: #244a96;
+  font-weight: 600;
+}
+
+.termos-de-uso-definitions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+.termos-de-uso-definitions dt {
+  font-weight: 600;
+  color: #244a96;
+}
+
+.termos-de-uso-definitions dd {
+  margin: 0;
+  text-align: justify;
+}
+
+.termos-de-uso-section a {
+  color: #244a96;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.termos-de-uso-section a:hover {
+  color: #1a3a7a;
+  text-decoration: underline;
+}
+
+.termos-de-uso-footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #28a745;
+  margin-top: 2rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.termos-de-uso-actions {
+  position: sticky;
+  bottom: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.termos-de-uso-actions.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.15);
+  margin: 1rem -1rem -1rem -1rem;
+}
+
+.termos-de-uso-accept-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 1.125rem 2.5rem;
+  border-radius: 15px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.termos-de-uso-accept-btn:hover {
+  background: linear-gradient(135deg, #20c997, #1e9e8a);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+}
+
+.termos-de-uso-accept-btn:active {
+  transform: translateY(0);
+}
+
+/* Animações */
+@keyframes termos-de-uso-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .termos-de-uso-content {
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .termos-de-uso-page {
+    padding: 1rem 0;
+  }
+
+  .termos-de-uso-back-btn {
+    top: 80px;
+    left: 1rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .termos-de-uso-container {
+    padding: 1rem;
+  }
+
+  .termos-de-uso-header {
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .termos-de-uso-logo {
+    height: 70px;
+  }
+
+  .termos-de-uso-header h1 {
+    font-size: 2rem;
+  }
+
+  .termos-de-uso-header p {
+    font-size: 1rem;
+  }
+
+  .termos-de-uso-content-container {
+    padding: 1.75rem;
+  }
+
+  .termos-de-uso-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .termos-de-uso-nav {
+    position: static;
+    order: 2;
+  }
+
+  .termos-de-uso-article {
+    max-height: none;
+    overflow-y: visible;
+    order: 1;
+    padding-right: 0;
+  }
+
+  .termos-de-uso-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .termos-de-uso-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .termos-de-uso-section h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .termos-de-uso-logo {
+    height: 60px;
+  }
+
+  .termos-de-uso-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .termos-de-uso-content-container {
+    padding: 1.25rem;
+    border-radius: 15px;
+  }
+
+  .termos-de-uso-header {
+    padding: 1.25rem;
+  }
+
+  .termos-de-uso-nav {
+    padding: 1rem;
+  }
+
+  .termos-de-uso-section {
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .termos-de-uso-accept-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .termos-de-uso-actions.scrolled {
+    margin: 1rem -0.5rem -0.5rem -0.5rem;
+  }
+}
+
+/* Melhorias para impressão */
+@media print {
+  .termos-de-uso-back-btn,
+  .termos-de-uso-nav,
+  .termos-de-uso-actions {
+    display: none;
+  }
+
+  .termos-de-uso-page {
+    background: white;
+    padding: 0;
+  }
+
+  .termos-de-uso-container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .termos-de-uso-content-container {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+
+  .termos-de-uso-content {
+    display: block;
+  }
+}
+/* Adicione estas regras ao TermosDeUso.css */
+
+.termos-de-uso-context {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.termos-de-uso-actions-note {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Melhoria no botão para texto mais longo */
+.termos-de-uso-accept-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 1.125rem 2rem;
+  border-radius: 15px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+  white-space: nowrap;
+  max-width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Responsividade para o botão */
+@media (max-width: 768px) {
+  .termos-de-uso-accept-btn {
+    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    white-space: normal;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  .termos-de-uso-accept-btn {
+    font-size: 0.85rem;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .termos-de-uso-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

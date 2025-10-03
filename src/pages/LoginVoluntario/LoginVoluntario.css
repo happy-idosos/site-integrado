@@ -1,0 +1,468 @@
+/* LoginVoluntario.css - Scoped styles for Login Voluntario page */
+
+/* All styles scoped with .login-voluntario- prefix to avoid conflicts */
+/* Changed gradient from purple to blue theme matching registration pages */
+
+.login-voluntario-page {
+  font-family: "Nunito", sans-serif;
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  min-height: 100vh;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+}
+
+.login-voluntario-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Back Button */
+.login-voluntario-back-btn {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid white;
+  color: #244a96;
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.login-voluntario-back-btn:hover {
+  background: white;
+  color: #1a3a7a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Logo Section */
+.login-voluntario-logo-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.login-voluntario-logo {
+  height: 90px;
+  width: auto;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+  transition: transform 0.3s ease;
+  background: white;
+  padding: 0.5rem;
+}
+
+.login-voluntario-logo:hover {
+  transform: scale(1.05);
+}
+
+.login-voluntario-logo-section h1 {
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.login-voluntario-logo-section p {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Container */
+.login-voluntario-form-container {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.login-voluntario-form-container:hover {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Form Sections */
+.login-voluntario-form-section {
+  margin-bottom: 2rem;
+}
+
+/* Form Groups */
+.login-voluntario-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.login-voluntario-form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Form Controls */
+.login-voluntario-form-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.login-voluntario-form-group input {
+  padding: 1rem 1.25rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  width: 100%;
+}
+
+.login-voluntario-form-group input:focus {
+  outline: none;
+  border-color: #244a96;
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
+  background: #fafbfc;
+}
+
+.login-voluntario-form-group input::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+/* Password Field */
+.login-voluntario-password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-voluntario-password-field input {
+  padding-right: 3rem;
+}
+
+.login-voluntario-toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-voluntario-toggle-password:hover {
+  color: #244a96;
+  background: rgba(36, 74, 150, 0.1);
+}
+
+/* Forgot Password */
+.login-voluntario-forgot-password {
+  text-align: right;
+  margin-top: 0.75rem;
+}
+
+/* Links */
+.login-voluntario-link {
+  color: #244a96;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.login-voluntario-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: #244a96;
+  transition: width 0.3s ease;
+}
+
+.login-voluntario-link:hover {
+  color: #1a3a7a;
+}
+
+.login-voluntario-link:hover::after {
+  width: 100%;
+}
+
+/* Submit Button */
+.login-voluntario-submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 15px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.login-voluntario-submit-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.login-voluntario-submit-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.login-voluntario-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.4);
+}
+
+.login-voluntario-submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.login-voluntario-btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.login-voluntario-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: login-voluntario-spin 1s linear infinite;
+}
+
+@keyframes login-voluntario-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Register Link */
+.login-voluntario-register-link {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.login-voluntario-register-link p {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Success/Error Messages */
+.login-voluntario-alert {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  animation: login-voluntario-slideDown 0.4s ease-out;
+}
+
+@keyframes login-voluntario-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-voluntario-alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.login-voluntario-alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Form Validation */
+.login-voluntario-error {
+  border-color: #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+.login-voluntario-success {
+  border-color: #28a745 !important;
+  background-color: #f0fdf4 !important;
+}
+
+.login-voluntario-error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.login-voluntario-error-message::before {
+  content: "⚠";
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-voluntario-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .login-voluntario-back-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .login-voluntario-logo {
+    height: 75px;
+  }
+
+  .login-voluntario-logo-section h1 {
+    font-size: 1.9rem;
+  }
+
+  .login-voluntario-logo-section p {
+    font-size: 1rem;
+  }
+
+  .login-voluntario-form-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-voluntario-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .login-voluntario-logo {
+    height: 65px;
+  }
+
+  .login-voluntario-logo-section h1 {
+    font-size: 1.7rem;
+  }
+
+  .login-voluntario-logo-section p {
+    font-size: 0.95rem;
+  }
+
+  .login-voluntario-form-container {
+    padding: 1.75rem;
+    border-radius: 16px;
+  }
+
+  .login-voluntario-form-group input {
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .login-voluntario-submit-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .login-voluntario-back-btn {
+    border-width: 3px;
+  }
+
+  .login-voluntario-form-group input {
+    border-width: 2px;
+  }
+
+  .login-voluntario-submit-btn {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .login-voluntario-back-btn,
+  .login-voluntario-logo,
+  .login-voluntario-form-container,
+  .login-voluntario-submit-btn,
+  .login-voluntario-link::after {
+    transition: none;
+  }
+
+  .login-voluntario-spinner {
+    animation: none;
+    border: 2px solid white;
+    border-top: 2px solid transparent;
+  }
+
+  .login-voluntario-alert {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .login-voluntario-back-btn {
+    display: none;
+  }
+}

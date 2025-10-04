@@ -8,9 +8,14 @@ import "./EsqueciASenha.css"
 
 const EsquecidASenha = () => {
   const navigate = useNavigate()
+  const [step, setStep] = useState(1) // 1 = email, 2 = token e senha
   const [email, setEmail] = useState("")
+  const [token, setToken] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ text: "", type: "" })
+  const [emailSent, setEmailSent] = useState(false)
 
   useEffect(() => {
     if (window.AOS) {
@@ -32,7 +37,7 @@ const EsquecidASenha = () => {
     return emailRegex.test(email)
   }
 
-  const handleSubmit = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault()
 
     if (!email || !isValidEmail(email)) {
@@ -55,9 +60,63 @@ const EsquecidASenha = () => {
 
       if (response.ok) {
         showMessage("Token enviado com sucesso! Verifique seu e-mail.", "success")
-        setEmail("")
+        setEmailSent(true)
+        setTimeout(() => {
+          setStep(2)
+        }, 2000)
       } else {
         showMessage(data.message || "Erro ao enviar token. Tente novamente.", "danger")
+      }
+    } catch (error) {
+      console.error("Erro:", error)
+      showMessage("Erro de conexão. Tente novamente mais tarde.", "danger")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault()
+
+    if (!token || !newPassword || !confirmPassword) {
+      showMessage("Por favor, preencha todos os campos.", "danger")
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      showMessage("As senhas não coincidem.", "danger")
+      return
+    }
+
+    if (newPassword.length < 6) {
+      showMessage("A senha deve ter pelo menos 6 caracteres.", "danger")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await fetch("/api/redefinir-senha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          email: email,
+          token: token,
+          newPassword: newPassword
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        showMessage("Senha redefinida com sucesso! Redirecionando para login...", "success")
+        setTimeout(() => {
+          navigate("/login")
+        }, 3000)
+      } else {
+        showMessage(data.message || "Erro ao redefinir senha. Verifique o token e tente novamente.", "danger")
       }
     } catch (error) {
       console.error("Erro:", error)
@@ -82,16 +141,35 @@ const EsquecidASenha = () => {
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
           <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
-        Voltar para Home
+        Voltar
       </button>
 
       <main>
         <section className="recuperacao-senha py-5" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <div className="row justify-content-center">
-              <div className="col-md-6 col-lg-5">
+              <div className="col-md-8 col-lg-6">
                 <div className="card shadow-lg border-0" style={{ borderRadius: "20px" }}>
                   <div className="card-body p-5">
+                    
+                    {/* Indicador de progresso */}
+                    <div className="progress-container mb-5">
+                      <div className="progress-steps d-flex justify-content-between position-relative">
+                        <div className={`step ${step >= 1 ? 'active' : ''}`}>
+                          <div className="step-circle">1</div>
+                          <span className="step-label">E-mail</span>
+                        </div>
+                        <div className={`step ${step >= 2 ? 'active' : ''}`}>
+                          <div className="step-circle">2</div>
+                          <span className="step-label">Token</span>
+                        </div>
+                        <div className={`step ${step >= 3 ? 'active' : ''}`}>
+                          <div className="step-circle">3</div>
+                          <span className="step-label">Nova Senha</span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="text-center mb-4">
                       <div className="icon-wrapper mb-3">
                         <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#244a96" strokeWidth="2">
@@ -100,9 +178,13 @@ const EsquecidASenha = () => {
                         </svg>
                       </div>
                       <h2 className="mb-2" style={{ color: "#244a96" }}>
-                        Esqueci a Senha
+                        {step === 1 ? "Esqueci a Senha" : "Redefinir Senha"}
                       </h2>
-                      <p className="text-muted">Digite seu e-mail para receber um token de recuperação</p>
+                      <p className="text-muted">
+                        {step === 1 
+                          ? "Digite seu e-mail para receber um token de recuperação" 
+                          : "Use o token enviado para redefinir sua senha"}
+                      </p>
                     </div>
 
                     {message.text && (
@@ -111,45 +193,138 @@ const EsquecidASenha = () => {
                       </div>
                     )}
 
-                    <form onSubmit={handleSubmit} noValidate>
-                      <div className="mb-4">
-                        <label htmlFor="email" className="form-label fw-semibold">
-                          E-mail
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control form-control-lg"
-                          id="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          placeholder="Digite seu e-mail cadastrado"
-                          style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
-                        />
-                      </div>
-
-                      <div className="d-grid mb-4">
-                        <button
-                          type="submit"
-                          className="btn btn-primary btn-lg"
-                          disabled={loading}
-                          style={{ borderRadius: "15px", padding: "15px", fontWeight: "600" }}
-                        >
-                          {loading ? (
-                            <>
-                              <span
-                                className="spinner-border spinner-border-sm me-2"
-                                role="status"
-                                aria-hidden="true"
-                              ></span>
-                              Enviando...
-                            </>
-                          ) : (
-                            "Enviar Token"
+                    {/* Formulário de solicitação de token */}
+                    {step === 1 && (
+                      <form onSubmit={handleEmailSubmit} noValidate>
+                        <div className="mb-4">
+                          <label htmlFor="email" className="form-label fw-semibold">
+                            E-mail
+                          </label>
+                          <input
+                            type="email"
+                            className={`form-control form-control-lg ${email && isValidEmail(email) ? 'is-valid' : ''}`}
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            placeholder="Digite seu e-mail cadastrado"
+                            style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
+                          />
+                          {email && !isValidEmail(email) && (
+                            <div className="invalid-feedback d-block">
+                              Por favor, digite um e-mail válido.
+                            </div>
                           )}
-                        </button>
-                      </div>
-                    </form>
+                        </div>
+
+                        <div className="d-grid mb-4">
+                          <button
+                            type="submit"
+                            className="btn btn-primary btn-lg"
+                            disabled={loading || !email || !isValidEmail(email)}
+                            style={{ borderRadius: "15px", padding: "15px", fontWeight: "600" }}
+                          >
+                            {loading ? (
+                              <>
+                                <span
+                                  className="spinner-border spinner-border-sm me-2"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>
+                                Enviando...
+                              </>
+                            ) : (
+                              "Enviar Token"
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    )}
+
+                    {/* Formulário de redefinição de senha */}
+                    {step === 2 && (
+                      <form onSubmit={handlePasswordReset} noValidate>
+                        <div className="mb-4">
+                          <label htmlFor="token" className="form-label fw-semibold">
+                            Token de Verificação
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control form-control-lg"
+                            id="token"
+                            value={token}
+                            onChange={(e) => setToken(e.target.value)}
+                            required
+                            placeholder="Digite o token recebido por e-mail"
+                            style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label htmlFor="newPassword" className="form-label fw-semibold">
+                            Nova Senha
+                          </label>
+                          <input
+                            type="password"
+                            className={`form-control form-control-lg ${newPassword && newPassword.length >= 6 ? 'is-valid' : ''}`}
+                            id="newPassword"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                            placeholder="Digite sua nova senha (mín. 6 caracteres)"
+                            style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
+                          />
+                          {newPassword && newPassword.length < 6 && (
+                            <div className="invalid-feedback d-block">
+                              A senha deve ter pelo menos 6 caracteres.
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="mb-4">
+                          <label htmlFor="confirmPassword" className="form-label fw-semibold">
+                            Confirmar Nova Senha
+                          </label>
+                          <input
+                            type="password"
+                            className={`form-control form-control-lg ${confirmPassword && confirmPassword === newPassword ? 'is-valid' : ''}`}
+                            id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            placeholder="Digite novamente sua nova senha"
+                            style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
+                          />
+                          {confirmPassword && confirmPassword !== newPassword && (
+                            <div className="invalid-feedback d-block">
+                              As senhas não coincidem.
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="d-grid mb-4">
+                          <button
+                            type="submit"
+                            className="btn btn-primary btn-lg"
+                            disabled={loading || !token || !newPassword || !confirmPassword || newPassword !== confirmPassword || newPassword.length < 6}
+                            style={{ borderRadius: "15px", padding: "15px", fontWeight: "600" }}
+                          >
+                            {loading ? (
+                              <>
+                                <span
+                                  className="spinner-border spinner-border-sm me-2"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>
+                                Redefinindo...
+                              </>
+                            ) : (
+                              "Redefinir Senha"
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    )}
 
                     <div className="text-center">
                       <Link to="/" className="text-decoration-none" style={{ color: "#244a96", fontWeight: "600" }}>
@@ -166,7 +341,7 @@ const EsquecidASenha = () => {
         <section className="instrucoes py-5 bg-light" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <div className="row justify-content-center">
-              <div className="col-md-8">
+              <div className="col-md-10">
                 <div className="text-center">
                   <h3 className="text-primary mb-4">Como funciona a recuperação?</h3>
                   <div className="row">
@@ -223,4 +398,4 @@ const EsquecidASenha = () => {
   )
 }
 
-export default EsqueciASenha
+export default EsquecidASenha

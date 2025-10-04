@@ -223,4 +223,4 @@ const EsquecidASenha = () => {
   )
 }
 
-export default EsquecidASenha
+export default EsqueciASenha

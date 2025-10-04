@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
 import AOS from "aos"
@@ -11,6 +12,7 @@ import logo from "../../assets/img/happyidosos.jpg"
 
 const LoginVoluntario = () => {
   const navigate = useNavigate()
+  const { login, loading: authLoading, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -26,16 +28,16 @@ const LoginVoluntario = () => {
       once: true,
       offset: 100,
     })
-  }, [])
+
+    // ✅ REDIRECIONAR SE JÁ ESTIVER AUTENTICADO
+    if (isAuthenticated) {
+      console.log('✅ Usuário já autenticado, redirecionando...')
+      navigate("/")
+    }
+  }, [isAuthenticated, navigate])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-
-    // Limite de caracteres para email (coerente com CadastroVoluntario)
-    if (name === "email" && value.length > 96) {
-      return
-    }
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -58,14 +60,10 @@ const LoginVoluntario = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(value)) {
         error = "Digite um e-mail válido."
-      } else if (value.length > 96) {
-        error = "E-mail deve ter no máximo 96 caracteres."
       }
     } else if (name === "senha") {
-      if (value.length < 8) {
-        error = "A senha deve ter pelo menos 8 caracteres."
-      } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(value)) {
-        error = "Senha deve conter pelo menos 1 letra e 1 número."
+      if (value.length < 6) {
+        error = "A senha deve ter pelo menos 6 caracteres."
       }
     }
 
@@ -93,32 +91,7 @@ const LoginVoluntario = () => {
     }, 5000)
   }
 
-  // Função para simular chamada à API (substituir pela real depois)
-  const mockApiLogin = async (loginData) => {
-    // Simulação de delay de rede
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    
-    // Simulação de resposta da API
-    // TODO: Substituir por chamada real à API
-    const mockResponse = {
-      success: true,
-      user: {
-        id: 1,
-        nome: "Voluntário Teste",
-        email: loginData.email,
-        tipo: "voluntario"
-      },
-      token: "mock-jwt-token-here"
-    }
-
-    // Simulação de erro para credenciais inválidas
-    if (loginData.email === "erro@exemplo.com" || loginData.senha === "erro123") {
-      throw new Error("Credenciais inválidas")
-    }
-
-    return mockResponse
-  }
-
+  // ===== SUBMIT INTEGRADO COM useAuth =====
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -130,52 +103,47 @@ const LoginVoluntario = () => {
     setLoading(true)
 
     try {
-      const loginData = {
-        email: formData.email.trim(),
-        senha: formData.senha,
-        tipoUsuario: "voluntario",
+      // ✅ INTEGRAÇÃO COMPLETA COM useAuth
+      const result = await login(formData.email, formData.senha)
+      
+      if (result.success) {
+        showAlert("Login realizado com sucesso! Redirecionando...", "success")
+
+        // Redirecionar para a página inicial após login bem-sucedido
+        setTimeout(() => {
+          navigate("/")
+        }, 1500)
+      } else {
+        // Tratamento específico de erros da API
+        let errorMessage = "E-mail ou senha incorretos. Tente novamente."
+        
+        if (result.error) {
+          if (result.error.includes("voluntário") || result.error.includes("usuário")) {
+            errorMessage = result.error
+          } else if (result.error.includes("credenciais")) {
+            errorMessage = "Credenciais inválidas. Verifique seu e-mail e senha."
+          } else if (result.error.includes("encontrado")) {
+            errorMessage = "Nenhum voluntário encontrado com este e-mail."
+          }
+        }
+        
+        showAlert(errorMessage, "error")
+        
+        // Limpar senha em caso de erro
+        setFormData(prev => ({
+          ...prev,
+          senha: ""
+        }))
       }
-
-      console.log("Login data ready for API:", loginData)
-
-      // TODO: Substituir por chamada real à API
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(loginData)
-      // });
-      // 
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.message || 'Erro ao fazer login');
-      // }
-      // 
-      // const data = await response.json();
-
-      // Usando mock enquanto API não está implementada
-      const data = await mockApiLogin(loginData)
-
-      // Salvar token e dados do usuário (exemplo)
-      localStorage.setItem('authToken', data.token)
-      localStorage.setItem('userData', JSON.stringify(data.user))
-
-      showAlert("Login realizado com sucesso! Redirecionando...", "success")
-
-      setTimeout(() => {
-        navigate("/dashboard-voluntario")
-      }, 1500)
-
     } catch (error) {
       console.error("Erro ao fazer login:", error)
+      showAlert("Erro de conexão. Verifique sua internet e tente novamente.", "error")
       
-      // Tratamento específico de erros da API
-      const errorMessage = error.message.includes("Credenciais inválidas") 
-        ? "E-mail ou senha incorretos. Tente novamente."
-        : "Erro ao conectar com o servidor. Tente novamente."
-
-      showAlert(errorMessage, "error")
+      // Limpar senha em caso de erro
+      setFormData(prev => ({
+        ...prev,
+        senha: ""
+      }))
     } finally {
       setLoading(false)
     }
@@ -189,24 +157,18 @@ const LoginVoluntario = () => {
     navigate("/")
   }
 
-  // Efeito para limpar alertas quando o componente desmontar
-  useEffect(() => {
-    return () => {
-      if (alert.show) {
-        setAlert({ show: false, message: "", type: "" })
-      }
-    }
-  }, [alert.show])
+  // Loading state combinado (authLoading + local loading)
+  const isLoading = loading || authLoading
 
   return (
     <div className="login-voluntario-page">
-        <button className="cadastro-voluntario-back-btn" onClick={handleBack}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-          Voltar
-        </button>
+      <button className="login-voluntario-back-btn" onClick={handleBack}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        Voltar
+      </button>
 
       <div className="login-voluntario-container">
         <div className="login-voluntario-logo-section" data-aos="fade-down">
@@ -233,13 +195,10 @@ const LoginVoluntario = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Digite seu e-mail"
-                  maxLength="96"
                   className={errors.email ? "login-voluntario-error" : formData.email ? "login-voluntario-success" : ""}
+                  disabled={isLoading}
                 />
                 {errors.email && <div className="login-voluntario-error-message">{errors.email}</div>}
-                <div className="login-voluntario-char-counter">
-                  {formData.email.length}/96 caracteres
-                </div>
               </div>
 
               <div className="login-voluntario-form-group">
@@ -252,14 +211,14 @@ const LoginVoluntario = () => {
                     value={formData.senha}
                     onChange={handleInputChange}
                     placeholder="Digite sua senha"
-                    className={
-                      errors.senha ? "login-voluntario-error" : formData.senha ? "login-voluntario-success" : ""
-                    }
+                    className={errors.senha ? "login-voluntario-error" : formData.senha ? "login-voluntario-success" : ""}
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     className="login-voluntario-toggle-password"
                     onClick={togglePasswordVisibility}
+                    disabled={isLoading}
                     aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                   >
                     {showPassword ? (
@@ -276,9 +235,6 @@ const LoginVoluntario = () => {
                   </button>
                 </div>
                 {errors.senha && <div className="login-voluntario-error-message">{errors.senha}</div>}
-                <div className="login-voluntario-password-requirements">
-                  • Mínimo 8 caracteres • Pelo menos 1 letra • Pelo menos 1 número
-                </div>
               </div>
 
               <div className="login-voluntario-forgot-password">
@@ -291,22 +247,20 @@ const LoginVoluntario = () => {
             <button 
               type="submit" 
               className="login-voluntario-submit-btn" 
-              disabled={loading}
-              data-aos="fade-up" 
-              data-aos-delay="300"
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <span className="login-voluntario-btn-loading">
                   <div className="login-voluntario-spinner"></div>
                   Entrando...
                 </span>
               ) : (
-                <span>Entrar</span>
+                <span>Entrar como Voluntário</span>
               )}
             </button>
           </form>
 
-          <div className="login-voluntario-register-link" data-aos="fade-up" data-aos-delay="400">
+          <div className="login-voluntario-register-link">
             <p>
               Não tem conta?{" "}
               <Link to="/cadastrovoluntario" className="login-voluntario-link">

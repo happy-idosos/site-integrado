@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
 import AOS from "aos"
@@ -11,6 +12,7 @@ import logo from "../../assets/img/happyidosos.jpg"
 
 const LoginAsilo = () => {
   const navigate = useNavigate()
+  const { login, loading: authLoading } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     senha: "",
@@ -20,7 +22,7 @@ const LoginAsilo = () => {
   const [alert, setAlert] = useState({ show: false, message: "", type: "" })
   const [errors, setErrors] = useState({})
 
-  React.useEffect(() => {
+  useEffect(() => {
     AOS.init({
       duration: 800,
       once: true,
@@ -83,6 +85,7 @@ const LoginAsilo = () => {
     }, 5000)
   }
 
+  // ===== SUBMIT INTEGRADO COM useAuth =====
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -94,24 +97,47 @@ const LoginAsilo = () => {
     setLoading(true)
 
     try {
-      const loginData = {
-        email: formData.email,
-        senha: formData.senha,
-        tipoUsuario: "asilo",
+      // ✅ INTEGRAÇÃO COMPLETA COM useAuth
+      const result = await login(formData.email, formData.senha)
+      
+      if (result.success) {
+        showAlert("Login realizado com sucesso! Redirecionando...", "success")
+
+        // Redirecionar para a página inicial após login bem-sucedido
+        setTimeout(() => {
+          navigate("/")
+        }, 1500)
+      } else {
+        // Tratamento específico de erros da API
+        let errorMessage = "E-mail ou senha incorretos. Tente novamente."
+        
+        if (result.error) {
+          if (result.error.includes("asilo") || result.error.includes("instituição")) {
+            errorMessage = result.error
+          } else if (result.error.includes("credenciais")) {
+            errorMessage = "Credenciais inválidas. Verifique seu e-mail e senha."
+          } else if (result.error.includes("encontrado")) {
+            errorMessage = "Nenhuma instituição encontrada com este e-mail."
+          }
+        }
+        
+        showAlert(errorMessage, "error")
+        
+        // Limpar senha em caso de erro
+        setFormData(prev => ({
+          ...prev,
+          senha: ""
+        }))
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      console.log("Login data ready for API:", loginData)
-
-      showAlert("Login realizado com sucesso! Redirecionando...", "success")
-
-      setTimeout(() => {
-        navigate("/dashboard-asilo")
-      }, 1500)
     } catch (error) {
       console.error("Erro ao fazer login:", error)
-      showAlert("E-mail ou senha incorretos. Tente novamente.", "error")
+      showAlert("Erro de conexão. Verifique sua internet e tente novamente.", "error")
+      
+      // Limpar senha em caso de erro
+      setFormData(prev => ({
+        ...prev,
+        senha: ""
+      }))
     } finally {
       setLoading(false)
     }
@@ -124,6 +150,9 @@ const LoginAsilo = () => {
   const handleBack = () => {
     navigate("/")
   }
+
+  // Loading state combinado (authLoading + local loading)
+  const isLoading = loading || authLoading
 
   return (
     <div className="login-asilo-page">
@@ -139,7 +168,7 @@ const LoginAsilo = () => {
         <div className="login-voluntario-logo-section" data-aos="fade-down">
           <img src={logo || "/placeholder.svg"} alt="Happy Idosos" className="login-voluntario-logo" />
           <h1>Bem-vindo de volta!</h1>
-          <p>Acesse sua conta e continue fazendo a diferença</p>
+          <p>Acesse sua conta e continue cuidando dos idosos</p>
         </div>
 
         <div className="login-asilo-form-container" data-aos="fade-up" data-aos-delay="200">
@@ -152,7 +181,7 @@ const LoginAsilo = () => {
 
             <div className="login-asilo-form-section">
               <div className="login-asilo-form-group">
-                <label htmlFor="email">E-mail *</label>
+                <label htmlFor="email">E-mail da Instituição *</label>
                 <input
                   type="email"
                   id="email"
@@ -161,6 +190,7 @@ const LoginAsilo = () => {
                   onChange={handleInputChange}
                   placeholder="Digite o e-mail da instituição"
                   className={errors.email ? "login-asilo-error" : formData.email ? "login-asilo-success" : ""}
+                  disabled={isLoading}
                 />
                 {errors.email && <div className="login-asilo-error-message">{errors.email}</div>}
               </div>
@@ -176,11 +206,13 @@ const LoginAsilo = () => {
                     onChange={handleInputChange}
                     placeholder="Digite sua senha"
                     className={errors.senha ? "login-asilo-error" : formData.senha ? "login-asilo-success" : ""}
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     className="login-asilo-toggle-password"
                     onClick={togglePasswordVisibility}
+                    disabled={isLoading}
                     aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                   >
                     {showPassword ? (
@@ -206,14 +238,18 @@ const LoginAsilo = () => {
               </div>
             </div>
 
-            <button type="submit" className="login-asilo-submit-btn" disabled={loading}>
-              {loading ? (
+            <button 
+              type="submit" 
+              className="login-asilo-submit-btn" 
+              disabled={isLoading}
+            >
+              {isLoading ? (
                 <span className="login-asilo-btn-loading">
                   <div className="login-asilo-spinner"></div>
                   Entrando...
                 </span>
               ) : (
-                <span>Entrar</span>
+                <span>Entrar na Instituição</span>
               )}
             </button>
           </form>

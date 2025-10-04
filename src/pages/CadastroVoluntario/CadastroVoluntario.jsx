@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
 import AOS from "aos"
@@ -11,6 +12,7 @@ import logo from "../../assets/img/happyidosos.jpg"
 
 export default function CadastroVoluntario() {
   const navigate = useNavigate()
+  const { registerUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     nome: "",
@@ -19,6 +21,7 @@ export default function CadastroVoluntario() {
     data_nascimento: "",
     email: "",
     senha: "",
+    confirmarSenha: "",
     termos: false,
   })
   const [errors, setErrors] = useState({})
@@ -36,6 +39,7 @@ export default function CadastroVoluntario() {
     navigate("/")
   }
 
+  // ===== MÁSCARAS =====
   const applyCpfMask = (value) => {
     let maskedValue = value.replace(/\D/g, "")
     if (maskedValue.length <= 11) {
@@ -56,6 +60,35 @@ export default function CadastroVoluntario() {
     return maskedValue
   }
 
+  // ===== VALIDAÇÕES DE SENHA SINCRONIZADAS COM A API =====
+  const validatePassword = (password) => {
+    if (!password) return "Este campo é obrigatório."
+    
+    // ✅ REQUISITOS SINCRONIZADOS COM A API PHP:
+    if (password.length < 8) {
+      return "A senha deve ter no mínimo 8 caracteres"
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      return "A senha deve conter pelo menos uma letra minúscula"
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      return "A senha deve conter pelo menos uma letra maiúscula"
+    }
+    
+    if (!/\d/.test(password)) {
+      return "A senha deve conter pelo menos um número"
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return "A senha deve conter pelo menos um caractere especial (!@#$%^&*(), etc.)"
+    }
+    
+    return ""
+  }
+
+  // ===== MANIPULAÇÃO DE INPUTS =====
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
 
@@ -63,11 +96,11 @@ export default function CadastroVoluntario() {
 
     // Aplicar limites de caracteres
     if (name === "nome" && value.length > 128) {
-      return // Não atualiza se exceder o limite
+      return
     }
     
     if (name === "email" && value.length > 96) {
-      return // Não atualiza se exceder o limite
+      return
     }
 
     if (name === "cpf") {
@@ -81,6 +114,30 @@ export default function CadastroVoluntario() {
       [name]: type === "checkbox" ? checked : processedValue,
     }))
 
+    // Validação em tempo real para senha
+    if (name === "senha" || name === "confirmarSenha") {
+      if (name === "senha") {
+        const passwordError = validatePassword(processedValue)
+        setErrors((prev) => ({
+          ...prev,
+          senha: passwordError,
+        }))
+      }
+      
+      // Validação de confirmação de senha em tempo real
+      if (formData.senha && formData.confirmarSenha && formData.senha !== formData.confirmarSenha) {
+        setErrors((prev) => ({
+          ...prev,
+          confirmarSenha: "As senhas não coincidem."
+        }))
+      } else if (errors.confirmarSenha) {
+        setErrors((prev) => ({
+          ...prev,
+          confirmarSenha: ""
+        }))
+      }
+    }
+
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -89,6 +146,7 @@ export default function CadastroVoluntario() {
     }
   }
 
+  // ===== VALIDAÇÕES =====
   const validateField = (name, value) => {
     let error = ""
 
@@ -131,7 +189,6 @@ export default function CadastroVoluntario() {
           let age = today.getFullYear() - birthDate.getFullYear()
           const monthDiff = today.getMonth() - birthDate.getMonth()
           
-          // Ajuste preciso da idade
           if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--
           }
@@ -143,10 +200,11 @@ export default function CadastroVoluntario() {
           }
           break
         case "senha":
-          if (value.length < 8) {
-            error = "Senha deve ter pelo menos 8 caracteres."
-          } else if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(value)) {
-            error = "Senha deve conter pelo menos 1 letra e 1 número."
+          error = validatePassword(value)
+          break
+        case "confirmarSenha":
+          if (value !== formData.senha) {
+            error = "As senhas não coincidem."
           }
           break
         default:
@@ -198,6 +256,12 @@ export default function CadastroVoluntario() {
       }
     })
 
+    // Validação adicional para senhas coincidentes
+    if (formData.senha !== formData.confirmarSenha) {
+      newErrors.confirmarSenha = "As senhas não coincidem."
+      isValid = false
+    }
+
     if (!formData.termos) {
       newErrors.termos = "Você deve aceitar os termos de uso para continuar."
       isValid = false
@@ -207,6 +271,7 @@ export default function CadastroVoluntario() {
     return isValid
   }
 
+  // ===== SUBMIT INTEGRADO COM useAuth =====
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -227,37 +292,45 @@ export default function CadastroVoluntario() {
         senha: formData.senha,
       }
 
-      console.log("[v0] Data to send to API:", submitData)
+      console.log("[v2] Data to send to API:", submitData)
 
-      // TODO: Substituir por chamada real à API
-      // const response = await fetch('/api/voluntarios/cadastro', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(submitData)
-      // });
-      // const data = await response.json();
+      // ✅ INTEGRAÇÃO COMPLETA COM useAuth
+      const result = await registerUser(submitData)
+      
+      if (result.success) {
+        showAlert("Cadastro realizado com sucesso! Redirecionando para login...", "success")
 
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+        // Limpar formulário após sucesso
+        setFormData({
+          nome: "",
+          cpf: "",
+          telefone: "",
+          data_nascimento: "",
+          email: "",
+          senha: "",
+          confirmarSenha: "",
+          termos: false,
+        })
 
-      showAlert("Cadastro realizado com sucesso! Entraremos em contato em breve.", "success")
-
-      setFormData({
-        nome: "",
-        cpf: "",
-        telefone: "",
-        data_nascimento: "",
-        email: "",
-        senha: "",
-        termos: false,
-      })
+        // Redirecionar para login após 3 segundos
+        setTimeout(() => {
+          navigate("/loginvoluntario")
+        }, 3000)
+      } else {
+        showAlert(
+          result.error || "Ocorreu um erro ao processar seu cadastro. Tente novamente.", 
+          "error"
+        )
+      }
     } catch (error) {
-      console.error("[v0] Erro ao enviar formulário:", error)
-      showAlert("Ocorreu um erro ao processar seu cadastro. Tente novamente.", "error")
+      console.error("[v2] Erro ao enviar formulário:", error)
+      showAlert("Ocorreu um erro ao conectar com o servidor. Tente novamente.", "error")
     } finally {
       setLoading(false)
     }
   }
 
+  // ===== RENDER =====
   return (
     <>
       <main className="cadastro-voluntario-page">
@@ -310,7 +383,7 @@ export default function CadastroVoluntario() {
                     />
                     {errors.nome && <div className="cadastro-voluntario-error-message">{errors.nome}</div>}
                     <div className="cadastro-voluntario-char-counter">
-                      {formData.nome.length}
+                      {formData.nome.length}/128
                     </div>
                   </div>
 
@@ -393,7 +466,7 @@ export default function CadastroVoluntario() {
                     />
                     {errors.email && <div className="cadastro-voluntario-error-message">{errors.email}</div>}
                     <div className="cadastro-voluntario-char-counter">
-                      {formData.email.length}
+                      {formData.email.length}/96
                     </div>
                   </div>
 
@@ -405,7 +478,7 @@ export default function CadastroVoluntario() {
                       name="senha"
                       value={formData.senha}
                       onChange={handleInputChange}
-                      placeholder="Mínimo 8 caracteres com letra e número"
+                      placeholder="Mínimo 8 caracteres com letras, números e caracteres especiais"
                       minLength="8"
                       className={
                         errors.senha ? "cadastro-voluntario-error" : formData.senha ? "cadastro-voluntario-success" : ""
@@ -414,7 +487,27 @@ export default function CadastroVoluntario() {
                     />
                     {errors.senha && <div className="cadastro-voluntario-error-message">{errors.senha}</div>}
                     <div className="cadastro-voluntario-password-requirements">
+                      • Mínimo 8 caracteres • 1 letra minúscula • 1 letra maiúscula • 1 número • 1 caractere especial
                     </div>
+                  </div>
+
+                  {/* Campo Confirmar Senha */}
+                  <div className="cadastro-voluntario-form-group">
+                    <label htmlFor="confirmarSenha">Confirmar Senha *</label>
+                    <input
+                      type="password"
+                      id="confirmarSenha"
+                      name="confirmarSenha"
+                      value={formData.confirmarSenha}
+                      onChange={handleInputChange}
+                      placeholder="Digite novamente sua senha"
+                      minLength="8"
+                      className={
+                        errors.confirmarSenha ? "cadastro-voluntario-error" : formData.confirmarSenha ? "cadastro-voluntario-success" : ""
+                      }
+                      required
+                    />
+                    {errors.confirmarSenha && <div className="cadastro-voluntario-error-message">{errors.confirmarSenha}</div>}
                   </div>
                 </div>
               </div>
@@ -445,23 +538,13 @@ export default function CadastroVoluntario() {
                   />
                   <span>
                     Li e aceito os{" "}
-                    <a
-                      href="/termosdeuso"
-                      className="cadastro-voluntario-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link to="/termosdeuso" className="cadastro-voluntario-link">
                       Termos de Uso
-                    </a>{" "}
+                    </Link>{" "}
                     e a{" "}
-                    <a
-                      href="/politica-privacidade"
-                      className="cadastro-voluntario-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <Link to="/politica-privacidade" className="cadastro-voluntario-link">
                       Política de Privacidade
-                    </a>{" "}
+                    </Link>{" "}
                     da plataforma Happy Idosos *
                   </span>
                 </label>

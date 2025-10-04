@@ -1,47 +1,63 @@
-import axios from 'axios';
+import { getAuthHeader } from './auth/auth.helpers';
+import { API_BASE_URL } from './auth/auth.constants';
 
-// ⬇️⬇️⬇️ USE ESTA URL AGORA ⬇️⬇️⬇️
-const API_BASE_URL = 'http://localhost/api-php/api.php';
-
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
+// Interceptor global para todas as requisições API
+export const api = {
+  async request(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    
+    const config = {
+      headers: {
         'Content-Type': 'application/json',
-    },
-});
+        ...getAuthHeader(),
+        ...options.headers,
+      },
+      ...options,
+    };
 
-// Serviços para Eventos
-export const eventosService = {
-    listar: () => api.get('/eventos'),
-    criar: (dados) => api.post('/eventos/criar', dados),
-    participar: (dados) => api.post('/eventos/participar', dados),
-};
-
-// Serviços para Autenticação
-export const authService = {
-    login: (credenciais) => api.post('/login', credenciais),
-    cadastroUsuario: (dados) => api.post('/cadastro/usuario', dados),
-    cadastroAsilo: (dados) => api.post('/cadastro/asilo', dados),
-    esqueceuSenha: (email) => api.post('/esqueceu-senha', { email }),
-};
-
-// Serviços para Asilos
-export const asilosService = {
-    listar: () => api.get('/asilos'),
-    filtrar: (filtros) => api.post('/filtra/asilos', filtros),
-};
-
-// Serviços para Contato
-export const contatoService = {
-    enviar: (dados, arquivo) => {
-        const formData = new FormData();
-        Object.keys(dados).forEach(key => formData.append(key, dados[key]));
-        if (arquivo) formData.append('arquivo', arquivo);
-        
-        return api.post('/contato', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+    // Converte body para JSON se for objeto
+    if (config.body && typeof config.body === 'object') {
+      config.body = JSON.stringify(config.body);
     }
-};
 
-export default api;
+    try {
+      const response = await fetch(url, config);
+      
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Erro HTTP: ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Erro na requisição API:', error);
+      throw error;
+    }
+  },
+
+  // Métodos HTTP simplificados
+  get(endpoint) {
+    return this.request(endpoint);
+  },
+
+  post(endpoint, data) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: data
+    });
+  },
+
+  put(endpoint, data) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: data
+    });
+  },
+
+  delete(endpoint) {
+    return this.request(endpoint, {
+      method: 'DELETE'
+    });
+  }
+};

@@ -1,5 +1,5 @@
 // URL base da sua API PHP
-export const API_BASE_URL = 'http://localhost/api-php';
+export const API_BASE_URL = 'http://localhost/back-end/api-php';
 
 // Endpoints da API
 export const API_ENDPOINTS = {

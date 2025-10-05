@@ -1,0 +1,370 @@
+/* LogoutModal.css - CSS EXCLUSIVO HAPPY MAPA LOGOUT */
+/* Prefixo único: happy-map-logout- para evitar conflitos */
+
+.happy-map-logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  backdrop-filter: blur(12px);
+  animation: happy-map-logout-fadeIn 0.4s ease-out;
+}
+
+@keyframes happy-map-logout-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.happy-map-logout-content {
+  background: linear-gradient(145deg, #fff5f5 0%, #fff0f0 50%, #ffe6e6 100%);
+  border-radius: 24px;
+  padding: 3rem 2.5rem 2.5rem;
+  width: 95%;
+  max-width: 480px;
+  box-shadow: 
+    0 30px 60px -12px rgba(220, 38, 38, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 60px rgba(220, 38, 38, 0.1);
+  position: relative;
+  animation: happy-map-logout-slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.happy-map-logout-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+  border-radius: 24px 24px 0 0;
+}
+
+@keyframes happy-map-logout-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.happy-map-logout-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.happy-map-logout-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 8px 16px rgba(220, 38, 38, 0.3));
+  animation: happy-map-logout-bounce 2s ease-in-out infinite;
+}
+
+@keyframes happy-map-logout-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.happy-map-logout-title {
+  color: #dc2626;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.happy-map-logout-subtitle {
+  color: #7f1d1d;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.happy-map-user-info {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #fecaca;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.happy-map-current-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.happy-map-user-avatar {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fca5a5;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.happy-map-user-details {
+  flex: 1;
+}
+
+.happy-map-user-name {
+  display: block;
+  color: #7f1d1d;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.happy-map-user-type {
+  display: inline-block;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.happy-map-logout-warning {
+  background: rgba(254, 226, 226, 0.6);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.happy-map-warning-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.happy-map-logout-warning p {
+  color: #7f1d1d;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.happy-map-logout-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.happy-map-logout-btn {
+  padding: 1.2rem 1.5rem;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.happy-map-logout-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.happy-map-logout-btn:hover::before {
+  left: 100%;
+}
+
+.happy-map-logout-cancel {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  color: #475569;
+  border: 2px solid #cbd5e1;
+}
+
+.happy-map-logout-cancel:hover {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(71, 85, 105, 0.3);
+}
+
+.happy-map-logout-confirm {
+  background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+  color: white;
+  border: 2px solid transparent;
+}
+
+.happy-map-logout-confirm:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+}
+
+.happy-map-btn-icon {
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.happy-map-logout-btn:hover .happy-map-btn-icon {
+  transform: scale(1.2);
+}
+
+.happy-map-logout-footer {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #fecaca;
+}
+
+.happy-map-logout-footer p {
+  color: #7f1d1d;
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Responsividade Exclusiva */
+@media (max-width: 768px) {
+  .happy-map-logout-content {
+    margin: 1rem;
+    padding: 2.5rem 2rem 2rem;
+    border-radius: 20px;
+  }
+  
+  .happy-map-logout-title {
+    font-size: 1.7rem;
+  }
+  
+  .happy-map-logout-icon {
+    font-size: 3.5rem;
+  }
+  
+  .happy-map-logout-actions {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .happy-map-current-user {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.8rem;
+  }
+  
+  .happy-map-user-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .happy-map-logout-content {
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: 18px;
+  }
+  
+  .happy-map-logout-title {
+    font-size: 1.5rem;
+  }
+  
+  .happy-map-logout-icon {
+    font-size: 3rem;
+  }
+  
+  .happy-map-logout-subtitle {
+    font-size: 1rem;
+  }
+  
+  .happy-map-logout-btn {
+    padding: 1rem 1.2rem;
+    font-size: 0.95rem;
+  }
+  
+  .happy-map-user-info {
+    padding: 1.2rem;
+  }
+}
+
+/* Animações de entrada para elementos */
+.happy-map-logout-header,
+.happy-map-user-info,
+.happy-map-logout-warning,
+.happy-map-logout-actions,
+.happy-map-logout-footer {
+  animation: happy-map-logout-fadeInUp 0.6s ease-out forwards;
+}
+
+.happy-map-logout-header {
+  animation-delay: 0.1s;
+}
+
+.happy-map-user-info {
+  animation-delay: 0.2s;
+}
+
+.happy-map-logout-warning {
+  animation-delay: 0.3s;
+}
+
+.happy-map-logout-actions {
+  animation-delay: 0.4s;
+}
+
+.happy-map-logout-footer {
+  animation-delay: 0.5s;
+}
+
+@keyframes happy-map-logout-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Garantir que não haja conflito */
+.happy-map-logout-overlay * {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Estilos de foco para acessibilidade */
+.happy-map-logout-btn:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}

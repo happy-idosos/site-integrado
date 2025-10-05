@@ -1,0 +1,430 @@
+@charset "UTF-8";
+
+.esquecid-a-senha * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.esquecid-a-senha {
+  font-family: "Nunito", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  display: flex;
+  flex-direction: column;
+}
+
+.esquecid-a-senha .container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Enhanced back button with better styling */
+.esquecid-a-senha .back-btn {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: white;
+  border: 2px solid #244a96;
+  color: #244a96;
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15);
+}
+
+.esquecid-a-senha .back-btn:hover {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25);
+}
+
+/* Added icon wrapper styling */
+.esquecid-a-senha .icon-wrapper {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Main content adjustments */
+.esquecid-a-senha main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.esquecid-a-senha .recuperacao-senha {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  min-height: auto;
+}
+
+.esquecid-a-senha .recuperacao-senha .card {
+  border-radius: 20px !important;
+  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.1) !important;
+  border: none !important;
+  overflow: hidden;
+  position: relative;
+  margin: 1rem 0;
+}
+
+.esquecid-a-senha .recuperacao-senha .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #244a96, #1a3a7a);
+}
+
+.esquecid-a-senha .recuperacao-senha .card-body {
+  padding: 2.5rem !important;
+}
+
+.esquecid-a-senha .recuperacao-senha .form-control {
+  border: 2px solid #e9ecef !important;
+  border-radius: 12px !important;
+  padding: 12px 15px !important;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.esquecid-a-senha .recuperacao-senha .form-control:focus {
+  border-color: #244a96 !important;
+  box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15) !important;
+  transform: translateY(-1px);
+}
+
+.esquecid-a-senha .recuperacao-senha .btn-primary {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border: none;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.esquecid-a-senha .recuperacao-senha .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+}
+
+.esquecid-a-senha .recuperacao-senha .btn-primary:disabled {
+  opacity: 0.6;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.esquecid-a-senha h2 {
+  color: #244a96;
+  font-size: 2rem;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.esquecid-a-senha h2::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #244a96, #1a3a7a);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* Instructions section compact */
+.esquecid-a-senha .instrucoes {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 2rem 0 !important;
+}
+
+.esquecid-a-senha .instrucoes h3 {
+  color: #244a96;
+  font-weight: 700;
+  font-size: 1.5rem;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.esquecid-a-senha .instrucoes h3::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #244a96, #1a3a7a);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.esquecid-a-senha .instrucoes .bg-primary {
+  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
+  transition: all 0.3s ease;
+  width: 50px !important;
+  height: 50px !important;
+  font-size: 18px !important;
+}
+
+.esquecid-a-senha .instrucoes .col-md-4:hover .bg-primary {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(36, 74, 150, 0.25);
+}
+
+.esquecid-a-senha .instrucoes h5 {
+  font-size: 1.1rem;
+  margin: 0.75rem 0 0.5rem 0;
+}
+
+.esquecid-a-senha .instrucoes p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.esquecid-a-senha .alert {
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.esquecid-a-senha .alert-success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.esquecid-a-senha .alert-danger {
+  background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.esquecid-a-senha .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Footer compact */
+.esquecid-a-senha .footer {
+  background: #1a1a1a;
+  color: white;
+  padding: 1rem 0 !important;
+  margin-top: auto;
+}
+
+.esquecid-a-senha .footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Progress Steps compact */
+.esquecid-a-senha .progress-container {
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.esquecid-a-senha .progress-steps {
+  margin-bottom: 1.5rem;
+}
+
+.esquecid-a-senha .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.esquecid-a-senha .step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #e9ecef;
+  z-index: -1;
+}
+
+.esquecid-a-senha .step.active:not(:last-child)::after {
+  background: linear-gradient(90deg, #244a96, #1a3a7a);
+}
+
+.esquecid-a-senha .step-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.esquecid-a-senha .step.active .step-circle {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(36, 74, 150, 0.25);
+}
+
+.esquecid-a-senha .step-label {
+  font-weight: 600;
+  color: #6c757d;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.esquecid-a-senha .step.active .step-label {
+  color: #244a96;
+}
+
+/* Form validation styles */
+.esquecid-a-senha .form-control.is-valid {
+  border-color: #28a745 !important;
+}
+
+.esquecid-a-senha .form-control.is-valid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15) !important;
+}
+
+.esquecid-a-senha .form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.esquecid-a-senha .invalid-feedback {
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  color: #dc3545;
+}
+
+.esquecid-a-senha .instrucoes .col-md-4 {
+  transition: transform 0.3s ease;
+  padding: 0.5rem;
+}
+
+.esquecid-a-senha .instrucoes .col-md-4:hover {
+  transform: translateY(-3px);
+}
+
+/* Text improvements */
+.esquecid-a-senha .text-muted {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.esquecid-a-senha .form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .esquecid-a-senha .back-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .esquecid-a-senha h2 {
+    font-size: 1.75rem;
+  }
+
+  .esquecid-a-senha .recuperacao-senha {
+    padding: 1.5rem 0;
+  }
+
+  .esquecid-a-senha .recuperacao-senha .card-body {
+    padding: 2rem !important;
+  }
+
+  .esquecid-a-senha .progress-container {
+    padding: 0 1rem;
+  }
+
+  .esquecid-a-senha .step-circle {
+    width: 45px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+
+  .esquecid-a-senha .step:not(:last-child)::after {
+    top: 22px;
+  }
+
+  .esquecid-a-senha .instrucoes {
+    padding: 1.5rem 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .esquecid-a-senha .back-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .esquecid-a-senha h2 {
+    font-size: 1.5rem;
+  }
+
+  .esquecid-a-senha .recuperacao-senha .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .esquecid-a-senha .step-label {
+    font-size: 0.75rem;
+  }
+
+  .esquecid-a-senha .icon-wrapper svg {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.esquecid-a-senha [data-aos] {
+  transition-timing-function: ease-in-out;
+}

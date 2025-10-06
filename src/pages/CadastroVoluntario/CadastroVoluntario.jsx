@@ -10,6 +10,52 @@ import "./CadastroVoluntario.css"
 
 import logo from "../../assets/img/happyidosos.jpg"
 
+// Componente Modal
+const CadastroModal = ({ show, type, title, message, onClose }) => {
+  if (!show) return null
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [onClose])
+
+  return (
+    <div className="cadastro-modal-overlay" onClick={onClose}>
+      <div 
+        className={`cadastro-modal-content cadastro-modal-${type}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="cadastro-modal-header">
+          <div className="cadastro-modal-icon">
+            {type === 'success' ? (
+              <i className="fas fa-check-circle"></i>
+            ) : (
+              <i className="fas fa-exclamation-triangle"></i>
+            )}
+          </div>
+          <h3 className="cadastro-modal-title">{title}</h3>
+        </div>
+        
+        <div className="cadastro-modal-body">
+          <p className="cadastro-modal-message">{message}</p>
+        </div>
+        
+        <div className="cadastro-modal-footer">
+          <button className="cadastro-modal-btn" onClick={onClose}>
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CadastroVoluntario() {
   const navigate = useNavigate()
   const { registerUser } = useAuth()
@@ -26,7 +72,12 @@ export default function CadastroVoluntario() {
     termos: false,
   })
   const [errors, setErrors] = useState({})
-  const [alert, setAlert] = useState({ show: false, message: "", type: "" })
+  const [modal, setModal] = useState({ 
+    show: false, 
+    title: "", 
+    message: "", 
+    type: "success" 
+  })
 
   useEffect(() => {
     AOS.init({
@@ -35,7 +86,6 @@ export default function CadastroVoluntario() {
       offset: 100,
     })
 
-    // Detectar se é mobile/tablet
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
     }
@@ -75,11 +125,10 @@ export default function CadastroVoluntario() {
     return maskedValue
   }
 
-  // ===== VALIDAÇÕES DE SENHA SINCRONIZADAS COM A API =====
+  // ===== VALIDAÇÕES DE SENHA =====
   const validatePassword = (password) => {
     if (!password) return "Este campo é obrigatório."
     
-    // ✅ REQUISITOS SINCRONIZADOS COM A API PHP:
     if (password.length < 8) {
       return "A senha deve ter no mínimo 8 caracteres"
     }
@@ -109,7 +158,6 @@ export default function CadastroVoluntario() {
 
     let processedValue = value
 
-    // Aplicar limites de caracteres
     if (name === "nome" && value.length > 128) {
       return
     }
@@ -129,7 +177,6 @@ export default function CadastroVoluntario() {
       [name]: type === "checkbox" ? checked : processedValue,
     }))
 
-    // Validação em tempo real para senha
     if (name === "senha" || name === "confirmarSenha") {
       if (name === "senha") {
         const passwordError = validatePassword(processedValue)
@@ -139,7 +186,6 @@ export default function CadastroVoluntario() {
         }))
       }
       
-      // Validação de confirmação de senha em tempo real
       if (formData.senha && formData.confirmarSenha && formData.senha !== formData.confirmarSenha) {
         setErrors((prev) => ({
           ...prev,
@@ -250,11 +296,17 @@ export default function CadastroVoluntario() {
     return remainder === Number.parseInt(cpf.charAt(10))
   }
 
-  const showAlert = (message, type) => {
-    setAlert({ show: true, message, type })
-    setTimeout(() => {
-      setAlert({ show: false, message: "", type: "" })
-    }, 5000)
+  const showModalMessage = (title, message, type = "success") => {
+    setModal({
+      show: true,
+      title,
+      message,
+      type
+    })
+  }
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, show: false }))
   }
 
   const validateForm = () => {
@@ -271,7 +323,6 @@ export default function CadastroVoluntario() {
       }
     })
 
-    // Validação adicional para senhas coincidentes
     if (formData.senha !== formData.confirmarSenha) {
       newErrors.confirmarSenha = "As senhas não coincidem."
       isValid = false
@@ -291,7 +342,11 @@ export default function CadastroVoluntario() {
     e.preventDefault()
 
     if (!validateForm()) {
-      showAlert("Por favor, corrija os erros no formulário antes de continuar.", "error")
+      showModalMessage(
+        "Erro no Formulário",
+        "Por favor, corrija os erros no formulário antes de continuar.",
+        "error"
+      )
       return
     }
 
@@ -313,7 +368,11 @@ export default function CadastroVoluntario() {
       const result = await registerUser(submitData)
       
       if (result.success) {
-        showAlert("Cadastro realizado com sucesso! Redirecionando para login...", "success")
+        showModalMessage(
+          "Cadastro Realizado com Sucesso!", 
+          "Seu cadastro foi realizado com sucesso! Redirecionando para login...", 
+          "success"
+        )
 
         // Limpar formulário após sucesso
         setFormData({
@@ -332,14 +391,19 @@ export default function CadastroVoluntario() {
           navigate("/loginvoluntario")
         }, 3000)
       } else {
-        showAlert(
+        showModalMessage(
+          "Erro no Cadastro",
           result.error || "Ocorreu um erro ao processar seu cadastro. Tente novamente.", 
           "error"
         )
       }
     } catch (error) {
       console.error("[v2] Erro ao enviar formulário:", error)
-      showAlert("Ocorreu um erro ao conectar com o servidor. Tente novamente.", "error")
+      showModalMessage(
+        "Erro de Conexão",
+        "Ocorreu um erro ao conectar com o servidor. Tente novamente.", 
+        "error"
+      )
     } finally {
       setLoading(false)
     }
@@ -397,12 +461,6 @@ export default function CadastroVoluntario() {
           </div>
 
           <div className="cadastro-voluntario-form-container" data-aos="fade-up">
-            {alert.show && (
-              <div className={`cadastro-voluntario-alert cadastro-voluntario-alert-${alert.type}`} data-aos="fade-in">
-                {alert.message}
-              </div>
-            )}
-
             <form onSubmit={handleSubmit} className="cadastro-voluntario-form">
               <div className="cadastro-voluntario-form-section" data-aos="fade-up" data-aos-delay="100">
                 <h3>
@@ -631,6 +689,15 @@ export default function CadastroVoluntario() {
           </div>
         </div>
       </main>
+
+      {/* Modal */}
+      <CadastroModal
+        show={modal.show}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        onClose={closeModal}
+      />
     </>
   )
 }

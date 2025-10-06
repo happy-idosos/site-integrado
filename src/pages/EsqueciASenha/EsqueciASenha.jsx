@@ -7,11 +7,11 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
 import "./EsqueciASenha.css"
 
-const EsquecidASenha = () => {
+const EsqueciASenha = () => {
   const navigate = useNavigate()
   const { forgotPassword, resetPassword, validateResetToken } = useAuth()
   
-  const [step, setStep] = useState(1) // 1 = email, 2 = token e senha
+  const [step, setStep] = useState(1)
   const [email, setEmail] = useState("")
   const [token, setToken] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -49,6 +49,7 @@ const EsquecidASenha = () => {
     }
 
     setLoading(true)
+    setMessage({ text: "", type: "" })
 
     try {
       const result = await forgotPassword(email)
@@ -58,12 +59,13 @@ const EsquecidASenha = () => {
         setEmailSent(true)
         setTimeout(() => {
           setStep(2)
+          setMessage({ text: "", type: "" })
         }, 2000)
       } else {
         showMessage(result.error || "Erro ao enviar token. Tente novamente.", "danger")
       }
     } catch (error) {
-      console.error("Erro:", error)
+      console.error("Erro no envio do token:", error)
       showMessage("Erro de conexão. Tente novamente mais tarde.", "danger")
     } finally {
       setLoading(false)
@@ -89,9 +91,10 @@ const EsquecidASenha = () => {
     }
 
     setLoading(true)
+    setMessage({ text: "", type: "" })
 
     try {
-      // Primeiro valida o token
+      // Validação do token
       const validationResult = await validateResetToken(token)
       
       if (!validationResult.success) {
@@ -99,7 +102,7 @@ const EsquecidASenha = () => {
         return
       }
 
-      // Se token é válido, redefine a senha
+      // Redefinição da senha
       const result = await resetPassword(token, newPassword)
       
       if (result.success) {
@@ -111,7 +114,7 @@ const EsquecidASenha = () => {
         showMessage(result.error || "Erro ao redefinir senha. Tente novamente.", "danger")
       }
     } catch (error) {
-      console.error("Erro:", error)
+      console.error("Erro na redefinição:", error)
       showMessage("Erro de conexão. Tente novamente mais tarde.", "danger")
     } finally {
       setLoading(false)
@@ -120,11 +123,18 @@ const EsquecidASenha = () => {
 
   const showMessage = (text, type) => {
     setMessage({ text, type })
-
     setTimeout(() => {
       setMessage({ text: "", type: "" })
     }, 5000)
   }
+
+  const isEmailValid = email && isValidEmail(email)
+  const isPasswordValid = newPassword.length >= 6
+  const isConfirmPasswordValid = confirmPassword === newPassword
+  const isFormStep1Valid = email && isValidEmail(email)
+  const isFormStep2Valid = token && newPassword && confirmPassword && 
+                          newPassword === confirmPassword && 
+                          newPassword.length >= 6
 
   return (
     <div className="esquecid-a-senha">
@@ -194,7 +204,7 @@ const EsquecidASenha = () => {
                           </label>
                           <input
                             type="email"
-                            className={`form-control form-control-lg ${email && isValidEmail(email) ? 'is-valid' : ''}`}
+                            className={`form-control form-control-lg ${email && !isValidEmail(email) ? 'is-invalid' : ''} ${isEmailValid ? 'is-valid' : ''}`}
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -213,7 +223,7 @@ const EsquecidASenha = () => {
                           <button
                             type="submit"
                             className="btn btn-primary btn-lg"
-                            disabled={loading || !email || !isValidEmail(email)}
+                            disabled={loading || !isFormStep1Valid}
                             style={{ borderRadius: "15px", padding: "15px", fontWeight: "600" }}
                           >
                             {loading ? (
@@ -251,7 +261,7 @@ const EsquecidASenha = () => {
                             style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
                           />
                           <small className="text-muted">
-                            O token foi enviado para: <strong>{email}</strong>
+                            Token enviado para: <strong>{email}</strong>
                           </small>
                         </div>
 
@@ -261,7 +271,7 @@ const EsquecidASenha = () => {
                           </label>
                           <input
                             type="password"
-                            className={`form-control form-control-lg ${newPassword && newPassword.length >= 6 ? 'is-valid' : ''}`}
+                            className={`form-control form-control-lg ${newPassword && !isPasswordValid ? 'is-invalid' : ''} ${isPasswordValid ? 'is-valid' : ''}`}
                             id="newPassword"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
@@ -269,7 +279,7 @@ const EsquecidASenha = () => {
                             placeholder="Digite sua nova senha (mín. 6 caracteres)"
                             style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
                           />
-                          {newPassword && newPassword.length < 6 && (
+                          {newPassword && !isPasswordValid && (
                             <div className="invalid-feedback d-block">
                               A senha deve ter pelo menos 6 caracteres.
                             </div>
@@ -282,7 +292,7 @@ const EsquecidASenha = () => {
                           </label>
                           <input
                             type="password"
-                            className={`form-control form-control-lg ${confirmPassword && confirmPassword === newPassword ? 'is-valid' : ''}`}
+                            className={`form-control form-control-lg ${confirmPassword && !isConfirmPasswordValid ? 'is-invalid' : ''} ${isConfirmPasswordValid ? 'is-valid' : ''}`}
                             id="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -290,7 +300,7 @@ const EsquecidASenha = () => {
                             placeholder="Digite novamente sua nova senha"
                             style={{ borderRadius: "15px", border: "2px solid #e9ecef", padding: "15px" }}
                           />
-                          {confirmPassword && confirmPassword !== newPassword && (
+                          {confirmPassword && !isConfirmPasswordValid && (
                             <div className="invalid-feedback d-block">
                               As senhas não coincidem.
                             </div>
@@ -301,7 +311,7 @@ const EsquecidASenha = () => {
                           <button
                             type="submit"
                             className="btn btn-primary btn-lg"
-                            disabled={loading || !token || !newPassword || !confirmPassword || newPassword !== confirmPassword || newPassword.length < 6}
+                            disabled={loading || !isFormStep2Valid}
                             style={{ borderRadius: "15px", padding: "15px", fontWeight: "600" }}
                           >
                             {loading ? (
@@ -393,4 +403,4 @@ const EsquecidASenha = () => {
   )
 }
 
-export default EsquecidASenha
+export default EsqueciASenha

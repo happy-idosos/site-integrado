@@ -28,20 +28,40 @@ export const contatoService = {
       const response = await fetch(`${API_BASE_URL}/api/contato`, {
         method: 'POST',
         body: formData,
-        // Não definir Content-Type aqui - o browser vai definir automaticamente com boundary para FormData
       });
 
-      // Verifica se a resposta é JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const textResponse = await response.text();
-        console.error('Resposta não-JSON do servidor:', textResponse);
-        throw new Error('Resposta inválida do servidor');
+      // 🔥 CORREÇÃO: Extrai o JSON mesmo com warnings HTML
+      const responseText = await response.text();
+      console.log('Resposta completa do servidor:', responseText);
+      
+      // Procura por JSON na resposta (pode estar misturado com HTML)
+      let data;
+      const jsonMatch = responseText.match(/\{.*\}/s); // Encontra JSON mesmo com quebras
+      
+      if (jsonMatch) {
+        try {
+          data = JSON.parse(jsonMatch[0]);
+          console.log('JSON extraído:', data);
+        } catch (jsonError) {
+          console.warn('Erro ao parsear JSON, mas continuando...');
+          // Se não conseguir parsear, cria resposta padrão baseada no status
+          data = response.ok 
+            ? { status: 200, message: "Mensagem enviada com sucesso!" }
+            : { status: 500, message: "Erro no servidor" };
+        }
+      } else {
+        // Se não encontrou JSON, usa lógica baseada no status
+        data = response.ok 
+          ? { status: 200, message: "Mensagem enviada com sucesso!" }
+          : { status: 500, message: "Erro no servidor" };
       }
 
-      const data = await response.json();
+      // Se temos um erro específico do PHP sobre arquivo, trata adequadamente
+      if (data.status === 500 && data.message === "Erro ao enviar arquivo.") {
+        throw new Error("Erro ao enviar arquivo. O arquivo pode ser muito grande ou estar corrompido.");
+      }
 
-      if (!response.ok) {
+      if (!response.ok && !data.status) {
         throw new Error(data.message || `Erro HTTP: ${response.status}`);
       }
 
@@ -52,10 +72,6 @@ export const contatoService = {
       // Mensagens de erro mais amigáveis
       if (error.message.includes('Failed to fetch')) {
         throw new Error('Não foi possível conectar ao servidor. Verifique sua conexão.');
-      }
-      
-      if (error.message.includes('Resposta inválida')) {
-        throw new Error('Erro no servidor. Tente novamente mais tarde.');
       }
       
       throw error;

@@ -666,3 +666,172 @@
     margin-bottom: 0.5rem;
   }
 }
+
+/* ========================================
+   MODAL STYLES PARA CADASTRO
+   ======================================== */
+.cadastro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+  animation: cadastro-modal-fadeIn 0.3s ease-out;
+}
+
+.cadastro-modal-content {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  max-width: 450px;
+  width: 100%;
+  animation: cadastro-modal-slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border: 1px solid rgba(36, 74, 150, 0.1);
+}
+
+.cadastro-modal-header {
+  padding: 1.5rem 2rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cadastro-modal-success .cadastro-modal-header {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+}
+
+.cadastro-modal-error .cadastro-modal-header {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+}
+
+.cadastro-modal-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.cadastro-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.cadastro-modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.cadastro-modal-message {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+}
+
+.cadastro-modal-footer {
+  padding: 0 2rem 2rem;
+  text-align: center;
+}
+
+.cadastro-modal-btn {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.cadastro-modal-btn:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(36, 74, 150, 0.3);
+}
+
+.cadastro-modal-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes cadastro-modal-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cadastro-modal-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cadastro-modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .cadastro-modal-content {
+    max-width: 100%;
+    margin: 1rem;
+  }
+  
+  .cadastro-modal-header {
+    padding: 1.25rem 1.5rem 0.75rem;
+  }
+  
+  .cadastro-modal-body {
+    padding: 1.5rem;
+  }
+  
+  .cadastro-modal-footer {
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .cadastro-modal-title {
+    font-size: 1.3rem;
+  }
+  
+  .cadastro-modal-message {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cadastro-modal-header {
+    padding: 1rem 1.25rem 0.5rem;
+  }
+  
+  .cadastro-modal-body {
+    padding: 1.25rem;
+  }
+  
+  .cadastro-modal-footer {
+    padding: 0 1.25rem 1.25rem;
+  }
+  
+  .cadastro-modal-icon {
+    font-size: 2.5rem;
+  }
+}

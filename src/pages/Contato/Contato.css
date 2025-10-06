@@ -566,3 +566,96 @@ textarea.form-control {
 
 
 
+/* ========================================
+   MODAL STYLES
+   ======================================== */
+.modal-content {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.5rem 2rem;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-footer {
+  padding: 1.5rem 2rem;
+}
+
+/* ========================================
+   FILE UPLOAD IMPROVEMENTS
+   ======================================== */
+.file-label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 18px;
+  background-color: #f8f9fb;
+  border: 2px solid #e9ecef;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
+  position: relative;
+}
+
+.file-label .btn-close {
+  position: static;
+  padding: 8px;
+  margin-left: auto;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.file-label .btn-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   CHARACTER COUNT STYLES
+   ======================================== */
+.position-relative .form-control {
+  padding-bottom: 2.5rem;
+}
+
+.position-absolute {
+  z-index: 5;
+}
+
+/* ========================================
+   PHONE INPUT STYLES
+   ======================================== */
+.form-group small.text-muted {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* ========================================
+   RESPONSIVE IMPROVEMENTS
+   ======================================== */
+@media (max-width: 575.98px) {
+  .file-label {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .file-label .btn-close {
+    align-self: center;
+    margin-top: 5px;
+  }
+  
+  .modal-content {
+    margin: 20px;
+  }
+}

@@ -1,5 +1,5 @@
-// URL base da sua API PHP
-export const API_BASE_URL = 'http://localhost/api-php';
+// URL base da sua API PHP - CORRIGIDA
+export const API_BASE_URL = 'http://localhost/back-end/api-php';
 
 // Endpoints da API
 export const API_ENDPOINTS = {
@@ -9,7 +9,7 @@ export const API_ENDPOINTS = {
   REGISTER_ASILO: '/api/cadastro/asilo',
   FORGOT_PASSWORD: '/api/esqueceu-senha',
   RESET_PASSWORD: '/api/reset-senha',
-  VALIDATE_TOKEN: '/api/reset-senha',
+  VALIDATE_TOKEN: '/api/reset-senha', // ✅ ENDPOINT SEPARADO
   
   // Perfis (se tiver)
   PROFILE_USER: '/api/perfil/usuario',

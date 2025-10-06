@@ -10,6 +10,52 @@ import "./CadastroAsilo.css"
 
 import logo from "../../assets/img/happyidosos.jpg"
 
+// Componente Modal separado
+const CadastroModal = ({ show, type, title, message, onClose }) => {
+  if (!show) return null
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [onClose])
+
+  return (
+    <div className="cadastro-modal-overlay" onClick={onClose}>
+      <div 
+        className={`cadastro-modal-content cadastro-modal-${type}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="cadastro-modal-header">
+          <div className="cadastro-modal-icon">
+            {type === 'success' ? (
+              <i className="fas fa-check-circle"></i>
+            ) : (
+              <i className="fas fa-exclamation-triangle"></i>
+            )}
+          </div>
+          <h3 className="cadastro-modal-title">{title}</h3>
+        </div>
+        
+        <div className="cadastro-modal-body">
+          <p className="cadastro-modal-message">{message}</p>
+        </div>
+        
+        <div className="cadastro-modal-footer">
+          <button className="cadastro-modal-btn" onClick={onClose}>
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CadastroAsilo() {
   const navigate = useNavigate()
   const { registerAsilo } = useAuth()
@@ -27,7 +73,12 @@ export default function CadastroAsilo() {
     termos: false,
   })
   const [errors, setErrors] = useState({})
-  const [alert, setAlert] = useState({ show: false, message: "", type: "" })
+  const [modal, setModal] = useState({ 
+    show: false, 
+    title: "", 
+    message: "", 
+    type: "success" 
+  })
 
   useEffect(() => {
     AOS.init({
@@ -36,7 +87,6 @@ export default function CadastroAsilo() {
       offset: 100,
     })
 
-    // Detectar se é mobile/tablet
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768)
     }
@@ -104,32 +154,26 @@ export default function CadastroAsilo() {
     return ""
   }
 
-  // FUNÇÃO CNPJ CORRIGIDA - AGORA VAI FUNCIONAR!
   const isValidCNPJ = (cnpj) => {
     cnpj = cnpj.replace(/[^\d]/g, '');
     
-    // Verifica se tem 14 dígitos
     if (cnpj.length !== 14) return false;
     
-    // CNPJs para TESTE que sempre serão aceitos
     const cnpjsTeste = [
-      '12345678000190', // CNPJ conhecido para testes
-      '99999999999999', // CNPJ genérico para testes  
-      '68493240000113', // CNPJ válido pelo algoritmo
-      '33543167000180', // CNPJ válido pelo algoritmo
-      '46963268000140', // CNPJ real do Lar dos Velhinhos
-      '11222333000181'  // Outro CNPJ válido
+      '12345678000190',
+      '99999999999999', 
+      '68493240000113',
+      '33543167000180',
+      '46963268000140',
+      '11222333000181'
     ];
     
-    // Se for um CNPJ de teste, aceita automaticamente
     if (cnpjsTeste.includes(cnpj)) {
       return true;
     }
     
-    // Elimina CNPJs inválidos conhecidos
     if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
-    // Valida DVs
     let tamanho = cnpj.length - 2;
     let numeros = cnpj.substring(0, tamanho);
     let digitos = cnpj.substring(tamanho);
@@ -215,7 +259,6 @@ export default function CadastroAsilo() {
       [name]: type === "checkbox" ? checked : processedValue,
     }))
 
-    // Validação em tempo real
     if (name === "senha") {
       const passwordError = validatePassword(processedValue)
       setErrors((prev) => ({
@@ -253,11 +296,17 @@ export default function CadastroAsilo() {
     return isValid
   }
 
-  const showAlert = (message, type) => {
-    setAlert({ show: true, message, type })
-    setTimeout(() => {
-      setAlert({ show: false, message: "", type: "" })
-    }, 5000)
+  const showModalMessage = (title, message, type = "success") => {
+    setModal({
+      show: true,
+      title,
+      message,
+      type
+    })
+  }
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, show: false }))
   }
 
   // ===== SUBMIT INTEGRADO COM useAuth =====
@@ -265,7 +314,8 @@ export default function CadastroAsilo() {
     e.preventDefault()
 
     if (!validateForm()) {
-      showAlert(
+      showModalMessage(
+        "Erro no Formulário",
         "Por favor, corrija os erros no formulário antes de continuar.",
         "error"
       )
@@ -288,16 +338,15 @@ export default function CadastroAsilo() {
 
       console.log("[v1] Data to send to API:", submitData)
 
-      // INTEGRAÇÃO COM useAuth - SUBSTITUIU A CHAMADA MOCK
       const result = await registerAsilo(submitData)
       
       if (result.success) {
-        showAlert(
+        showModalMessage(
+          "Cadastro Realizado!",
           "Cadastro da instituição realizado com sucesso! Redirecionando para login...",
           "success"
         )
 
-        // Limpar formulário após sucesso
         setFormData({
           nome: "",
           cnpj: "",
@@ -310,19 +359,20 @@ export default function CadastroAsilo() {
           termos: false,
         })
 
-        // Redirecionar para login após 3 segundos
         setTimeout(() => {
           navigate("/loginasilo")
         }, 3000)
       } else {
-        showAlert(
+        showModalMessage(
+          "Erro no Cadastro",
           result.error || "Ocorreu um erro ao processar seu cadastro. Tente novamente.",
           "error"
         )
       }
     } catch (error) {
       console.error("[v1] Erro ao enviar formulário:", error)
-      showAlert(
+      showModalMessage(
+        "Erro de Conexão",
         "Ocorreu um erro ao conectar com o servidor. Tente novamente.",
         "error"
       )
@@ -335,6 +385,15 @@ export default function CadastroAsilo() {
   return (
     <>
       <main className="cadastro-asilo-page">
+        {/* Modal */}
+        <CadastroModal
+          show={modal.show}
+          type={modal.type}
+          title={modal.title}
+          message={modal.message}
+          onClose={closeModal}
+        />
+
         {/* HEADER PARA MOBILE/TABLET */}
         {isMobile && (
           <header className="cadastro-asilo-mobile-header">
@@ -392,15 +451,6 @@ export default function CadastroAsilo() {
             className="cadastro-asilo-form-container"
             data-aos="fade-up"
           >
-            {alert.show && (
-              <div
-                className={`cadastro-asilo-alert cadastro-asilo-alert-${alert.type}`}
-                data-aos="fade-in"
-              >
-                {alert.message}
-              </div>
-            )}
-
             <form onSubmit={handleSubmit} className="cadastro-asilo-form">
               <div
                 className="cadastro-asilo-form-section"

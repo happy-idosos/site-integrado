@@ -14,8 +14,6 @@ import carouselum from "../../assets/img/carousels/carousel-10.jpg"
 import carouseldois from "../../assets/img/carousels/carousel-2.jpg"
 import carouseltres from "../../assets/img/carousels/carousel-3.jpg"
 
-
-
 export default function Contato() {
   const [formData, setFormData] = useState({
     nome: "",
@@ -28,7 +26,10 @@ export default function Contato() {
   const [fileName, setFileName] = useState("Nenhum arquivo escolhido")
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState({ text: "", type: "" })
+  const [showModal, setShowModal] = useState(false)
+  const [charCount, setCharCount] = useState(0)
   const carouselRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     AOS.init({
@@ -48,21 +49,56 @@ export default function Contato() {
     }
   }, [])
 
+  // Formatação do telefone em tempo real
+  const formatPhoneNumber = (value) => {
+    // Remove tudo que não é dígito
+    const cleaned = value.replace(/\D/g, '')
+    
+    // Aplica a formatação (XX) XXXXX-XXXX
+    if (cleaned.length <= 2) {
+      return `(${cleaned}`
+    } else if (cleaned.length <= 6) {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`
+    } else if (cleaned.length <= 10) {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6)}`
+    } else {
+      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`
+    }
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
+    
+    if (name === "telefone") {
+      const formattedPhone = formatPhoneNumber(value)
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: formattedPhone,
+      }))
+    } else if (name === "mensagem") {
+      // Limita a 256 caracteres
+      if (value.length <= 256) {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }))
+        setCharCount(value.length)
+      }
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
   }
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      // Validação básica do arquivo (opcional)
+      // Validação básica do arquivo
       if (file.size > 10 * 1024 * 1024) { // 10MB
-        alert('Arquivo muito grande. Tamanho máximo: 10MB');
-        return;
+        showMessage("Arquivo muito grande. Tamanho máximo: 10MB", "error")
+        return
       }
       
       setFormData((prevState) => ({
@@ -70,6 +106,17 @@ export default function Contato() {
         arquivo: file,
       }))
       setFileName(file.name)
+    }
+  }
+
+  const handleRemoveFile = () => {
+    setFormData((prevState) => ({
+      ...prevState,
+      arquivo: null,
+    }))
+    setFileName("Nenhum arquivo escolhido")
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
 
@@ -86,6 +133,14 @@ export default function Contato() {
     setTimeout(() => setMessage({ text: "", type: "" }), 5000)
   }
 
+  const showSuccessModal = () => {
+    setShowModal(true)
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -98,6 +153,14 @@ export default function Contato() {
       return
     }
 
+    // Validação do telefone (pelo menos 10 dígitos)
+    const phoneDigits = formData.telefone.replace(/\D/g, '')
+    if (phoneDigits.length < 10) {
+      showMessage("Por favor, insira um número de telefone válido.", "error")
+      setIsLoading(false)
+      return
+    }
+
     try {
       console.log("Enviando dados para o backend:", formData)
       
@@ -105,7 +168,8 @@ export default function Contato() {
       
       console.log("Resposta do servidor:", resultado)
       
-      showMessage(resultado.message || "Mensagem enviada com sucesso! Entraremos em contato em breve.", "success")
+      // Mostra o modal de sucesso
+      showSuccessModal()
 
       // Reset do formulário
       setFormData({
@@ -116,10 +180,10 @@ export default function Contato() {
         arquivo: null,
       })
       setFileName("Nenhum arquivo escolhido")
+      setCharCount(0)
       
       // Reset do input file
-      const fileInput = document.getElementById('arquivo')
-      if (fileInput) fileInput.value = ''
+      if (fileInputRef.current) fileInputRef.current.value = ''
 
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error)
@@ -240,6 +304,35 @@ export default function Contato() {
           </div>
         )}
 
+        {/* Modal de sucesso */}
+        {showModal && (
+          <div className="modal fade show d-block" tabIndex="-1" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header border-0">
+                  <h5 className="modal-title text-success">
+                    <i className="fas fa-check-circle me-2"></i>
+                    Mensagem Enviada!
+                  </h5>
+                  <button type="button" className="btn-close" onClick={closeModal}></button>
+                </div>
+                <div className="modal-body text-center py-4">
+                  <i className="fas fa-paper-plane fa-3x text-primary mb-3"></i>
+                  <h4 className="mb-3">Obrigado pelo seu contato!</h4>
+                  <p className="text-muted">
+                    Sua mensagem foi enviada com sucesso. Nossa equipe entrará em contato em breve.
+                  </p>
+                </div>
+                <div className="modal-footer border-0 justify-content-center">
+                  <button type="button" className="btn btn-primary px-4" onClick={closeModal}>
+                    Entendido
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Seção de Contato */}
         <section className="contato-section" id="contato-form" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
@@ -287,10 +380,12 @@ export default function Contato() {
                         onChange={handleInputChange}
                         required
                         disabled={isLoading}
+                        maxLength={15}
                       />
+                      <small className="text-muted">Formato: (11) 99999-9999</small>
                     </div>
 
-                    <div className="form-group mb-4">
+                    <div className="form-group mb-4 position-relative">
                       <textarea
                         className="form-control"
                         rows="6"
@@ -300,12 +395,19 @@ export default function Contato() {
                         onChange={handleInputChange}
                         required
                         disabled={isLoading}
+                        maxLength={256}
                       ></textarea>
+                      <div className="position-absolute bottom-0 end-0 p-2">
+                        <small className={`${charCount === 256 ? 'text-danger' : 'text-muted'}`}>
+                          {charCount}/256
+                        </small>
+                      </div>
                     </div>
 
                     <div className="form-group mb-4">
                       <div className="file-upload">
                         <input 
+                          ref={fileInputRef}
                           type="file" 
                           id="arquivo" 
                           className="file-input" 
@@ -316,6 +418,14 @@ export default function Contato() {
                         <label htmlFor="arquivo" className="file-label">
                           <span className="file-button">Escolher arquivo</span>
                           <span className="file-text">{fileName}</span>
+                          {formData.arquivo && (
+                            <button 
+                              type="button" 
+                              className="btn-close ms-2"
+                              onClick={handleRemoveFile}
+                              aria-label="Remover arquivo"
+                            ></button>
+                          )}
                         </label>
                       </div>
                       <small className="text-muted">Formatos aceitos: PDF, DOC, JPG, PNG (Máx. 10MB)</small>

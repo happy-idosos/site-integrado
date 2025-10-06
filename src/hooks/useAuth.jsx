@@ -187,7 +187,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ VALIDAR TOKEN DE REDEFINIÇÃO
+  // ✅ VALIDAR TOKEN DE REDEFINIÇÃO - CORRIGIDA
   const validateResetToken = useCallback(async (token) => {
     try {
       setLoading(true);
@@ -195,28 +195,29 @@ export const AuthProvider = ({ children }) => {
 
       const result = await authService.validateResetToken(token);
       
-      if (result.status === 200) {
+      // ✅ VERIFICAÇÃO CORRIGIDA
+      if (result.success || result.status === 200) {
         console.log('✅ Token válido');
         return { success: true, data: result };
       } else {
         console.error('❌ Token inválido:', result.message);
         return { 
           success: false, 
-          error: result.message || 'Token inválido ou expirado' 
+          error: result.message || result.error || 'Token inválido ou expirado' 
         };
       }
     } catch (error) {
       console.error('❌ Erro na validação do token:', error);
       return { 
         success: false, 
-        error: error.message || 'Erro de conexão' 
+        error: error.message || 'Erro de validação do token' 
       };
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // ✅ REDEFINIR SENHA
+  // ✅ REDEFINIR SENHA - CORRIGIDA
   const resetPassword = useCallback(async (token, novaSenha) => {
     try {
       setLoading(true);
@@ -224,14 +225,15 @@ export const AuthProvider = ({ children }) => {
 
       const result = await authService.resetPassword(token, novaSenha);
       
-      if (result.status === 200) {
+      // ✅ VERIFICAÇÃO CORRIGIDA - USA result.success EM VEZ DE result.status
+      if (result.success || result.status === 200) {
         console.log('✅ Senha redefinida com sucesso');
         return { success: true, data: result };
       } else {
         console.error('❌ Falha ao redefinir senha:', result.message);
         return { 
           success: false, 
-          error: result.message || 'Erro ao redefinir senha' 
+          error: result.message || result.error || 'Erro ao redefinir senha' 
         };
       }
     } catch (error) {

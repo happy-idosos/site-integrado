@@ -1,4 +1,3 @@
-// src/services/editarperfil/editarPerfilVoluntario.service.js
 import api from '../api';
 
 export const editarPerfilVoluntarioService = {
@@ -10,7 +9,7 @@ export const editarPerfilVoluntarioService = {
       return response;
     } catch (error) {
       console.error('❌ Erro ao buscar perfil voluntário:', error);
-      throw new Error(error.message || 'Erro ao carregar perfil');
+      throw new Error(error.response?.data?.message || 'Erro ao carregar perfil');
     }
   },
 
@@ -23,7 +22,7 @@ export const editarPerfilVoluntarioService = {
       return response;
     } catch (error) {
       console.error('❌ Erro ao editar perfil básico:', error);
-      throw new Error(error.message || 'Erro ao atualizar perfil básico');
+      throw new Error(error.response?.data?.message || 'Erro ao atualizar perfil básico');
     }
   },
 
@@ -36,7 +35,7 @@ export const editarPerfilVoluntarioService = {
       return response;
     } catch (error) {
       console.error('❌ Erro ao editar perfil voluntário:', error);
-      throw new Error(error.message || 'Erro ao atualizar perfil voluntário');
+      throw new Error(error.response?.data?.message || 'Erro ao atualizar perfil voluntário');
     }
   },
 
@@ -47,14 +46,17 @@ export const editarPerfilVoluntarioService = {
       const formData = new FormData();
       formData.append('foto_perfil', arquivo);
       
-      // Usa o método upload especializado
-      const response = await api.upload('/perfil/voluntario/foto', formData);
+      const response = await api.post('/perfil/voluntario/foto', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       console.log('✅ Foto atualizada:', response);
       return response;
     } catch (error) {
       console.error('❌ Erro ao fazer upload da foto:', error);
-      throw new Error(error.message || 'Erro ao fazer upload da foto');
+      throw new Error(error.response?.data?.message || 'Erro ao fazer upload da foto');
     }
   }
 };

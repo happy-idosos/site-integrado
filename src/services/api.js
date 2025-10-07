@@ -1,10 +1,7 @@
 // src/services/api.js
-
-// 🔐 Helpers de autenticação
 import { getAuthHeader, isAuthenticated } from './auth/auth.helpers';
 import { API_BASE_URL } from './auth/auth.constants';
 
-// ✅ API unificada e funcional
 export const api = {
   API_BASE_URL,
 

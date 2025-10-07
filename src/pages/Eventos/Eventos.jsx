@@ -9,6 +9,8 @@ import Footer from "../../components/layout/Footer"
 import "aos/dist/aos.css"
 import AOS from "aos"
 import "./Eventos.css"
+import { api } from "../../services/api"
+import { API_BASE_URL } from "../../services/auth/auth.constants"
 
 // Importações de bibliotecas
 import carouselum from "../../assets/img/carousels/carousel-12.jpg"
@@ -26,6 +28,11 @@ const Eventos = () => {
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedDate, setSelectedDate] = useState("")
   const [showModal, setShowModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showErrorModal, setShowErrorModal] = useState(false)
+  const [modalMessage, setModalMessage] = useState("")
+  const [modalTitle, setModalTitle] = useState("")
+  const [isLoadingAction, setIsLoadingAction] = useState(false)
   const [eventForm, setEventForm] = useState({
     title: "",
     category: "",
@@ -38,18 +45,67 @@ const Eventos = () => {
   })
   const eventosSectionRef = useRef(null)
 
-  // API Configuration
-  const API_BASE_URL = "https://api.happyidosos.com" // Substitua pela URL da sua API
+  // Função para mapear categorias baseadas na descrição
+  const mapCategory = (description) => {
+    if (!description) return 'conversa'
+    
+    const desc = description.toLowerCase()
+    if (desc.includes('música') || desc.includes('musica') || desc.includes('cantar') || desc.includes('canto')) return 'musica'
+    if (desc.includes('arte') || desc.includes('pintura') || desc.includes('artesanato') || desc.includes('craft')) return 'arte'
+    if (desc.includes('conversa') || desc.includes('bate-papo') || desc.includes('palestra') || desc.includes('debate')) return 'conversa'
+    if (desc.includes('exercício') || desc.includes('exercicio') || desc.includes('yoga') || desc.includes('caminhada') || desc.includes('alongamento')) return 'exercicio'
+    if (desc.includes('culinária') || desc.includes('culinaria') || desc.includes('cooking') || desc.includes('culinaria') || desc.includes('receita')) return 'culinaria'
+    return 'conversa'
+  }
+
+  // Função para determinar status do evento
+  const getEventStatus = (event) => {
+    const eventDate = new Date(event.data_evento)
+    const today = new Date()
+    
+    if (eventDate < today) return 'cancelado'
+    
+    // Simular lotação baseada em algum critério
+    const isFull = Math.random() > 0.7 // 30% de chance de estar lotado
+    return isFull ? 'lotado' : 'disponivel'
+  }
 
   const loadEvents = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`${API_BASE_URL}/events`)
-      const data = await response.json()
-      setEvents(data.events)
-      setHasMore(data.hasMore)
+      const data = await api.get('/api/eventos')
+      console.log("Dados recebidos da API:", data)
+      
+      if (data.status === 200) {
+        // Mapear dados do backend para o formato esperado no frontend
+        const formattedEvents = data.eventos.map(event => {
+          const category = mapCategory(event.descricao)
+          const status = getEventStatus(event)
+          
+          return {
+            id: event.id_evento,
+            title: event.titulo,
+            category: category,
+            description: event.descricao,
+            date: event.data_evento,
+            time: "14:00", // Valor padrão
+            location: event.nome_asilo || "Local a definir",
+            contact: event.email_asilo || "",
+            capacity: 50, // Valor padrão
+            registered: Math.floor(Math.random() * 50), // Simular inscrições
+            status: status
+          }
+        })
+        
+        setEvents(formattedEvents)
+        setHasMore(false) // Backend atual não suporta paginação
+      } else {
+        console.error("Erro ao carregar eventos:", data.message)
+        setEvents([])
+      }
     } catch (error) {
       console.error("Error loading events:", error)
+      setEvents([])
     } finally {
       setIsLoading(false)
     }
@@ -57,71 +113,185 @@ const Eventos = () => {
 
   const loadStats = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/stats`)
-      const data = await response.json()
-      setStats(data.stats)
+      const eventData = await api.get('/api/eventos')
+      if (eventData.status === 200) {
+        const today = new Date()
+        const availableEvents = eventData.eventos.filter(e => new Date(e.data_evento) >= today)
+        
+        setStats({
+          totalEvents: eventData.eventos.length,
+          availableEvents: availableEvents.length
+        })
+      }
     } catch (error) {
       console.error("Error loading stats:", error)
+      setStats({ totalEvents: 0, availableEvents: 0 })
     }
   }
 
   const inscreverEvento = async (eventId) => {
+    setIsLoadingAction(true)
     try {
-      const response = await fetch(`${API_BASE_URL}/events/${eventId}/register`, {
-        method: "POST",
+      const response = await api.post('/api/eventos/participar', {
+        id_evento: eventId
       })
-      if (response.ok) {
-        alert("Inscrição realizada com sucesso!")
-        loadEvents()
+      
+      if (response.status === 200) {
+        showModalSuccess("Inscrição realizada com sucesso!", "Sucesso!")
+        loadEvents() // Recarregar eventos para atualizar contagem
       } else {
-        alert("Erro ao se inscrever no evento.")
+        showModalError(response.message || "Erro ao se inscrever no evento.")
       }
     } catch (error) {
       console.error("Error registering for event:", error)
+      showModalError(error.message || "Erro ao se inscrever no evento.")
+    } finally {
+      setIsLoadingAction(false)
     }
   }
 
   const scrollToEvents = () => {
-    eventosSectionRef.current.scrollIntoView({ behavior: "smooth" })
+    if (eventosSectionRef.current) {
+      eventosSectionRef.current.scrollIntoView({ behavior: "smooth" })
+    }
   }
 
   const showCreateEventModal = () => {
-    setShowModal(true)
+    // Verificação mais robusta
+    const token = localStorage.getItem('auth_token');
+    const userDataStr = localStorage.getItem('user_data');
+    
+    console.log('🔐 Modal - Token:', token ? 'PRESENTE' : 'AUSENTE');
+    console.log('👤 Modal - User Data:', userDataStr);
+    
+    if (!token || !userDataStr) {
+      showModalError("Você precisa estar logado para criar um evento.");
+      setTimeout(() => navigate('/login'), 2000);
+      return;
+    }
+  
+    try {
+      const user = JSON.parse(userDataStr);
+      console.log('👤 Modal - User object:', user);
+      console.log('👤 Modal - Tipo de usuário:', user.tipo);
+      
+      // Debug do token
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          console.log('🔐 Modal - Payload do token:', payload);
+          console.log('🔐 Modal - Tem campo data?:', !!payload.data);
+          console.log('🔐 Modal - Data content:', payload.data);
+        } catch (e) {
+          console.log('🔐 Modal - Erro ao decodificar token:', e);
+        }
+      }
+      
+      if (user.tipo !== 'asilo') {
+        showModalError(`Somente asilos podem criar eventos. Seu tipo é: ${user.tipo || 'não definido'}`);
+        return;
+      }
+      
+      setShowModal(true);
+    } catch (error) {
+      console.error('Erro ao verificar usuário:', error);
+      showModalError('Erro ao verificar permissões. Tente fazer login novamente.');
+    }
+  }
+
+  const showModalSuccess = (message, title = "Sucesso!") => {
+    setModalTitle(title)
+    setModalMessage(message)
+    setShowSuccessModal(true)
+  }
+
+  const showModalError = (message, title = "Erro!") => {
+    setModalTitle(title)
+    setModalMessage(message)
+    setShowErrorModal(true)
   }
 
   const createEvent = async () => {
+    setIsLoadingAction(true)
     try {
-      const response = await fetch(`${API_BASE_URL}/events`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(eventForm),
-      })
-      if (response.ok) {
-        alert("Evento criado com sucesso!")
+      // DEBUG: Verificar autenticação detalhadamente
+      const token = localStorage.getItem('auth_token');
+      const userDataStr = localStorage.getItem('user_data');
+      
+      console.log('🔐 DEBUG - Token:', token);
+      console.log('👤 DEBUG - User Data string:', userDataStr);
+      
+      if (!token || !userDataStr) {
+        showModalError("Você precisa estar logado para criar um evento.");
+        setTimeout(() => navigate('/login'), 2000);
+        return;
+      }
+
+      const user = JSON.parse(userDataStr);
+      console.log('👤 DEBUG - User object:', user);
+      console.log('👤 DEBUG - Tipo de usuário:', user.tipo);
+      
+      if (user.tipo !== 'asilo') {
+        showModalError("Somente asilos podem criar eventos. Seu tipo é: " + (user.tipo || 'não definido'));
+        return;
+      }
+
+      // DEBUG: Verificar o que há no token JWT
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          console.log('🔐 DEBUG - Payload do token:', payload);
+        } catch (e) {
+          console.log('🔐 DEBUG - Não foi possível decodificar o token:', e);
+        }
+      }
+
+      // Validar campos obrigatórios
+      if (!eventForm.title || !eventForm.description || !eventForm.date) {
+        showModalError("Preencha todos os campos obrigatórios: título, descrição e data.");
+        return;
+      }
+
+      const eventData = {
+        titulo: eventForm.title,
+        descricao: eventForm.description,
+        data_evento: eventForm.date
+      }
+
+      console.log('📤 DEBUG - Enviando dados:', eventData);
+
+      const response = await api.post('/api/eventos/criar', eventData);
+      
+      console.log('📥 DEBUG - Resposta:', response);
+      
+      if (response.status === 201) {
+        showModalSuccess("Evento criado com sucesso!", "Evento Criado!")
         setShowModal(false)
+        setEventForm({
+          title: "",
+          category: "",
+          description: "",
+          date: "",
+          time: "",
+          location: "",
+          contact: "",
+          capacity: 1,
+        })
         loadEvents()
       } else {
-        alert("Erro ao criar o evento.")
+        showModalError(response.message || "Erro ao criar o evento.")
       }
     } catch (error) {
       console.error("Error creating event:", error)
+      showModalError(error.message || "Erro ao criar o evento. Verifique se você está logado como asilo.")
+    } finally {
+      setIsLoadingAction(false)
     }
   }
 
   const loadMoreEvents = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch(`${API_BASE_URL}/events?more=true`)
-      const data = await response.json()
-      setEvents([...events, ...data.events])
-      setHasMore(data.hasMore)
-    } catch (error) {
-      console.error("Error loading more events:", error)
-    } finally {
-      setIsLoading(false)
-    }
+    // Backend atual não suporta paginação
+    console.warn("Paginação não implementada no backend")
   }
 
   useEffect(() => {
@@ -162,9 +332,9 @@ const Eventos = () => {
           if (selectedDate === "hoje") {
             return eventDate === today
           } else if (selectedDate === "semana") {
-            return eventDate >= today && eventDate <= weekLater
+            return eventDate >= today && eventDate <= weekLater.toISOString().split("T")[0]
           } else if (selectedDate === "mes") {
-            return eventDate >= today && eventDate <= monthLater
+            return eventDate >= today && eventDate <= monthLater.toISOString().split("T")[0]
           }
           return true
         })
@@ -174,6 +344,54 @@ const Eventos = () => {
 
     filterEvents()
   }, [events, searchTerm, selectedCategory, selectedDate])
+
+  // Modal de Sucesso
+  const SuccessModal = () => (
+    <div className={`modal fade ${showSuccessModal ? 'show' : ''}`} style={{ display: showSuccessModal ? 'block' : 'none' }} tabIndex="-1">
+      <div className="modal-dialog modal-dialog-centered modal-confirm">
+        <div className="modal-content">
+          <div className="modal-header">
+            <div className="icon-box success">
+              <i className="fas fa-check"></i>
+            </div>
+            <button type="button" className="btn-close" onClick={() => setShowSuccessModal(false)}></button>
+          </div>
+          <div className="modal-body text-center">
+            <h4>{modalTitle}</h4>
+            <p>{modalMessage}</p>
+            <button className="btn btn-success" onClick={() => setShowSuccessModal(false)}>
+              <i className="fas fa-thumbs-up me-2"></i>
+              Continuar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  // Modal de Erro
+  const ErrorModal = () => (
+    <div className={`modal fade ${showErrorModal ? 'show' : ''}`} style={{ display: showErrorModal ? 'block' : 'none' }} tabIndex="-1">
+      <div className="modal-dialog modal-dialog-centered modal-confirm">
+        <div className="modal-content">
+          <div className="modal-header">
+            <div className="icon-box error">
+              <i className="fas fa-times"></i>
+            </div>
+            <button type="button" className="btn-close" onClick={() => setShowErrorModal(false)}></button>
+          </div>
+          <div className="modal-body text-center">
+            <h4>{modalTitle}</h4>
+            <p>{modalMessage}</p>
+            <button className="btn btn-error" onClick={() => setShowErrorModal(false)}>
+              <i className="fas fa-redo me-2"></i>
+              Tentar Novamente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
   // Event card component
   const EventCard = ({ event }) => {
@@ -232,13 +450,20 @@ const Eventos = () => {
             <button
               className="btn-inscricao"
               onClick={() => inscreverEvento(event.id)}
-              disabled={event.status === "lotado" || event.status === "cancelado"}
+              disabled={event.status === "lotado" || event.status === "cancelado" || isLoadingAction}
             >
-              {event.status === "lotado"
-                ? "Evento Lotado"
-                : event.status === "cancelado"
-                  ? "Evento Cancelado"
-                  : "Inscrever-se"}
+              {isLoadingAction ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Processando...
+                </>
+              ) : event.status === "lotado" ? (
+                "Evento Lotado"
+              ) : event.status === "cancelado" ? (
+                "Evento Cancelado"
+              ) : (
+                "Inscrever-se"
+              )}
             </button>
           </div>
         </div>
@@ -447,14 +672,13 @@ const Eventos = () => {
                     </div>
                     <div className="col-md-6 mb-3">
                       <label htmlFor="eventCategory" className="form-label">
-                        Categoria *
+                        Categoria
                       </label>
                       <select
                         className="form-select"
                         id="eventCategory"
                         value={eventForm.category}
                         onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
-                        required
                       >
                         <option value="">Selecione uma categoria</option>
                         <option value="musica">Música</option>
@@ -494,7 +718,7 @@ const Eventos = () => {
                     </div>
                     <div className="col-md-6 mb-3">
                       <label htmlFor="eventTime" className="form-label">
-                        Horário *
+                        Horário
                       </label>
                       <input
                         type="time"
@@ -502,14 +726,13 @@ const Eventos = () => {
                         id="eventTime"
                         value={eventForm.time}
                         onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
-                        required
                       />
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-md-8 mb-3">
                       <label htmlFor="eventLocation" className="form-label">
-                        Local *
+                        Local
                       </label>
                       <input
                         type="text"
@@ -517,7 +740,6 @@ const Eventos = () => {
                         id="eventLocation"
                         value={eventForm.location}
                         onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
-                        required
                       />
                     </div>
                     <div className="col-md-4 mb-3">
@@ -536,7 +758,7 @@ const Eventos = () => {
                   </div>
                   <div className="mb-3">
                     <label htmlFor="eventContact" className="form-label">
-                      Contato do Organizador *
+                      Contato do Organizador
                     </label>
                     <input
                       type="email"
@@ -544,15 +766,23 @@ const Eventos = () => {
                       id="eventContact"
                       value={eventForm.contact}
                       onChange={(e) => setEventForm({ ...eventForm, contact: e.target.value })}
-                      required
                     />
                   </div>
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                       Cancelar
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                      <i className="fas fa-plus me-2"></i>Criar Evento
+                    <button type="submit" className="btn btn-primary" disabled={isLoadingAction}>
+                      {isLoadingAction ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                          Criando...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-plus me-2"></i>Criar Evento
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>
@@ -561,6 +791,10 @@ const Eventos = () => {
           </div>
         </div>
       )}
+
+      {/* Modais de Feedback */}
+      <SuccessModal />
+      <ErrorModal />
 
       <Footer />
     </div>

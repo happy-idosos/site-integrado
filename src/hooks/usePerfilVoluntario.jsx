@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { editarPerfilVoluntarioService } from '../services/editarperfil/editarPerfilVoluntario.service';
+import { editarPerfilVoluntarioService } from '../services/editarperfil/editarperfilvoluntario.service';
 
 export const usePerfilVoluntario = () => {
   const [perfil, setPerfil] = useState(null);
@@ -104,13 +104,14 @@ export const usePerfilVoluntario = () => {
           foto_perfil: response.data.foto_perfil
         }));
         console.log('✅ Foto do voluntário atualizada:', response.data);
+        return { success: true, foto_url: response.data.foto_perfil };
+      } else {
+        throw new Error(response.message || 'Erro ao fazer upload da foto');
       }
-      
-      return response;
     } catch (error) {
       console.error('❌ Erro ao fazer upload da foto do voluntário:', error);
       setErro(error.message);
-      throw error;
+      return { success: false, message: error.message };
     } finally {
       setCarregando(false);
     }
@@ -127,7 +128,7 @@ export const usePerfilVoluntario = () => {
     perfil,
     carregando,
     erro,
-    buscarPerfil,
+    buscarPerfil, // função para recarregar manualmente
     editarPerfilBasico,
     editarPerfilVoluntario,
     uploadFoto,

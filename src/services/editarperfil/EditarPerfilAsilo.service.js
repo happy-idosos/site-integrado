@@ -1,4 +1,4 @@
-import { api } from 'http://localhost/back-end/api-php';
+import api from '../api';
 
 export const editarPerfilAsiloService = {
   async buscarPerfil() {

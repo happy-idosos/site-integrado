@@ -1,5 +1,5 @@
 // src/services/editarperfil/editarPerfilVoluntario.service.js
-import { api } from 'http://localhost/back-end/api-php';
+import api from '../api';
 
 export const editarPerfilVoluntarioService = {
   async buscarPerfil() {

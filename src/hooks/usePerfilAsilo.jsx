@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { editarPerfilAsiloService } from '../services/editarperfil/EditarPerfilAsilo.service';
+import { editarPerfilAsiloService } from '../services/editarperfil/editarperfilasilo.service';
 
 export const usePerfilAsilo = () => {
   const [perfil, setPerfil] = useState(null);

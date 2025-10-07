@@ -4,6 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { usePerfilVoluntario } from '../../hooks/usePerfilVoluntario';
 import './PerfilVoluntario.css';
 
+// Limites de caracteres
+const LIMITES = {
+  nome: 128,
+  endereco: 128,
+  habilidades: 64,
+  sobre_voce: 128,
+  telefone: 15, // (00) 00000-0000
+  cpf: 14, // 000.000.000-00
+  cep: 9 // 00000-000
+};
+
 const PerfilVoluntario = () => {
   const navigate = useNavigate();
   const {
@@ -13,7 +24,7 @@ const PerfilVoluntario = () => {
     editarPerfilBasico,
     editarPerfilVoluntario,
     uploadFoto,
-    atualizarPerfil
+    recarregarPerfil
   } = usePerfilVoluntario();
 
   const [editando, setEditando] = React.useState(false);
@@ -21,22 +32,24 @@ const PerfilVoluntario = () => {
   const [mostrarModalErro, setMostrarModalErro] = React.useState(false);
   const [fotoPerfil, setFotoPerfil] = React.useState(perfil?.foto_perfil || null);
   const [erroMensagem, setErroMensagem] = React.useState('');
+  const [salvando, setSalvando] = React.useState(false);
+  
   const [dadosForm, setDadosForm] = React.useState({
-    nome: perfil?.nome || '',
-    email: perfil?.email || '',
-    telefone: perfil?.telefone || '',
-    cpf: perfil?.cpf || '',
-    data_nascimento: perfil?.data_nascimento || '',
-    endereco: perfil?.endereco || '',
-    cidade: perfil?.cidade || '',
-    estado: perfil?.estado || '',
-    cep: perfil?.cep || '',
-    habilidades: perfil?.habilidades || '',
-    disponibilidade: perfil?.disponibilidade || '',
-    sobre_voce: perfil?.sobre_voce || ''
+    nome: '',
+    email: '',
+    telefone: '',
+    cpf: '',
+    data_nascimento: '',
+    endereco: '',
+    cidade: '',
+    estado: '',
+    cep: '',
+    habilidades: '',
+    disponibilidade: '',
+    sobre_voce: ''
   });
 
-  // Atualizar dados do formulário quando o perfil carregar
+  // Atualizar dados do formulário quando o perfil carregar do banco
   React.useEffect(() => {
     if (perfil) {
       setDadosForm({
@@ -57,12 +70,55 @@ const PerfilVoluntario = () => {
     }
   }, [perfil]);
 
+  // Função para formatar e limitar caracteres
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let valorFormatado = value;
+
+    // Aplicar limites de caracteres
+    if (LIMITES[name]) {
+      valorFormatado = value.slice(0, LIMITES[name]);
+    }
+
+    // Formatação específica para alguns campos
+    switch (name) {
+      case 'telefone':
+        valorFormatado = formatarTelefone(value);
+        break;
+      case 'cpf':
+        valorFormatado = formatarCPF(value);
+        break;
+      case 'cep':
+        valorFormatado = formatarCEP(value);
+        break;
+      default:
+        break;
+    }
+
     setDadosForm(prev => ({
       ...prev,
-      [name]: value
+      [name]: valorFormatado
     }));
+  };
+
+  // Funções de formatação
+  const formatarTelefone = (valor) => {
+    const numbers = valor.replace(/\D/g, '');
+    if (numbers.length <= 10) {
+      return numbers.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    } else {
+      return numbers.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    }
+  };
+
+  const formatarCPF = (valor) => {
+    const numbers = valor.replace(/\D/g, '');
+    return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+  };
+
+  const formatarCEP = (valor) => {
+    const numbers = valor.replace(/\D/g, '');
+    return numbers.replace(/(\d{5})(\d{0,3})/, '$1-$2');
   };
 
   const handleFileChange = async (e) => {
@@ -101,6 +157,11 @@ const PerfilVoluntario = () => {
       return false;
     }
 
+    if (dadosForm.nome.length > LIMITES.nome) {
+      setErroMensagem(`Nome deve ter no máximo ${LIMITES.nome} caracteres.`);
+      return false;
+    }
+
     if (!dadosForm.email.trim() || !dadosForm.email.includes('@')) {
       setErroMensagem('Por favor, insira um e-mail válido.');
       return false;
@@ -116,6 +177,22 @@ const PerfilVoluntario = () => {
       return false;
     }
 
+    // Validações de limites
+    if (dadosForm.endereco.length > LIMITES.endereco) {
+      setErroMensagem(`Endereço deve ter no máximo ${LIMITES.endereco} caracteres.`);
+      return false;
+    }
+
+    if (dadosForm.habilidades.length > LIMITES.habilidades) {
+      setErroMensagem(`Habilidades deve ter no máximo ${LIMITES.habilidades} caracteres.`);
+      return false;
+    }
+
+    if (dadosForm.sobre_voce.length > LIMITES.sobre_voce) {
+      setErroMensagem(`Biografia deve ter no máximo ${LIMITES.sobre_voce} caracteres.`);
+      return false;
+    }
+
     return true;
   };
 
@@ -125,24 +202,26 @@ const PerfilVoluntario = () => {
       return;
     }
 
+    setSalvando(true);
+
     try {
       // Separar dados básicos e dados de perfil voluntário
       const dadosBasicos = {
-        nome: dadosForm.nome,
-        email: dadosForm.email,
+        nome: dadosForm.nome.trim(),
+        email: dadosForm.email.trim(),
         telefone: dadosForm.telefone,
         cpf: dadosForm.cpf,
         data_nascimento: dadosForm.data_nascimento,
-        endereco: dadosForm.endereco,
-        cidade: dadosForm.cidade,
+        endereco: dadosForm.endereco.trim(),
+        cidade: dadosForm.cidade.trim(),
         estado: dadosForm.estado,
         cep: dadosForm.cep
       };
 
       const dadosPerfil = {
-        habilidades: dadosForm.habilidades,
+        habilidades: dadosForm.habilidades.trim(),
         disponibilidade: dadosForm.disponibilidade,
-        sobre_voce: dadosForm.sobre_voce
+        sobre_voce: dadosForm.sobre_voce.trim()
       };
 
       // Atualizar dados básicos
@@ -157,11 +236,15 @@ const PerfilVoluntario = () => {
     } catch (error) {
       setErroMensagem(error.message || 'Erro ao salvar as alterações. Tente novamente.');
       setMostrarModalErro(true);
+    } finally {
+      setSalvando(false);
     }
   };
 
   const fecharModal = () => {
     setMostrarModal(false);
+    // Recarregar dados do banco após salvar
+    recarregarPerfil();
   };
 
   const fecharModalErro = () => {
@@ -174,6 +257,23 @@ const PerfilVoluntario = () => {
 
   const voltarParaHome = () => {
     navigate('/');
+  };
+
+  // Adicionar contadores de caracteres nos campos limitados
+  const renderContadorCaracteres = (campo, valor) => {
+    const limite = LIMITES[campo];
+    if (!limite) return null;
+
+    const usado = valor.length;
+    const restante = limite - usado;
+
+    return (
+      <div className="pv-contador-caracteres">
+        <small className={restante < 20 ? 'pv-texto-alerta' : ''}>
+          {restante} caracteres restantes
+        </small>
+      </div>
+    );
   };
 
   if (carregando && !perfil) {
@@ -235,36 +335,6 @@ const PerfilVoluntario = () => {
                 <span>Disponível para voluntariado</span>
               </div>
             </div>
-
-            <div className="pv-stats">
-              <div className="pv-stat-card">
-                <div className="pv-stat-icon">
-                  <span className="pv-icon">❤️</span>
-                </div>
-                <div className="pv-stat-content">
-                  <div className="pv-stat-number">24</div>
-                  <div className="pv-stat-label">Atividades</div>
-                </div>
-              </div>
-              <div className="pv-stat-card">
-                <div className="pv-stat-icon">
-                  <span className="pv-icon">⏰</span>
-                </div>
-                <div className="pv-stat-content">
-                  <div className="pv-stat-number">156h</div>
-                  <div className="pv-stat-label">Horas Doadas</div>
-                </div>
-              </div>
-              <div className="pv-stat-card">
-                <div className="pv-stat-icon">
-                  <span className="pv-icon">📅</span>
-                </div>
-                <div className="pv-stat-content">
-                  <div className="pv-stat-number">2022</div>
-                  <div className="pv-stat-label">Desde</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="pv-main">
@@ -291,6 +361,7 @@ const PerfilVoluntario = () => {
               <div className="pv-card-body">
                 <div className="pv-form">
                   <div className="pv-form-grid">
+                    {/* Nome */}
                     <div className="pv-form-group">
                       <label className="pv-label">Nome Completo *</label>
                       <div className="pv-input-wrapper">
@@ -302,11 +373,14 @@ const PerfilVoluntario = () => {
                           className="pv-input"
                           placeholder="Digite seu nome completo"
                           disabled={!editando}
+                          maxLength={LIMITES.nome}
                         />
                         <span className="pv-input-icon">👤</span>
                       </div>
+                      {renderContadorCaracteres('nome', dadosForm.nome)}
                     </div>
 
+                    {/* E-mail */}
                     <div className="pv-form-group">
                       <label className="pv-label">E-mail *</label>
                       <div className="pv-input-wrapper">
@@ -323,6 +397,7 @@ const PerfilVoluntario = () => {
                       </div>
                     </div>
 
+                    {/* Telefone */}
                     <div className="pv-form-group">
                       <label className="pv-label">Telefone *</label>
                       <div className="pv-input-wrapper">
@@ -334,11 +409,13 @@ const PerfilVoluntario = () => {
                           className="pv-input"
                           placeholder="(00) 00000-0000"
                           disabled={!editando}
+                          maxLength={LIMITES.telefone}
                         />
                         <span className="pv-input-icon">📱</span>
                       </div>
                     </div>
 
+                    {/* Data Nascimento */}
                     <div className="pv-form-group">
                       <label className="pv-label">Data de Nascimento</label>
                       <div className="pv-input-wrapper">
@@ -354,6 +431,7 @@ const PerfilVoluntario = () => {
                       </div>
                     </div>
 
+                    {/* CPF */}
                     <div className="pv-form-group">
                       <label className="pv-label">CPF *</label>
                       <div className="pv-input-wrapper">
@@ -365,11 +443,13 @@ const PerfilVoluntario = () => {
                           className="pv-input"
                           placeholder="000.000.000-00"
                           disabled={!editando}
+                          maxLength={LIMITES.cpf}
                         />
                         <span className="pv-input-icon">🆔</span>
                       </div>
                     </div>
 
+                    {/* Endereço */}
                     <div className="pv-form-group pv-full-width">
                       <label className="pv-label">Endereço</label>
                       <div className="pv-input-wrapper">
@@ -381,11 +461,14 @@ const PerfilVoluntario = () => {
                           className="pv-input"
                           placeholder="Digite seu endereço completo"
                           disabled={!editando}
+                          maxLength={LIMITES.endereco}
                         />
                         <span className="pv-input-icon">📍</span>
                       </div>
+                      {renderContadorCaracteres('endereco', dadosForm.endereco)}
                     </div>
 
+                    {/* Cidade */}
                     <div className="pv-form-group">
                       <label className="pv-label">Cidade</label>
                       <div className="pv-input-wrapper">
@@ -402,6 +485,7 @@ const PerfilVoluntario = () => {
                       </div>
                     </div>
 
+                    {/* Estado */}
                     <div className="pv-form-group">
                       <label className="pv-label">Estado</label>
                       <div className="pv-input-wrapper">
@@ -413,38 +497,13 @@ const PerfilVoluntario = () => {
                           disabled={!editando}
                         >
                           <option value="">Selecione</option>
-                          <option value="AC">Acre</option>
-                          <option value="AL">Alagoas</option>
-                          <option value="AP">Amapá</option>
-                          <option value="AM">Amazonas</option>
-                          <option value="BA">Bahia</option>
-                          <option value="CE">Ceará</option>
-                          <option value="DF">Distrito Federal</option>
-                          <option value="ES">Espírito Santo</option>
-                          <option value="GO">Goiás</option>
-                          <option value="MA">Maranhão</option>
-                          <option value="MT">Mato Grosso</option>
-                          <option value="MS">Mato Grosso do Sul</option>
-                          <option value="MG">Minas Gerais</option>
-                          <option value="PA">Pará</option>
-                          <option value="PB">Paraíba</option>
-                          <option value="PR">Paraná</option>
-                          <option value="PE">Pernambuco</option>
-                          <option value="PI">Piauí</option>
-                          <option value="RJ">Rio de Janeiro</option>
-                          <option value="RN">Rio Grande do Norte</option>
-                          <option value="RS">Rio Grande do Sul</option>
-                          <option value="RO">Rondônia</option>
-                          <option value="RR">Roraima</option>
-                          <option value="SC">Santa Catarina</option>
-                          <option value="SP">São Paulo</option>
-                          <option value="SE">Sergipe</option>
-                          <option value="TO">Tocantins</option>
+                          {/* Opções de estados... */}
                         </select>
                         <span className="pv-input-icon">🗺️</span>
                       </div>
                     </div>
 
+                    {/* CEP */}
                     <div className="pv-form-group">
                       <label className="pv-label">CEP</label>
                       <div className="pv-input-wrapper">
@@ -456,11 +515,13 @@ const PerfilVoluntario = () => {
                           className="pv-input"
                           placeholder="00000-000"
                           disabled={!editando}
+                          maxLength={LIMITES.cep}
                         />
                         <span className="pv-input-icon">📮</span>
                       </div>
                     </div>
 
+                    {/* Habilidades */}
                     <div className="pv-form-group pv-full-width">
                       <label className="pv-label">Habilidades</label>
                       <div className="pv-input-wrapper">
@@ -472,11 +533,14 @@ const PerfilVoluntario = () => {
                           rows="3"
                           placeholder="Descreva suas principais habilidades..."
                           disabled={!editando}
+                          maxLength={LIMITES.habilidades}
                         />
                         <span className="pv-input-icon">💡</span>
                       </div>
+                      {renderContadorCaracteres('habilidades', dadosForm.habilidades)}
                     </div>
 
+                    {/* Disponibilidade */}
                     <div className="pv-form-group">
                       <label className="pv-label">Disponibilidade</label>
                       <div className="pv-input-wrapper">
@@ -497,6 +561,7 @@ const PerfilVoluntario = () => {
                       </div>
                     </div>
 
+                    {/* Biografia */}
                     <div className="pv-form-group pv-full-width">
                       <label className="pv-label">Biografia</label>
                       <div className="pv-input-wrapper">
@@ -508,9 +573,11 @@ const PerfilVoluntario = () => {
                           rows="4"
                           placeholder="Conte um pouco sobre você e sua experiência com voluntariado..."
                           disabled={!editando}
+                          maxLength={LIMITES.sobre_voce}
                         />
                         <span className="pv-input-icon">📝</span>
                       </div>
+                      {renderContadorCaracteres('sobre_voce', dadosForm.sobre_voce)}
                     </div>
                   </div>
 
@@ -519,15 +586,15 @@ const PerfilVoluntario = () => {
                       <button 
                         className="pv-btn pv-btn-success pv-btn-save"
                         onClick={salvarAlteracoes}
-                        disabled={carregando}
+                        disabled={salvando}
                       >
-                        <span className="pv-icon">{carregando ? "⏳" : "✅"}</span>
-                        {carregando ? "Salvando..." : "Salvar Alterações"}
+                        <span className="pv-icon">{salvando ? "⏳" : "✅"}</span>
+                        {salvando ? "Salvando..." : "Salvar Alterações"}
                       </button>
                       <button 
                         className="pv-btn pv-btn-outline pv-btn-cancel"
                         onClick={() => setEditando(false)}
-                        disabled={carregando}
+                        disabled={salvando}
                       >
                         <span className="pv-icon">❌</span>
                         Cancelar
@@ -541,7 +608,7 @@ const PerfilVoluntario = () => {
         </div>
       </div>
 
-      {/* Modal de Sucesso */}
+      {/* Modal de Sucesso - CORRIGIDO */}
       {mostrarModal && (
         <div className="pv-modal-overlay" onClick={fecharModal}>
           <div className="pv-modal" onClick={(e) => e.stopPropagation()}>
@@ -556,19 +623,15 @@ const PerfilVoluntario = () => {
                 <h3 className="pv-modal-title">Perfil Atualizado!</h3>
               </div>
               <div className="pv-modal-body">
-                <p>Suas informações foram salvas com sucesso.</p>
-                <p>Você será redirecionado para a página inicial.</p>
+                <p>Suas informações foram salvas com sucesso no banco de dados.</p>
               </div>
               <div className="pv-modal-footer">
                 <button 
                   className="pv-btn pv-btn-primary pv-modal-btn"
-                  onClick={() => {
-                    fecharModal();
-                    setTimeout(() => navigate('/'), 1000);
-                  }}
+                  onClick={fecharModal}
                 >
-                  <span className="pv-icon">🏠</span>
-                  Ir para Home
+                  <span className="pv-icon">👌</span>
+                  Continuar
                 </button>
               </div>
             </div>

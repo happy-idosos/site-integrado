@@ -1,100 +1,136 @@
 // src/services/api.js
+
+// 🔐 Helpers de autenticação
 import { getAuthHeader, isAuthenticated } from './auth/auth.helpers';
 import { API_BASE_URL } from './auth/auth.constants';
 
+// ✅ API unificada e funcional
 export const api = {
   API_BASE_URL,
-  
+
   async request(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  // Configuração base dos headers
-  const headers = {
-    ...getAuthHeader(),
-    ...options.headers,
-  };
+    const url = `${API_BASE_URL}${endpoint}`;
+    const isFormData = options.body instanceof FormData;
 
-  // IMPORTANTE: Não adicionar Content-Type para FormData
-  if (!(options.body instanceof FormData)) {
-    headers['Content-Type'] = 'application/json';
-  }
+    // 🔧 Configuração base
+    const headers = {
+      ...getAuthHeader(),
+      ...(options.headers || {}),
+    };
 
-  const config = {
-    headers,
-    ...options,
-  };
+    // ⚙️ Define Content-Type somente se não for FormData
+    if (options.body && !isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
 
-  // Converte body para JSON apenas se não for FormData
-  if (config.body && typeof config.body === 'object' && !(config.body instanceof FormData)) {
-    config.body = JSON.stringify(config.body);
-  }
+    const config = {
+      method: options.method || 'GET',
+      credentials: 'include', // Mantém sessões PHP
+      headers,
+      ...options,
+    };
 
-  try {
-    console.log(`🌐 Fazendo requisição para: ${url}`, {
-      method: config.method,
-      headers: config.headers,
-      hasBody: !!config.body,
-      isFormData: config.body instanceof FormData
-    });
+    // 🔄 Converte body para JSON se for objeto comum
+    if (config.body && typeof config.body === 'object' && !isFormData) {
+      config.body = JSON.stringify(config.body);
+    } else if (isFormData) {
+      config.body = options.body;
+    }
 
-    const response = await fetch(url, config);
-    
-    // ... resto do código permanece igual
-    const contentType = response.headers.get('content-type');
-    let data;
-    
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-      try {
-        if (data && data.trim().startsWith('{')) {
-          data = JSON.parse(data);
+    try {
+      console.log(`🌐 Requisição [${config.method}] → ${url}`, {
+        headers: config.headers,
+        hasBody: !!config.body,
+        isFormData,
+      });
+
+      const response = await fetch(url, config);
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      // 🔍 Tenta ler o corpo da resposta
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        data = text ? this.safeJsonParse(text) : {};
+      }
+
+      console.log(`✅ [${response.status}] ${url}`, data);
+
+      // 🚫 Erros HTTP
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.warn('⚠️ Token expirado ou inválido. Limpando autenticação...');
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user_data');
+          window.dispatchEvent(new Event('authExpired'));
         }
-      } catch (e) {
-        // Mantém como texto
+
+        const errorMessage =
+          data?.message || data?.error || data?.detail || `Erro HTTP: ${response.status}`;
+        const error = new Error(errorMessage);
+        error.status = response.status;
+        error.data = data;
+        throw error;
       }
-    }
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        console.warn('⚠️ Token expirado ou inválido');
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
-        window.dispatchEvent(new Event('authExpired'));
+      return data;
+    } catch (error) {
+      console.error(`❌ Erro em [${options.method || 'GET'}] ${url}:`, error);
+
+      // 🌐 Erro de rede
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        const networkError = new Error(
+          'Erro de conexão. Verifique sua internet e se o servidor backend está rodando.'
+        );
+        networkError.status = 0;
+        throw networkError;
       }
-      
-      throw new Error(data.message || data.error || `Erro HTTP: ${response.status}`);
+
+      // 🛑 Garante status definido
+      if (!error.status) {
+        error.status = 500;
+      }
+
+      throw error;
     }
+  },
 
-    return data;
-  } catch (error) {
-    console.error('❌ Erro na requisição API:', error);
-    throw error;
-  }
-},
-
+  // 📦 Métodos HTTP simplificados
   get(endpoint) {
-    return this.request(endpoint);
+    return this.request(endpoint, { method: 'GET' });
   },
 
-  post(endpoint, data) {
-    return this.request(endpoint, {
-      method: 'POST',
-      body: data
-    });
+  post(endpoint, body) {
+    return this.request(endpoint, { method: 'POST', body });
   },
 
-  put(endpoint, data) {
-    return this.request(endpoint, {
-      method: 'PUT',
-      body: data
-    });
+  put(endpoint, body) {
+    return this.request(endpoint, { method: 'PUT', body });
+  },
+
+  patch(endpoint, body) {
+    return this.request(endpoint, { method: 'PATCH', body });
   },
 
   delete(endpoint) {
-    return this.request(endpoint, {
-      method: 'DELETE'
-    });
-  }
+    return this.request(endpoint, { method: 'DELETE' });
+  },
+
+  upload(endpoint, formData) {
+    return this.request(endpoint, { method: 'POST', body: formData });
+  },
+
+  // 🧠 Utilitário seguro para tentar converter texto em JSON
+  safeJsonParse(text) {
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.warn('⚠️ Retornando texto puro (não é JSON):', text);
+      return { message: text };
+    }
+  },
 };
+
+export default api;

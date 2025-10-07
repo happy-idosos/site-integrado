@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import AOS from "aos"
 import "aos/dist/aos.css"
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./Videos.css"
@@ -28,7 +30,13 @@ function Videos() {
 
   // Inicialização
   useEffect(() => {
-    AOS.init({ duration: 1000, easing: "ease-out-cubic", once: true })
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: true,
+      offset: 100,
+    })
+    
     if (window.bootstrap) {
       videoPlayerModalRef.current = new window.bootstrap.Modal(document.getElementById("videoPlayerModal"))
       uploadModalRef.current = new window.bootstrap.Modal(document.getElementById("uploadModal"))
@@ -181,145 +189,171 @@ function Videos() {
     <div className="videos-page">
       <Header />
 
-      {/* Hero Section */}
-      <section className="video-hero">
-        <div className="container">
-          <div className="hero-content">
-            <h1 data-aos="fade-up">Nossa Galeria de Vídeos</h1>
-            <p data-aos="fade-up" data-aos-delay="200">
-              Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores
-            </p>
-          </div>
+      {/* Hero Section - Carousel */}
+      <div
+        id="carouselExampleCaptions"
+        className="carousel slide hero-carousel"
+        data-bs-ride="carousel"
+        data-aos="fade-up"
+        data-aos-duration="1200"
+      >
+        <div className="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="0"
+            className="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
         </div>
-      </section>
-
-      {/* Search and Upload Section */}
-      <section className="search-upload-section">
-        <div className="container">
-          <div className="section-content">
-            <div className="search-upload-grid">
-              <div className="search-container" data-aos="fade-right">
-                <div className="search-box">
-                  <input
-                    type="text"
-                    placeholder="🔍 Buscar vídeos por título ou descrição..."
-                    className="search-input"
-                    onChange={(e) => searchVideos(e.target.value)}
-                  />
-                  <div className="search-icon">
-                    <i className="fas fa-search"></i>
-                  </div>
-                </div>
-              </div>
-              <div className="upload-container" data-aos="fade-left">
-                <button
-                  className="upload-btn-primary"
-                  onClick={() => uploadModalRef.current?.show()}
-                >
-                  <span className="btn-icon">📹</span>
-                  <span className="btn-text">Enviar Vídeo</span>
-                </button>
-              </div>
+        <div className="carousel-inner">
+          <div className="carousel-item active">
+            <img src={carouselum || "/placeholder.svg"} className="d-block w-100" alt="Galeria de Vídeos" />
+            <div className="carousel-caption d-none d-md-block">
+              <h2>Nossa Galeria de Vídeos</h2>
+              <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
+              <button className="btn btn-outline-light btn-lg">
+                Explorar Vídeos
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Video Grid Section */}
-      <section className="video-grid-section">
-        <div className="container">
-          <div className="section-content">
-            {isLoading && videos.length === 0 ? (
-              <div className="loading-state">
-                <div className="loading-spinner"></div>
-                <p>Carregando vídeos...</p>
+      <hr className="divisor" />
+
+      <main>
+        <section
+          className="videos-lista py-5"
+          data-aos="fade-up"
+          data-aos-duration="800"
+        >
+          <div className="container">
+            <h2 className="text-center mb-4 videos-main-title">Nossa Galeria de Vídeos</h2>
+
+            <div className="text-center mb-5">
+              <button 
+                className="btn-criar-video" 
+                onClick={() => uploadModalRef.current?.show()}
+              >
+                <i className="fas fa-plus-circle me-2"></i>
+                Enviar Novo Vídeo
+              </button>
+            </div>
+
+            {/* Filtros e Busca */}
+            <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
+              <div className="row g-3">
+                <div className="col-md-12 mb-3">
+                  <div className="search-box">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar vídeos por título ou descrição..."
+                      value={currentSearch}
+                      onChange={(e) => searchVideos(e.target.value)}
+                    />
+                    <i className="fas fa-search search-icon"></i>
+                  </div>
+                </div>
               </div>
-            ) : videos.length === 0 ? (
-              <div className="empty-state" data-aos="fade-up">
-                <div className="empty-icon">🎬</div>
-                <h3>Nenhum vídeo encontrado</h3>
-                <p>
+            </div>
+
+            {/* Loading spinner */}
+            {isLoading && videos.length === 0 && (
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Carregando...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Grid de Vídeos */}
+            {!isLoading && videos.length > 0 && (
+              <div className="row">
+                {videos.map((video, index) => (
+                  <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
+                    <div className="card video-card" data-aos="fade-up" data-aos-delay={index % 3 * 100}>
+                      <div className="video-thumbnail-container" onClick={() => openVideoPlayer(video)}>
+                        <video
+                          src={`${API_BASE_URL}/${video.url}`}
+                          className="video-thumbnail"
+                          muted
+                          preload="metadata"
+                        />
+                        <div className="video-overlay">
+                          <div className="play-button">
+                            <i className="fas fa-play"></i>
+                          </div>
+                        </div>
+                        <div className="video-duration">2:30</div>
+                      </div>
+                      <div className="card-body text-center">
+                        <div className="video-icon">
+                          <i className="fas fa-play-circle"></i>
+                        </div>
+                        <h3 className="video-title">{video.nome_midia}</h3>
+                        {video.descricao && (
+                          <p className="video-description">
+                            {video.descricao.length > 120 
+                              ? `${video.descricao.substring(0, 120)}...` 
+                              : video.descricao}
+                          </p>
+                        )}
+                        <ul className="video-details">
+                          <li>
+                            <i className="fas fa-user"></i> {video.autor_nome}
+                          </li>
+                          <li>
+                            <i className="fas fa-calendar"></i> {formatDate(video.criado_em)}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Mensagem quando não há vídeos */}
+            {!isLoading && videos.length === 0 && (
+              <div className="text-center py-5">
+                <i className="fas fa-video-slash fa-3x text-muted mb-3"></i>
+                <h4 className="text-muted">Nenhum vídeo encontrado</h4>
+                <p className="text-muted">
                   {currentSearch 
                     ? `Nenhum resultado para "${currentSearch}"` 
                     : "Ainda não há vídeos publicados. Seja o primeiro a compartilhar!"}
                 </p>
                 <button 
-                  className="upload-btn-secondary"
+                  className="btn-criar-video"
                   onClick={() => uploadModalRef.current?.show()}
                 >
-                  📹 Enviar Primeiro Vídeo
+                  <i className="fas fa-plus-circle me-2"></i>
+                  Enviar Primeiro Vídeo
                 </button>
               </div>
-            ) : (
-              <>
-                <div className="video-grid">
-                  {videos.map((v, index) => (
-                    <div 
-                      key={v.id_midia} 
-                      className="video-card"
-                      data-aos="fade-up" 
-                      data-aos-delay={index % 3 * 100}
-                    >
-                      <div className="video-card-inner">
-                        <div className="video-thumbnail-container" onClick={() => openVideoPlayer(v)}>
-                          <video
-                            src={`${API_BASE_URL}/${v.url}`}
-                            className="video-thumbnail"
-                            muted
-                            preload="metadata"
-                          />
-                          <div className="video-overlay">
-                            <div className="play-button">
-                              <i className="fas fa-play"></i>
-                            </div>
-                          </div>
-                          <div className="video-duration">2:30</div>
-                        </div>
-                        <div className="video-card-content">
-                          <h3 className="video-title">{v.nome_midia}</h3>
-                          {v.descricao && (
-                            <p className="video-description">
-                              {v.descricao.length > 120 
-                                ? `${v.descricao.substring(0, 120)}...` 
-                                : v.descricao}
-                            </p>
-                          )}
-                          <div className="video-meta">
-                            <div className="meta-item">
-                              <i className="fas fa-user"></i>
-                              <span>{v.autor_nome}</span>
-                            </div>
-                            <div className="meta-item">
-                              <i className="fas fa-calendar"></i>
-                              <span>{formatDate(v.criado_em)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            )}
 
-                {hasMore && !isLoading && (
-                  <div className="load-more-container" data-aos="fade-up">
-                    <button className="load-more-btn" onClick={loadMoreVideos}>
-                      <span>Carregar Mais Vídeos</span>
-                      <i className="fas fa-arrow-down"></i>
-                    </button>
-                  </div>
-                )}
-              </>
+            {/* Botão carregar mais */}
+            {hasMore && !isLoading && (
+              <div className="text-center mt-4">
+                <button className="btn btn-outline-primary btn-lg" onClick={loadMoreVideos}>
+                  Carregar Mais Vídeos
+                </button>
+              </div>
             )}
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Video Player Modal */}
+      {/* Modal Player de Vídeo */}
       <div className="modal fade video-player-modal" id="videoPlayerModal" tabIndex="-1">
         <div className="modal-dialog modal-xl modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">{selectedVideo?.nome_midia}</h3>
+              <h5 className="modal-title">{selectedVideo?.nome_midia}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div className="modal-body">
@@ -345,48 +379,57 @@ function Videos() {
         </div>
       </div>
 
-      {/* Upload Modal */}
+      {/* Modal de Upload */}
       <div className="modal fade upload-modal" id="uploadModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <form onSubmit={handleVideoUpload}>
-              <div className="modal-header">
-                <h3 className="modal-title">Enviar Novo Vídeo</h3>
-                <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label className="form-label">Título do Vídeo *</label>
-                  <input 
-                    id="videoTitle" 
-                    className="form-control" 
-                    placeholder="Digite um título descritivo..." 
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Descrição</label>
-                  <textarea 
-                    id="videoDescription" 
-                    className="form-control" 
-                    placeholder="Descreva o conteúdo do vídeo (opcional)..."
-                    rows="3"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Arquivo de Vídeo *</label>
-                  <div className="file-upload-area">
-                    <input 
-                      id="videoFile" 
-                      type="file" 
-                      className="file-input" 
-                      accept="video/*" 
-                      required 
+            <div className="modal-header">
+              <h5 className="modal-title">Enviar Novo Vídeo</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleVideoUpload}>
+                <div className="row">
+                  <div className="col-12 mb-3">
+                    <label htmlFor="videoTitle" className="form-label">
+                      Título do Vídeo *
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="videoTitle"
+                      placeholder="Digite um título descritivo..."
+                      required
                     />
-                    <div className="upload-placeholder">
-                      <i className="fas fa-cloud-upload-alt"></i>
-                      <p>Clique para selecionar ou arraste um arquivo</p>
-                      <span>Formatos: MP4, AVI, MOV, WEBM (Max: 100MB)</span>
+                  </div>
+                  <div className="col-12 mb-3">
+                    <label htmlFor="videoDescription" className="form-label">
+                      Descrição
+                    </label>
+                    <textarea
+                      className="form-control"
+                      id="videoDescription"
+                      rows="3"
+                      placeholder="Descreva o conteúdo do vídeo (opcional)..."
+                    ></textarea>
+                  </div>
+                  <div className="col-12 mb-3">
+                    <label htmlFor="videoFile" className="form-label">
+                      Arquivo de Vídeo *
+                    </label>
+                    <div className="file-upload-area">
+                      <input
+                        type="file"
+                        className="form-control"
+                        id="videoFile"
+                        accept="video/*"
+                        required
+                      />
+                      <div className="upload-placeholder">
+                        <i className="fas fa-cloud-upload-alt"></i>
+                        <p>Clique para selecionar ou arraste um arquivo</p>
+                        <span>Formatos: MP4, AVI, MOV, WEBM (Max: 100MB)</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -403,31 +446,31 @@ function Videos() {
                     </div>
                   </div>
                 )}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                  Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary" disabled={uploadProgress > 0}>
-                  {uploadProgress > 0 ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin"></i>
-                      Enviando...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-upload"></i>
-                      Enviar Vídeo
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn btn-primary" disabled={uploadProgress > 0}>
+                    {uploadProgress > 0 ? (
+                      <>
+                        <i className="fas fa-spinner fa-spin me-2"></i>
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-upload me-2"></i>
+                        Enviar Vídeo
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Notification Modal */}
+      {/* Modal de Notificação */}
       <div className="modal fade notification-modal" id="notificationModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-sm">
           <div className="modal-content">

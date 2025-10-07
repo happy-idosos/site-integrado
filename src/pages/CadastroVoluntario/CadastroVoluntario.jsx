@@ -10,7 +10,7 @@ import "./CadastroVoluntario.css"
 
 import logo from "../../assets/img/happyidosos.jpg"
 
-// Componente Modal
+// Componente Modal Atualizado
 const CadastroModal = ({ show, type, title, message, onClose }) => {
   if (!show) return null
 
@@ -30,13 +30,21 @@ const CadastroModal = ({ show, type, title, message, onClose }) => {
       <div 
         className={`cadastro-modal-content cadastro-modal-${type}`}
         onClick={(e) => e.stopPropagation()}
+        data-aos="zoom-in"
       >
         <div className="cadastro-modal-header">
           <div className="cadastro-modal-icon">
             {type === 'success' ? (
-              <i className="fas fa-check-circle"></i>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
             ) : (
-              <i className="fas fa-exclamation-triangle"></i>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
             )}
           </div>
           <h3 className="cadastro-modal-title">{title}</h3>
@@ -47,7 +55,7 @@ const CadastroModal = ({ show, type, title, message, onClose }) => {
         </div>
         
         <div className="cadastro-modal-footer">
-          <button className="cadastro-modal-btn" onClick={onClose}>
+          <button className={`cadastro-modal-btn cadastro-modal-btn-${type}`} onClick={onClose}>
             Entendido
           </button>
         </div>
@@ -61,6 +69,8 @@ export default function CadastroVoluntario() {
   const { registerUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
     nome: "",
     cpf: "",
@@ -177,6 +187,7 @@ export default function CadastroVoluntario() {
       [name]: type === "checkbox" ? checked : processedValue,
     }))
 
+    // Validação em tempo real para senhas
     if (name === "senha" || name === "confirmarSenha") {
       if (name === "senha") {
         const passwordError = validatePassword(processedValue)
@@ -186,16 +197,19 @@ export default function CadastroVoluntario() {
         }))
       }
       
-      if (formData.senha && formData.confirmarSenha && formData.senha !== formData.confirmarSenha) {
-        setErrors((prev) => ({
-          ...prev,
-          confirmarSenha: "As senhas não coincidem."
-        }))
-      } else if (errors.confirmarSenha) {
-        setErrors((prev) => ({
-          ...prev,
-          confirmarSenha: ""
-        }))
+      // Validação de confirmação de senha em tempo real
+      if (name === "confirmarSenha" || (name === "senha" && formData.confirmarSenha)) {
+        if (processedValue && formData.confirmarSenha && processedValue !== formData.confirmarSenha) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmarSenha: "As senhas não coincidem."
+          }))
+        } else if (errors.confirmarSenha) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmarSenha: ""
+          }))
+        }
       }
     }
 
@@ -307,6 +321,14 @@ export default function CadastroVoluntario() {
 
   const closeModal = () => {
     setModal(prev => ({ ...prev, show: false }))
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword)
   }
 
   const validateForm = () => {
@@ -488,7 +510,7 @@ export default function CadastroVoluntario() {
                     />
                     {errors.nome && <div className="cadastro-voluntario-error-message">{errors.nome}</div>}
                     <div className="cadastro-voluntario-char-counter">
-                      {formData.nome.length}/128
+                      {formData.nome.length} de 128 caracteres utilizados
                     </div>
                   </div>
 
@@ -571,48 +593,100 @@ export default function CadastroVoluntario() {
                     />
                     {errors.email && <div className="cadastro-voluntario-error-message">{errors.email}</div>}
                     <div className="cadastro-voluntario-char-counter">
-                      {formData.email.length}/96
+                      {formData.email.length} de 96 caracteres utilizados
                     </div>
                   </div>
 
                   <div className="cadastro-voluntario-form-group">
                     <label htmlFor="senha">Senha *</label>
-                    <input
-                      type="password"
-                      id="senha"
-                      name="senha"
-                      value={formData.senha}
-                      onChange={handleInputChange}
-                      placeholder="Mínimo 8 caracteres com letras, números e caracteres especiais"
-                      minLength="8"
-                      className={
-                        errors.senha ? "cadastro-voluntario-error" : formData.senha ? "cadastro-voluntario-success" : ""
-                      }
-                      required
-                    />
+                    <div className="cadastro-voluntario-password-field">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="senha"
+                        name="senha"
+                        value={formData.senha}
+                        onChange={handleInputChange}
+                        placeholder="Mínimo 8 caracteres com letras, números e caracteres especiais"
+                        minLength="8"
+                        className={
+                          errors.senha ? "cadastro-voluntario-error" : formData.senha ? "cadastro-voluntario-success" : ""
+                        }
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="cadastro-voluntario-toggle-password"
+                        onClick={togglePasswordVisibility}
+                        aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                      >
+                        {showPassword ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                     {errors.senha && <div className="cadastro-voluntario-error-message">{errors.senha}</div>}
                     <div className="cadastro-voluntario-password-requirements">
-                      • Mínimo 8 caracteres • 1 letra minúscula • 1 letra maiúscula • 1 número • 1 caractere especial
+                      <strong>Requisitos da senha:</strong>
+                      <ul>
+                        <li className={formData.senha.length >= 8 ? "valid" : ""}>Mínimo 8 caracteres</li>
+                        <li className={/[a-z]/.test(formData.senha) ? "valid" : ""}>1 letra minúscula</li>
+                        <li className={/[A-Z]/.test(formData.senha) ? "valid" : ""}>1 letra maiúscula</li>
+                        <li className={/\d/.test(formData.senha) ? "valid" : ""}>1 número</li>
+                        <li className={/[!@#$%^&*(),.?":{}|<>]/.test(formData.senha) ? "valid" : ""}>1 caractere especial</li>
+                      </ul>
                     </div>
                   </div>
 
                   {/* Campo Confirmar Senha */}
                   <div className="cadastro-voluntario-form-group">
                     <label htmlFor="confirmarSenha">Confirmar Senha *</label>
-                    <input
-                      type="password"
-                      id="confirmarSenha"
-                      name="confirmarSenha"
-                      value={formData.confirmarSenha}
-                      onChange={handleInputChange}
-                      placeholder="Digite novamente sua senha"
-                      minLength="8"
-                      className={
-                        errors.confirmarSenha ? "cadastro-voluntario-error" : formData.confirmarSenha ? "cadastro-voluntario-success" : ""
-                      }
-                      required
-                    />
+                    <div className="cadastro-voluntario-password-field">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        id="confirmarSenha"
+                        name="confirmarSenha"
+                        value={formData.confirmarSenha}
+                        onChange={handleInputChange}
+                        placeholder="Digite novamente sua senha"
+                        minLength="8"
+                        className={
+                          errors.confirmarSenha ? "cadastro-voluntario-error" : formData.confirmarSenha ? "cadastro-voluntario-success" : ""
+                        }
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="cadastro-voluntario-toggle-password"
+                        onClick={toggleConfirmPasswordVisibility}
+                        aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                      >
+                        {showConfirmPassword ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                     {errors.confirmarSenha && <div className="cadastro-voluntario-error-message">{errors.confirmarSenha}</div>}
+                    {formData.senha && formData.confirmarSenha && formData.senha === formData.confirmarSenha && (
+                      <div className="cadastro-voluntario-success-message">
+                        ✅ As senhas coincidem
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

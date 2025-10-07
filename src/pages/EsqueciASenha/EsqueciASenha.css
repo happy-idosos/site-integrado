@@ -12,30 +12,30 @@
   line-height: 1.6;
   color: #333;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  background: white;
   display: flex;
   flex-direction: column;
 }
 
 .esquecid-a-senha .container {
   width: 90%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Enhanced back button with better styling */
+/* Enhanced back button */
 .esquecid-a-senha .back-btn {
   position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  background: white;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.95);
   border: 2px solid #244a96;
   color: #244a96;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 25px;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -43,224 +43,65 @@
   transition: all 0.3s ease;
   z-index: 1000;
   box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .esquecid-a-senha .back-btn:hover {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  background: #244a96;
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25);
 }
 
-/* Added icon wrapper styling */
-.esquecid-a-senha .icon-wrapper {
-  display: inline-block;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-/* Main content adjustments */
+/* Main content */
 .esquecid-a-senha main {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1rem 0;
+  padding: 2rem 0;
 }
 
 .esquecid-a-senha .recuperacao-senha {
   display: flex;
   align-items: center;
-  padding: 2rem 0;
+  padding: 3rem 0;
   min-height: auto;
 }
 
-.esquecid-a-senha .recuperacao-senha .card {
-  border-radius: 20px !important;
-  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.1) !important;
+/* Recovery Card */
+.esquecid-a-senha .recovery-card {
+  border-radius: 24px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1) !important;
   border: none !important;
   overflow: hidden;
-  position: relative;
-  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.esquecid-a-senha .recuperacao-senha .card::before {
+.esquecid-a-senha .recovery-card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #244a96, #1a3a7a);
+  background: white;
 }
 
-.esquecid-a-senha .recuperacao-senha .card-body {
-  padding: 2.5rem !important;
+.esquecid-a-senha .recovery-card .card-body {
+  padding: 3rem !important;
 }
 
-.esquecid-a-senha .recuperacao-senha .form-control {
-  border: 2px solid #e9ecef !important;
-  border-radius: 12px !important;
-  padding: 12px 15px !important;
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
-
-.esquecid-a-senha .recuperacao-senha .form-control:focus {
-  border-color: #244a96 !important;
-  box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15) !important;
-  transform: translateY(-1px);
-}
-
-.esquecid-a-senha .recuperacao-senha .btn-primary {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
-  border: none;
-  border-radius: 12px !important;
-  padding: 12px !important;
-  font-weight: 600;
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
-
-.esquecid-a-senha .recuperacao-senha .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1a3a7a, #112a63);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
-}
-
-.esquecid-a-senha .recuperacao-senha .btn-primary:disabled {
-  opacity: 0.6;
-  transform: none;
-  cursor: not-allowed;
-}
-
-.esquecid-a-senha h2 {
-  color: #244a96;
-  font-size: 2rem;
-  font-weight: 800;
-  position: relative;
-  display: inline-block;
-  margin-bottom: 0.5rem;
-}
-
-.esquecid-a-senha h2::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #244a96, #1a3a7a);
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-
-/* Instructions section compact */
-.esquecid-a-senha .instrucoes {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  padding: 2rem 0 !important;
-}
-
-.esquecid-a-senha .instrucoes h3 {
-  color: #244a96;
-  font-weight: 700;
-  font-size: 1.5rem;
-  position: relative;
-  display: inline-block;
-  margin-bottom: 1.5rem;
-}
-
-.esquecid-a-senha .instrucoes h3::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #244a96, #1a3a7a);
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-
-.esquecid-a-senha .instrucoes .bg-primary {
-  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
-  transition: all 0.3s ease;
-  width: 50px !important;
-  height: 50px !important;
-  font-size: 18px !important;
-}
-
-.esquecid-a-senha .instrucoes .col-md-4:hover .bg-primary {
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(36, 74, 150, 0.25);
-}
-
-.esquecid-a-senha .instrucoes h5 {
-  font-size: 1.1rem;
-  margin: 0.75rem 0 0.5rem 0;
-}
-
-.esquecid-a-senha .instrucoes p {
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.esquecid-a-senha .alert {
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-}
-
-.esquecid-a-senha .alert-success {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  color: #155724;
-  border-left: 4px solid #28a745;
-}
-
-.esquecid-a-senha .alert-danger {
-  background: linear-gradient(135deg, #f8d7da, #f1b0b7);
-  color: #721c24;
-  border-left: 4px solid #dc3545;
-}
-
-.esquecid-a-senha .spinner-border-sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Footer compact */
-.esquecid-a-senha .footer {
-  background: #1a1a1a;
-  color: white;
-  padding: 1rem 0 !important;
-  margin-top: auto;
-}
-
-.esquecid-a-senha .footer p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-/* Progress Steps compact */
+/* Progress Steps - Enhanced */
 .esquecid-a-senha .progress-container {
-  padding: 0 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 0 2rem;
+  margin-bottom: 3rem;
 }
 
 .esquecid-a-senha .progress-steps {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .esquecid-a-senha .step {
@@ -275,12 +116,13 @@
 .esquecid-a-senha .step:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 25px;
-  left: 50%;
-  width: 100%;
-  height: 2px;
-  background-color: #e9ecef;
+  top: 30px;
+  left: 60%;
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(90deg, #e9ecef, #e9ecef);
   z-index: -1;
+  transition: all 0.3s ease;
 }
 
 .esquecid-a-senha .step.active:not(:last-child)::after {
@@ -288,98 +130,458 @@
 }
 
 .esquecid-a-senha .step-circle {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background-color: #e9ecef;
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
   color: #6c757d;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .esquecid-a-senha .step.active .step-circle {
   background: linear-gradient(135deg, #244a96, #1a3a7a);
   color: white;
-  transform: scale(1.05);
-  box-shadow: 0 3px 10px rgba(36, 74, 150, 0.25);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .esquecid-a-senha .step-label {
   font-weight: 600;
   color: #6c757d;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
 .esquecid-a-senha .step.active .step-label {
   color: #244a96;
+  font-weight: 700;
 }
 
-/* Form validation styles */
-.esquecid-a-senha .form-control.is-valid {
-  border-color: #28a745 !important;
+/* Header Section */
+.esquecid-a-senha .recovery-icon {
+  background: white;
+  border-radius: 50%;
+  padding: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-.esquecid-a-senha .form-control.is-valid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15) !important;
+.esquecid-a-senha .recovery-title {
+  color: #244a96;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #244a96, #667eea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.esquecid-a-senha .form-control.is-invalid {
-  border-color: #dc3545 !important;
+.esquecid-a-senha .recovery-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.esquecid-a-senha .invalid-feedback {
+/* Form Styles */
+.esquecid-a-senha .recovery-form {
+  margin-top: 2rem;
+}
+
+.esquecid-a-senha .form-group-custom {
+  margin-bottom: 2rem;
+}
+
+.esquecid-a-senha .form-label-custom {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
   display: block;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
+}
+
+.esquecid-a-senha .input-group-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.esquecid-a-senha .form-control-custom {
+  width: 100%;
+  padding: 1rem 1.5rem 1rem 3rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.esquecid-a-senha .form-control-custom:focus {
+  outline: none;
+  border-color: #244a96;
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
+  transform: translateY(-2px);
+}
+
+.esquecid-a-senha .form-control-custom.is-valid {
+  border-color: #28a745;
+}
+
+.esquecid-a-senha .form-control-custom.is-invalid {
+  border-color: #dc3545;
+}
+
+.esquecid-a-senha .input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.esquecid-a-senha .form-text-custom {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.esquecid-a-senha .invalid-feedback-custom {
   color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.esquecid-a-senha .instrucoes .col-md-4 {
-  transition: transform 0.3s ease;
+.esquecid-a-senha .valid-feedback-custom {
+  color: #28a745;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+/* Password Field */
+.esquecid-a-senha .password-field .form-control-custom {
+  padding-right: 3.5rem;
+}
+
+.esquecid-a-senha .toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
   padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.esquecid-a-senha .instrucoes .col-md-4:hover {
+.esquecid-a-senha .toggle-password:hover {
+  color: #244a96;
+  background: rgba(36, 74, 150, 0.1);
+}
+
+/* Button Styles */
+.esquecid-a-senha .btn-primary-custom {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border: none;
+  border-radius: 12px;
+  padding: 1.25rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+.esquecid-a-senha .btn-primary-custom:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
   transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.4);
 }
 
-/* Text improvements */
-.esquecid-a-senha .text-muted {
-  font-size: 0.9rem;
+.esquecid-a-senha .btn-primary-custom:disabled {
+  opacity: 0.6;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Back Link */
+.esquecid-a-senha .back-link {
+  color: #244a96;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.esquecid-a-senha .back-link:hover {
+  color: #1a3a7a;
+  background: rgba(36, 74, 150, 0.1);
+  text-decoration: none;
+}
+
+/* Instructions Section */
+.esquecid-a-senha .instrucoes {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 3rem;
+}
+
+.esquecid-a-senha .instrucoes-title {
+  color: white;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+}
+
+.esquecid-a-senha .instrucao-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.esquecid-a-senha .instrucao-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.esquecid-a-senha .instrucao-icon {
   margin-bottom: 1.5rem;
 }
 
-.esquecid-a-senha .form-label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+.esquecid-a-senha .icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #244a96, #667eea);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
 }
 
+.esquecid-a-senha .instrucao-title {
+  color: #244a96;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.esquecid-a-senha .instrucao-text {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Alert Styles */
+.esquecid-a-senha .alert {
+  border-radius: 12px;
+  border: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.esquecid-a-senha .alert-success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.esquecid-a-senha .alert-danger {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+/* Footer */
+.esquecid-a-senha .footer {
+  background: rgba(26, 26, 26, 0.9);
+  color: white;
+  padding: 2rem 0 !important;
+  margin-top: auto;
+  backdrop-filter: blur(10px);
+}
+
+.esquecid-a-senha .footer p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* ===== MODAL STYLES ===== */
+.esquecid-a-senha .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 2rem;
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+.esquecid-a-senha .modal-content {
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  animation: modal-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.esquecid-a-senha .modal-success {
+  border-top: 6px solid #28a745;
+}
+
+.esquecid-a-senha .modal-icon {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.esquecid-a-senha .modal-success .modal-icon {
+  color: #28a745;
+}
+
+.esquecid-a-senha .modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+}
+
+.esquecid-a-senha .modal-message {
+  color: #666;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.esquecid-a-senha .modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.esquecid-a-senha .modal-btn {
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.esquecid-a-senha .modal-btn-primary {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+.esquecid-a-senha .modal-btn-primary:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.4);
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .esquecid-a-senha .back-btn {
     top: 1rem;
     left: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
   }
 
-  .esquecid-a-senha h2 {
-    font-size: 1.75rem;
-  }
-
-  .esquecid-a-senha .recuperacao-senha {
-    padding: 1.5rem 0;
-  }
-
-  .esquecid-a-senha .recuperacao-senha .card-body {
+  .esquecid-a-senha .recovery-card .card-body {
     padding: 2rem !important;
+  }
+
+  .esquecid-a-senha .recovery-title {
+    font-size: 2rem;
   }
 
   .esquecid-a-senha .progress-container {
@@ -387,41 +589,58 @@
   }
 
   .esquecid-a-senha .step-circle {
-    width: 45px;
-    height: 45px;
-    font-size: 0.9rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
   }
 
   .esquecid-a-senha .step:not(:last-child)::after {
-    top: 22px;
+    top: 25px;
   }
 
-  .esquecid-a-senha .instrucoes {
-    padding: 1.5rem 0 !important;
+  .esquecid-a-senha .modal-content {
+    padding: 2rem;
+    margin: 1rem;
+  }
+
+  .esquecid-a-senha .modal-title {
+    font-size: 1.5rem;
+  }
+
+  .esquecid-a-senha .modal-message {
+    font-size: 1rem;
+  }
+
+  .esquecid-a-senha .modal-buttons {
+    flex-direction: column;
+  }
+
+  .esquecid-a-senha .modal-btn {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .esquecid-a-senha .back-btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
   }
 
-  .esquecid-a-senha h2 {
-    font-size: 1.5rem;
+  .esquecid-a-senha .recovery-title {
+    font-size: 1.75rem;
   }
 
-  .esquecid-a-senha .recuperacao-senha .card-body {
+  .esquecid-a-senha .recovery-card .card-body {
     padding: 1.5rem !important;
   }
 
   .esquecid-a-senha .step-label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
   }
 
-  .esquecid-a-senha .icon-wrapper svg {
-    width: 50px;
-    height: 50px;
+  .esquecid-a-senha .btn-primary-custom {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
   }
 }
 

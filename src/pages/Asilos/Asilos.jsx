@@ -1,5 +1,6 @@
 "use client"
 
+import { asilosService } from '/src/services/asilos/asilos.service.js';
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import AOS from "aos"
@@ -18,6 +19,7 @@ function Asilos() {
   const [distancia, setDistancia] = useState("25")
   const [atividade, setAtividade] = useState("")
   const [loading, setLoading] = useState(false)
+  const [asilosEncontrados, setAsilosEncontrados] = useState([])
 
   useEffect(() => {
     AOS.init({
@@ -38,12 +40,64 @@ function Asilos() {
     }
   }, [])
 
-  const buscarAsilos = () => {
+  const buscarAsilos = async () => {
     setLoading(true)
-    setTimeout(() => {
+
+    // Validação
+    if (!cidade.trim() || !estado) {
+      alert('Por favor, preencha cidade e estado.')
       setLoading(false)
-      console.log("Buscando asilos com filtros:", { cidade, estado, distancia, atividade })
-    }, 2000)
+      return
+    }
+
+    try {
+      // Formata os dados EXATAMENTE como o backend espera
+      const filtros = {
+        cidade: cidade.trim(),
+        estado: estado,
+        distancia: parseInt(distancia) || 10
+        // O backend não usa "atividade" - vamos filtrar no frontend
+      }
+      
+      console.log('🎯 Enviando para backend:', filtros)
+      
+      const resultado = await asilosService.buscarAsilos(filtros)
+
+      // O backend retorna {status: 200, asilos: [...]} ou {status: 400/404, message: "..."}
+      if (resultado.status === 200) {
+        let asilosDoBackend = resultado.asilos || []
+        
+        // Aplica filtro de atividade NO FRONTEND (backend não suporta)
+        if (atividade) {
+          asilosDoBackend = asilosDoBackend.filter(asilo => {
+            if (!asilo.atividades) return false
+            return asilo.atividades.toLowerCase().includes(atividade.toLowerCase())
+          })
+        }
+        
+        setAsilosEncontrados(asilosDoBackend)
+        console.log('✅ Asilos encontrados:', asilosDoBackend)
+        
+        if (asilosDoBackend.length === 0) {
+          alert('Nenhum asilo encontrado com os filtros aplicados.')
+        }
+      } else {
+        // Erro do backend (400, 404, etc)
+        alert(resultado.message || 'Erro na busca de asilos')
+        setAsilosEncontrados([])
+      }
+    } catch (error) {
+      console.error('❌ Erro de conexão:', error)
+      alert('Erro ao conectar com o servidor. Verifique se o backend está rodando.')
+      setAsilosEncontrados([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const carregarMaisAsilos = () => {
+    console.log("Carregando mais asilos...")
+    // Aqui você pode adicionar a lógica para carregar mais resultados
   }
 
   const interesseVoluntario = (asiloId) => {
@@ -51,14 +105,100 @@ function Asilos() {
     console.log("Interesse registrado para:", asiloId)
   }
 
-  const carregarMaisAsilos = () => {
-    console.log("Carregando mais asilos...")
+  // Função para renderizar os asilos da API
+  const renderAsilosAPI = () => {
+    if (!asilosEncontrados || asilosEncontrados.length === 0) {
+      return (
+        <div className="text-center py-5">
+          <i className="fas fa-search fa-3x text-muted mb-3"></i>
+          <h4 className="text-muted">Nenhum asilo encontrado</h4>
+          <p className="text-muted">Tente ajustar os filtros de busca.</p>
+        </div>
+      )
+    }
+    
+    return asilosEncontrados.map((asilo, index) => (
+      <div key={asilo.id_asilo || index} className="asilo-card" data-aos="zoom-in" data-aos-delay={(index % 3) * 100}>
+        <div className="asilo-header">
+          <h3 className="text-balance">{asilo.nome || "Asilo Sem Nome"}</h3>
+          <span className="badge bg-success">Disponível</span>
+        </div>
+        <div className="asilo-info">
+          <p>
+            <strong>
+              <i className="fas fa-map-marker-alt text-primary"></i> Local:
+            </strong>{" "}
+            {asilo.cidade || "Cidade não informada"}, {asilo.estado || "Estado não informado"}
+            {asilo.distancia_km && ` - ${asilo.distancia_km} km de distância`}
+          </p>
+          
+          {asilo.endereco && (
+            <p>
+              <strong>
+                <i className="fas fa-map text-primary"></i> Endereço:
+              </strong>{" "}
+              {asilo.endereco}
+            </p>
+          )}
+          
+          {asilo.descricao && (
+            <p>
+              <strong>
+                <i className="fas fa-info-circle text-primary"></i> Descrição:
+              </strong>{" "}
+              {asilo.descricao}
+            </p>
+          )}
+
+          {asilo.telefone && (
+            <p>
+              <strong>
+                <i className="fas fa-phone text-primary"></i> Telefone:
+              </strong>{" "}
+              {asilo.telefone}
+            </p>
+          )}
+
+          {asilo.email && (
+            <p>
+              <strong>
+                <i className="fas fa-envelope text-primary"></i> Email:
+              </strong>{" "}
+              {asilo.email}
+            </p>
+          )}
+
+          {asilo.atividades && (
+            <>
+              <p>
+                <strong>
+                  <i className="fas fa-hands-helping text-primary"></i> Atividades:
+                </strong>
+              </p>
+              <ul className="lista-atividades">
+                {asilo.atividades.split(',').map((atividade, idx) => (
+                  <li key={idx}>
+                    <i className="fas fa-check"></i> {atividade.trim()}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+        <div className="asilo-actions">
+          <button className="btn btn-primary" onClick={() => interesseVoluntario(asilo.id_asilo)}>
+            <i className="fas fa-heart me-1"></i>Tenho Interesse
+          </button>
+        </div>
+      </div>
+    ))
   }
 
   return (
     <div className="home-page">
       <Header />
-
+      
+      {/* Hero Carousel */}
       <div
         id="heroCarousel"
         className="carousel slide hero-carousel"
@@ -283,160 +423,26 @@ function Asilos() {
               </div>
             )}
 
-            <div className="asilos-container">
-              {/* Card 1 - Lar Vicentino */}
-              <div className="asilo-card" data-aos="zoom-in" data-aos-delay="100">
-                <div className="asilo-header">
-                  <h3 className="text-balance">Lar Vicentino</h3>
-                  <span className="badge bg-success">Ativo</span>
-                </div>
-                <div className="asilo-info">
-                  <p>
-                    <strong>
-                      <i className="fas fa-map-marker-alt text-primary"></i> Local:
-                    </strong>{" "}
-                    São Paulo, SP - 2.5 km
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-info-circle text-primary"></i> Descrição:
-                    </strong>{" "}
-                    Entidade sem fins lucrativos, fundada em 1972 por um grupo de Vicentinos preocupados com idosos em
-                    situação de risco social e abandono.
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-hands-helping text-primary"></i> Precisamos de:
-                    </strong>
-                  </p>
-                  <ul className="lista-atividades">
-                    <li>
-                      <i className="fas fa-utensils"></i> Mantimentos
-                    </li>
-                    <li>
-                      <i className="fas fa-soap"></i> Materiais de limpeza e higiene
-                    </li>
-                    <li>
-                      <i className="fas fa-gift"></i> Doações para bazar
-                    </li>
-                  </ul>
-                </div>
-                <div className="asilo-actions">
-                  <a
-                    href="https://www.larvicentino.org.br/"
-                    className="btn btn-outline-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="fas fa-external-link-alt me-1"></i>Ver Site
-                  </a>
-                  <button className="btn btn-primary" onClick={() => interesseVoluntario("lar-vicentino")}>
-                    <i className="fas fa-heart me-1"></i>Tenho Interesse
-                  </button>
+            {/* RESULTADOS DA API */}
+            {asilosEncontrados && asilosEncontrados.length > 0 && (
+              <div className="mb-5">
+                <h3 className="text-center mb-4 text-success">
+                  <i className="fas fa-search me-2"></i>
+                  Resultados da Busca ({asilosEncontrados.length} asilos encontrados)
+                </h3>
+                <div className="asilos-container">
+                  {renderAsilosAPI()}
                 </div>
               </div>
+            )}
 
-              {/* Card 2 - Casa Luz do Caminho */}
-              <div className="asilo-card" data-aos="zoom-in" data-aos-delay="200">
-                <div className="asilo-header">
-                  <h3 className="text-balance">Casa Luz do Caminho</h3>
-                  <span className="badge bg-success">Ativo</span>
-                </div>
-                <div className="asilo-info">
-                  <p>
-                    <strong>
-                      <i className="fas fa-map-marker-alt text-primary"></i> Local:
-                    </strong>{" "}
-                    São Paulo, SP - 4.1 km
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-info-circle text-primary"></i> Descrição:
-                    </strong>{" "}
-                    A "Casa Luz do Caminho" foi fundada em 08 de setembro de 1999, é uma Entidade civil beneficente,
-                    filantrópica, assistencial, educacional e cultural, sem fins lucrativos.
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-hands-helping text-primary"></i> Precisamos de:
-                    </strong>
-                  </p>
-                  <ul className="lista-atividades">
-                    <li>
-                      <i className="fas fa-broom"></i> Itens de limpeza
-                    </li>
-                    <li>
-                      <i className="fas fa-soap"></i> Itens de higiene
-                    </li>
-                    <li>
-                      <i className="fas fa-utensils"></i> Mantimentos
-                    </li>
-                  </ul>
-                </div>
-                <div className="asilo-actions">
-                  <a
-                    href="https://casaluzdocaminho.org.br/"
-                    className="btn btn-outline-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="fas fa-external-link-alt me-1"></i>Ver Site
-                  </a>
-                  <button className="btn btn-primary" onClick={() => interesseVoluntario("casa-luz-caminho")}>
-                    <i className="fas fa-heart me-1"></i>Tenho Interesse
-                  </button>
-                </div>
+            {!loading && asilosEncontrados.length === 0 && (
+              <div className="text-center py-5">
+                <i className="fas fa-home fa-3x text-muted mb-3"></i>
+                <h4 className="text-muted">Nenhum asilo para exibir</h4>
+                <p className="text-muted">Use os filtros acima para encontrar asilos próximos a você.</p>
               </div>
-
-              {/* Card 3 - Casa Odina Lobo */}
-              <div className="asilo-card" data-aos="zoom-in" data-aos-delay="300">
-                <div className="asilo-header">
-                  <h3 className="text-balance">Casa Odina Lobo</h3>
-                  <span className="badge bg-warning">Urgente</span>
-                </div>
-                <div className="asilo-info">
-                  <p>
-                    <strong>
-                      <i className="fas fa-map-marker-alt text-primary"></i> Local:
-                    </strong>{" "}
-                    São Paulo, SP - 6.8 km
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-info-circle text-primary"></i> Descrição:
-                    </strong>{" "}
-                    É uma instituição de longa permanência para idosos (ILPI), sem fins lucrativos, fundada em 1950.
-                    Somos uma entidade totalmente Filantrópica.
-                  </p>
-                  <p>
-                    <strong>
-                      <i className="fas fa-hands-helping text-primary"></i> Precisamos de:
-                    </strong>
-                  </p>
-                  <ul className="lista-atividades">
-                    <li>
-                      <i className="fas fa-donate"></i> Doações financeiras
-                    </li>
-                    <li>
-                      <i className="fas fa-music"></i> Atividades musicais
-                    </li>
-                  </ul>
-                </div>
-                <div className="asilo-actions">
-                  <a
-                    href="https://casa.ondinalobo.org.br/"
-                    className="btn btn-outline-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="fas fa-external-link-alt me-1"></i>Ver Site
-                  </a>
-                  <button className="btn btn-primary" onClick={() => interesseVoluntario("casa-odina-lobo")}>
-                    <i className="fas fa-heart me-1"></i>Tenho Interesse
-                  </button>
-                </div>
-              </div>
-            </div>
+            )}
 
             <div className="text-center mt-5">
               <button className="btn btn-outline-primary btn-lg" onClick={carregarMaisAsilos} disabled={loading}>
@@ -471,7 +477,7 @@ function Asilos() {
                 idoso, cadastre-se agora.
               </p>
               <div className="cta-buttons" data-aos="zoom-in" data-aos-delay="200">
-              <Link to="/cadastrovoluntario" className="btn videos-btn-cta-secondary">
+                <Link to="/cadastrovoluntario" className="btn videos-btn-cta-secondary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -490,7 +496,7 @@ function Asilos() {
                   </svg>
                   Tornar-se Voluntário
                 </Link>
-                                <button className="btn videos-btn-cta-primary" onClick={() => uploadModalRef.current?.show()}>
+                <Link to="/cadastroasilo" className="btn videos-btn-cta-primary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -508,7 +514,7 @@ function Asilos() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                   Cadastrar seu Asilo
-                </button>
+                </Link>
               </div>
             </div>
           </div>

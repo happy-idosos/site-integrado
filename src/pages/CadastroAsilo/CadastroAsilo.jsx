@@ -10,7 +10,7 @@ import "./CadastroAsilo.css"
 
 import logo from "../../assets/img/happyidosos.jpg"
 
-// Componente Modal separado
+// Componente Modal Atualizado
 const CadastroModal = ({ show, type, title, message, onClose }) => {
   if (!show) return null
 
@@ -30,13 +30,21 @@ const CadastroModal = ({ show, type, title, message, onClose }) => {
       <div 
         className={`cadastro-modal-content cadastro-modal-${type}`}
         onClick={(e) => e.stopPropagation()}
+        data-aos="zoom-in"
       >
         <div className="cadastro-modal-header">
           <div className="cadastro-modal-icon">
             {type === 'success' ? (
-              <i className="fas fa-check-circle"></i>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
             ) : (
-              <i className="fas fa-exclamation-triangle"></i>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
             )}
           </div>
           <h3 className="cadastro-modal-title">{title}</h3>
@@ -47,7 +55,7 @@ const CadastroModal = ({ show, type, title, message, onClose }) => {
         </div>
         
         <div className="cadastro-modal-footer">
-          <button className="cadastro-modal-btn" onClick={onClose}>
+          <button className={`cadastro-modal-btn cadastro-modal-btn-${type}`} onClick={onClose}>
             Entendido
           </button>
         </div>
@@ -61,6 +69,7 @@ export default function CadastroAsilo() {
   const { registerAsilo } = useAuth()
   const [loading, setLoading] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     nome: "",
     cnpj: "",
@@ -143,12 +152,20 @@ export default function CadastroAsilo() {
       return "A senha deve ter no mínimo 8 caracteres"
     }
 
-    if (!/[a-zA-Z]/.test(password)) {
-      return "A senha deve conter pelo menos uma letra"
+    if (!/[a-z]/.test(password)) {
+      return "A senha deve conter pelo menos uma letra minúscula"
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      return "A senha deve conter pelo menos uma letra maiúscula"
     }
 
     if (!/\d/.test(password)) {
       return "A senha deve conter pelo menos um número"
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return "A senha deve conter pelo menos um caractere especial (!@#$%^&*(), etc.)"
     }
 
     return ""
@@ -309,6 +326,10 @@ export default function CadastroAsilo() {
     setModal(prev => ({ ...prev, show: false }))
   }
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
   // ===== SUBMIT INTEGRADO COM useAuth =====
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -421,7 +442,7 @@ export default function CadastroAsilo() {
 
         {/* BOTÃO VOLTAR APENAS PARA DESKTOP */}
         {!isMobile && (
-        <button className="cadastro-voluntario-back-btn" onClick={handleBack}>
+        <button className="cadastro-asilo-back-btn-desktop" onClick={handleBack}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
@@ -687,28 +708,58 @@ export default function CadastroAsilo() {
                   {/* Senha */}
                   <div className="cadastro-asilo-form-group">
                     <label htmlFor="senha">Senha *</label>
-                    <input
-                      type="password"
-                      id="senha"
-                      name="senha"
-                      value={formData.senha}
-                      onChange={handleInputChange}
-                      placeholder="Mínimo 8 caracteres, com letras e números"
-                      minLength="8"
-                      className={
-                        errors.senha
-                          ? "cadastro-asilo-error"
-                          : formData.senha
-                          ? "cadastro-asilo-success"
-                          : ""
-                      }
-                      required
-                    />
+                    <div className="cadastro-asilo-password-field">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="senha"
+                        name="senha"
+                        value={formData.senha}
+                        onChange={handleInputChange}
+                        placeholder="Mínimo 8 caracteres com letras, números e caracteres especiais"
+                        minLength="8"
+                        className={
+                          errors.senha
+                            ? "cadastro-asilo-error"
+                            : formData.senha
+                            ? "cadastro-asilo-success"
+                            : ""
+                        }
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="cadastro-asilo-toggle-password"
+                        onClick={togglePasswordVisibility}
+                        aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                      >
+                        {showPassword ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                     {errors.senha && (
                       <div className="cadastro-asilo-error-message">
                         {errors.senha}
                       </div>
                     )}
+                    <div className="cadastro-asilo-password-requirements">
+                      <strong>Requisitos da senha:</strong>
+                      <ul>
+                        <li className={formData.senha.length >= 8 ? "valid" : ""}>Mínimo 8 caracteres</li>
+                        <li className={/[a-z]/.test(formData.senha) ? "valid" : ""}>1 letra minúscula</li>
+                        <li className={/[A-Z]/.test(formData.senha) ? "valid" : ""}>1 letra maiúscula</li>
+                        <li className={/\d/.test(formData.senha) ? "valid" : ""}>1 número</li>
+                        <li className={/[!@#$%^&*(),.?":{}|<>]/.test(formData.senha) ? "valid" : ""}>1 caractere especial</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>

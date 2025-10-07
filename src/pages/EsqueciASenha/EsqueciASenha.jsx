@@ -5,30 +5,37 @@ import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
+import AOS from "aos"
 import "./EsqueciASenha.css"
 
-// Componente Modal de Sucesso
+// Componente Modal de Sucesso - CORRIGIDO
 const SuccessModal = ({ show, onClose }) => {
-  if (!show) return null;
-
-  const handleAsiloLogin = () => {
-    navigate("/loginasilo");
-  };
-
-  const handleVoluntarioLogin = () => {
-    navigate("/loginvoluntario");
-  };
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if (!show) return
+
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose()
       }
-    };
+    }
     
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [show, onClose])
+
+  const handleAsiloLogin = () => {
+    navigate("/loginasilo")
+    onClose()
+  }
+
+  const handleVoluntarioLogin = () => {
+    navigate("/loginvoluntario")
+    onClose()
+  }
+
+  if (!show) return null
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -56,8 +63,8 @@ const SuccessModal = ({ show, onClose }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const EsqueciASenha = () => {
   const navigate = useNavigate()
@@ -78,45 +85,43 @@ const EsqueciASenha = () => {
   // 🎯 CAPTURAR EMAIL DA TELA ANTERIOR
   useEffect(() => {
     // Tenta pegar o email do localStorage
-    const savedEmail = localStorage.getItem('recoveryEmail');
+    const savedEmail = localStorage.getItem('recoveryEmail')
     if (savedEmail) {
-      setEmail(savedEmail);
+      setEmail(savedEmail)
     }
 
     // Tenta pegar o email dos parâmetros da URL
-    const urlParams = new URLSearchParams(location.search);
-    const emailFromUrl = urlParams.get('email');
+    const urlParams = new URLSearchParams(location.search)
+    const emailFromUrl = urlParams.get('email')
     if (emailFromUrl) {
-      setEmail(decodeURIComponent(emailFromUrl));
+      setEmail(decodeURIComponent(emailFromUrl))
     }
 
     // Tenta pegar do state da navegação
     if (location.state?.email) {
-      setEmail(location.state.email);
+      setEmail(location.state.email)
     }
-  }, [location]);
+  }, [location])
 
   useEffect(() => {
-    if (window.AOS) {
-      window.AOS.init({
-        duration: 800,
-        easing: "ease-in-out",
-        once: true,
-        offset: 100,
-      })
-    }
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: true,
+      offset: 100,
+    })
   }, [])
 
   const handleBack = () => {
     if (step === 1) {
-      navigate(-1);
+      navigate(-1)
     } else {
-      setStep(step - 1);
+      setStep(step - 1)
       // Limpa os campos ao voltar
       if (step === 2) {
-        setToken("");
-        setNewPassword("");
-        setConfirmPassword("");
+        setToken("")
+        setNewPassword("")
+        setConfirmPassword("")
       }
     }
   }
@@ -142,6 +147,8 @@ const EsqueciASenha = () => {
       
       if (result.success) {
         showMessage("Token enviado com sucesso! Verifique seu e-mail.", "success")
+        // Salva o email no localStorage para uso posterior
+        localStorage.setItem('recoveryEmail', email)
         setTimeout(() => {
           setStep(2)
           setMessage({ text: "", type: "" })
@@ -196,6 +203,8 @@ const EsqueciASenha = () => {
         setToken("")
         setNewPassword("")
         setConfirmPassword("")
+        // Limpa o email do localStorage após sucesso
+        localStorage.removeItem('recoveryEmail')
       } else {
         showMessage(result.error || "Erro ao redefinir senha. Tente novamente.", "danger")
       }
@@ -389,7 +398,7 @@ const EsqueciASenha = () => {
                               value={token}
                               onChange={(e) => setToken(e.target.value)}
                               required
-                              placeholder="Digite o token de 6 dígitos"
+                              placeholder="Digite o token"
                             />
                             <div className="input-icon">
                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -416,6 +425,7 @@ const EsqueciASenha = () => {
                               onChange={(e) => setNewPassword(e.target.value)}
                               required
                               placeholder="Mínimo 6 caracteres"
+                              minLength="6"
                             />
                             <button
                               type="button"
@@ -456,6 +466,7 @@ const EsqueciASenha = () => {
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               required
                               placeholder="Digite a senha novamente"
+                              minLength="6"
                             />
                             <button
                               type="button"

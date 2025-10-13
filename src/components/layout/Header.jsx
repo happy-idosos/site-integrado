@@ -52,7 +52,7 @@ function Header() {
     return location.pathname === path ? "active" : ""
   }
 
-  // ✅ TOGGLE DO MENU MOBILE
+  // ✅ TOGGLE DO MENU HAMBURGUER
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
@@ -111,135 +111,107 @@ function Header() {
 
   return (
     <header ref={navbarRef}>
-      <nav className={`navbar navbar-expand-lg transparent-header ${scrolled ? "scrolled" : ""}`} id="mainNavbar">
+      <nav className={`navbar transparent-header ${scrolled ? "scrolled" : ""}`} id="mainNavbar">
         <div className="container">
           <Link className="navbar-brand" to="/" onClick={handleNavClick}>
             <img src={logoHappyIdosos || "/placeholder.svg"} alt="Logo Happy Idosos" />
           </Link>
           
-          {/* ✅ BOTÃO TOGGLER MODERNO - APENAS MOBILE */}
-<button
-  className={`navbar-toggler simple-toggler ${isMobileMenuOpen ? 'active' : ''}`}
-  type="button"
-  aria-controls="navbarNav"
-  aria-expanded={isMobileMenuOpen}
-  aria-label="Toggle navigation"
-  onClick={toggleMobileMenu}
->
-  <span className="toggler-bar"></span>
-  <span className="toggler-bar"></span>
-  <span className="toggler-bar"></span>
-</button>
-          
-          {/* ✅ MENU DESKTOP (ORIGINAL - SEM ALTERAÇÕES) */}
-          <div className="collapse navbar-collapse desktop-menu" id="navbarNav">
-            <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/")}`} 
-                  to="/"
-                >
-                  Início
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/asilos")}`} 
-                  to="/asilos"
-                >
-                  Buscar Asilos
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/eventos")}`} 
-                  to="/eventos"
-                >
-                  Eventos
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/videos")}`} 
-                  to="/videos"
-                >
-                  Vídeos
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/sobrenos")}`} 
-                  to="/sobrenos"
-                >
-                  Sobre Nós
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive("/contato")}`} 
-                  to="/contato"
-                >
-                  Contato
-                </Link>
-              </li>
-            </ul>
-            
-            <div className="header-buttons">
-              {isAuthenticated ? (
-                <div className="d-flex align-items-center gap-3">
-                  <div className="user-info">
-                    <div className="user-welcome">
-                      <span className="user-icon">{getUserTypeIcon()}</span>
-                      Olá, <strong>{userName}</strong>
-                    </div>
-                    <div className="user-type badge">
-                      {getUserTypeText()}
-                    </div>
-                  </div>
-                  
-                  <Link 
-                    to={getProfileRoute()}
-                    className="btn btn-outline-light btn"
-                  >
-                    Meu Perfil
-                  </Link>
-                  
-                  <button 
-                    onClick={handleOpenLogoutModal}
-                    className="btn btn-outline-danger btn"
-                    title="Sair da conta"
-                  >
-                    Sair
-                  </button>
-                </div>
-              ) : (
-                <div className="d-flex align-items-center gap-2">
-                  <button 
-                    onClick={handleOpenLoginModal}
-                    className="btn btn-outline-light btn"
-                  >
-                    Entrar
-                  </button>
-                  <Link 
-                    to="/cadastrovoluntario" 
-                    className="btn btn-outline-primary btn"
-                  >
-                    Cadastrar - Voluntário
-                  </Link>
-                  <Link 
-                    to="/cadastroasilo" 
-                    className="btn btn-primary btn"
-                  >
-                    Cadastrar - Asilo
-                  </Link>
-                </div>
-              )}
-            </div>
+          {/* ✅ ITENS FIXOS NO HEADER - INÍCIO, HAPPY IDOSOS, CONTATO */}
+          <div className="header-main-links">
+            <Link 
+              className={`nav-link ${isActive("/")}`} 
+              to="/"
+              onClick={handleNavClick}
+            >
+              Início
+            </Link>
+            <Link 
+              className={`nav-link ${isActive("/sobreprojeto")}`} 
+              to="/sobreprojeto"
+              onClick={handleNavClick}
+            >
+              Happy Idosos
+            </Link>
+            <Link 
+              className={`nav-link ${isActive("/contato")}`} 
+              to="/contato"
+              onClick={handleNavClick}
+            >
+              Contato
+            </Link>
           </div>
+
+          {/* ✅ BOTÕES DE AUTENTICAÇÃO - SEMPRE VISÍVEIS */}
+          <div className="header-buttons-desktop">
+            {isAuthenticated ? (
+              <div className="d-flex align-items-center gap-3">
+                <div className="user-info">
+                  <div className="user-welcome">
+                    <span className="user-icon">{getUserTypeIcon()}</span>
+                    Olá, <strong>{userName}</strong>
+                  </div>
+                  <div className="user-type badge">
+                    {getUserTypeText()}
+                  </div>
+                </div>
+                
+                <Link 
+                  to={getProfileRoute()}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  Meu Perfil
+                </Link>
+                
+                <button 
+                  onClick={handleOpenLogoutModal}
+                  className="btn btn-outline-primary btn-sm logout-btn"
+                  title="Sair da conta"
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <div className="d-flex align-items-center gap-2">
+                <button 
+                  onClick={handleOpenLoginModal}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  Entrar
+                </button>
+                <Link 
+                  to="/cadastrovoluntario" 
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  Cadastrar - Voluntário
+                </Link>
+                <Link 
+                  to="/cadastroasilo" 
+                  className="btn btn-primary btn-sm"
+                >
+                  Cadastrar - Asilo
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* ✅ BOTÃO HAMBURGUER PARA MENU COMPLETO */}
+          <button
+            className={`navbar-toggler simple-toggler ${isMobileMenuOpen ? 'active' : ''}`}
+            type="button"
+            aria-controls="navbarNav"
+            aria-expanded={isMobileMenuOpen}
+            aria-label="Toggle navigation"
+            onClick={toggleMobileMenu}
+          >
+            <span className="toggler-bar"></span>
+            <span className="toggler-bar"></span>
+            <span className="toggler-bar"></span>
+          </button>
         </div>
       </nav>
 
-      {/* ✅ MENU MOBILE - SIDEBAR DRAWER ANIMADO */}
+      {/* ✅ MENU HAMBURGUER COMPLETO */}
       <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
       
       <div className={`mobile-menu-drawer ${isMobileMenuOpen ? 'active' : ''}`}>
@@ -259,7 +231,7 @@ function Header() {
             ) : (
               <>
                 <div className="drawer-avatar">
-                  <span className="avatar-icon">👤</span>
+                  <span className="avatar-icon"></span>
                 </div>
                 <div className="drawer-user-details">
                   <div className="drawer-user-name">Visitante</div>
@@ -273,10 +245,10 @@ function Header() {
           </button>
         </div>
 
-        {/* Navegação Principal - CORRIGIDO ALINHAMENTO */}
+        {/* Navegação Principal */}
         <nav className="drawer-nav">
           <div className="nav-section">
-            <div className="nav-section-label">Navegação</div>
+            <div className="nav-section-label">Navegação Principal</div>
             <Link to="/" className={`nav-item ${isActive("/")}`} onClick={handleNavClick}>
               <span className="nav-icon"></span>
               <span className="nav-text">Início</span>
@@ -293,9 +265,13 @@ function Header() {
               <span className="nav-icon"></span>
               <span className="nav-text">Vídeos</span>
             </Link>
+            <Link to="/sobreprojeto" className={`nav-item ${isActive("/sobreprojeto")}`} onClick={handleNavClick}>
+              <span className="nav-icon"></span>
+              <span className="nav-text">Happy Idosos</span>
+            </Link>
             <Link to="/sobrenos" className={`nav-item ${isActive("/sobrenos")}`} onClick={handleNavClick}>
               <span className="nav-icon"></span>
-              <span className="nav-text">Sobre Nós</span>
+              <span className="nav-text">Equipe</span>
             </Link>
             <Link to="/contato" className={`nav-item ${isActive("/contato")}`} onClick={handleNavClick}>
               <span className="nav-icon"></span>
@@ -303,7 +279,7 @@ function Header() {
             </Link>
           </div>
 
-          {/* Seção de Ações do Usuário - CORRIGIDO ALINHAMENTO */}
+          {/* Seção de Ações do Usuário */}
           <div className="nav-section">
             <div className="nav-section-label">Minha Conta</div>
             {isAuthenticated ? (

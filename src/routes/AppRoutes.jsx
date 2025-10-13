@@ -10,6 +10,7 @@ import Asilos from "../pages/Asilos/Asilos"
 import Eventos from "../pages/Eventos/Eventos"
 import Videos from "../pages/Videos/Videos"
 import SobreNos from "../pages/SobreNos/SobreNos"
+import SobreProjeto from "../pages/SobreProjeto/SobreProjeto"
 import Contato from "../pages/Contato/Contato"
 import TermosDeUso from "../pages/TermosDeUso/TermosDeUso"
 import EsqueciASenha from "../pages/EsqueciASenha/EsqueciASenha"
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/eventos" element={<Eventos />} />
       <Route path="/videos" element={<Videos />} />
       <Route path="/sobrenos" element={<SobreNos />} />
+      <Route path="/sobreprojeto" element={<SobreProjeto />} />
       <Route path="/contato" element={<Contato />} />
       <Route path="/termosdeuso" element={<TermosDeUso />} />
       <Route path="/esqueciasenha" element={<EsqueciASenha />} />

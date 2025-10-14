@@ -10,7 +10,7 @@ import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./Videos.css"
 
-import carouselum from "../../assets/img/carousels/carousel-8.jpg"
+import carouselum from "../../assets/img/carousels/carousel-2.jpg"
 import { api } from "../../services/api"
 import { API_BASE_URL } from "../../services/auth/auth.constants"
 

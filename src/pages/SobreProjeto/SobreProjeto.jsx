@@ -1,31 +1,35 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import AOS from "aos"
 import "aos/dist/aos.css"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./SobreProjeto.css"
 
-// Imagens do carousel
-import projeto1 from "../../assets/img/carousels/carousel-1.jpg"
-import projeto2 from "../../assets/img/carousels/carousel-2.jpg"
-import projeto3 from "../../assets/img/carousels/carousel-3.jpg"
+// Import das imagens do carousel
+import carouselum from "../../assets/img/carousels/carousel-1.jpg"
+import carouseldois from "../../assets/img/carousels/carousel-2.jpg"
+import carouseltres from "../../assets/img/carousels/carousel-3.jpg"
 
-// Imagens das ODS
+// Import das ODS
 import ods3 from "../../assets/img/ods3.png"
 import ods16 from "../../assets/img/ods16.png"
 
-// Imagens ilustrativas
-import impacto from "../../assets/img/equipefoto.jpg"
-import tecnologia from "../../assets/img/sobrenos_integrantes/Lucas Martins.jpeg"
-import comunidade from "../../assets/img/sobrenos_integrantes/Ana Caroline.jpeg"
+// Import das imagens dos idosos
+import idosos1 from "../../assets/img/sobreprojeto/idosos1.jpeg"
+import idosos2 from "../../assets/img/sobreprojeto/idosos2.jpeg"
+import idosos3 from "../../assets/img/sobreprojeto/idosos3.jpeg"
+import idosos4 from "../../assets/img/sobreprojeto/idosos4.jpeg"
+import idosos5 from "../../assets/img/sobreprojeto/idosos5.jpeg"
+import idosos6 from "../../assets/img/sobreprojeto/idosos6.jpeg"
 
 const SobreProjeto = () => {
+  const carouselRef = useRef(null)
+
   useEffect(() => {
+    // Initialize AOS animations
     AOS.init({
       duration: 1000,
       easing: "ease-out-cubic",
@@ -34,90 +38,32 @@ const SobreProjeto = () => {
       delay: 100,
     })
 
-    const carouselElement = document.querySelector("#heroCarousel")
-    if (carouselElement && window.bootstrap) {
-      new window.bootstrap.Carousel(carouselElement, {
-        ride: "carousel",
-        interval: 6000,
-        pause: "hover",
-      })
-    }
-
-    // Carousel functionality for features
-    class FeaturesCarousel {
-      constructor(carouselId, trackId, prevBtnId, nextBtnId) {
-        this.carousel = document.getElementById(carouselId)
-        this.track = document.getElementById(trackId)
-        this.prevBtn = document.getElementById(prevBtnId)
-        this.nextBtn = document.getElementById(nextBtnId)
-        this.cards = this.track.querySelectorAll(".feature-card")
-        this.currentIndex = 0
-        this.cardsPerView = this.getCardsPerView()
-
-        this.init()
-        this.updateButtons()
-
-        window.addEventListener("resize", () => {
-          this.cardsPerView = this.getCardsPerView()
-          this.currentIndex = Math.min(this.currentIndex, this.cards.length - this.cardsPerView)
-          this.updateCarousel()
-          this.updateButtons()
-        })
-      }
-
-      getCardsPerView() {
-        if (window.innerWidth <= 768) return 1
-        if (window.innerWidth <= 991) return 2
-        return 3
-      }
-
-      init() {
-        this.prevBtn.addEventListener("click", () => this.prev())
-        this.nextBtn.addEventListener("click", () => this.next())
-      }
-
-      prev() {
-        if (this.currentIndex > 0) {
-          this.currentIndex--
-          this.updateCarousel()
-          this.updateButtons()
+    // Import e inicialização do Bootstrap de forma segura
+    const initializeBootstrap = async () => {
+      try {
+        const bootstrap = await import("bootstrap/dist/js/bootstrap.bundle.min.js")
+        
+        // Inicializa o carousel se existir
+        if (carouselRef.current) {
+          new bootstrap.Carousel(carouselRef.current, {
+            interval: 5000,
+            ride: "carousel",
+            pause: "hover",
+            wrap: true
+          })
         }
-      }
-
-      next() {
-        if (this.currentIndex < this.cards.length - this.cardsPerView) {
-          this.currentIndex++
-          this.updateCarousel()
-          this.updateButtons()
-        }
-      }
-
-      updateCarousel() {
-        const cardWidth = this.cards[0].offsetWidth
-        const gap = 20
-        const translateX = -(this.currentIndex * (cardWidth + gap))
-        this.track.style.transform = `translateX(${translateX}px)`
-      }
-
-      updateButtons() {
-        this.prevBtn.disabled = this.currentIndex === 0
-        this.nextBtn.disabled = this.currentIndex >= this.cards.length - this.cardsPerView
+      } catch (error) {
+        console.error("Erro ao carregar Bootstrap:", error)
       }
     }
 
-    // Initialize carousels
-    const featuresCarousel = new FeaturesCarousel("featuresCarousel", "featuresTrack", "featuresPrev", "featuresNext")
-
-    return () => {
-      window.removeEventListener("resize", () => {})
-    }
+    initializeBootstrap()
   }, [])
 
   return (
     <div className="sobre-projeto-page">
       <Header />
 
-      {/* Hero Carousel */}
       <div
         id="heroCarousel"
         className="carousel slide hero-carousel"
@@ -141,67 +87,74 @@ const SobreProjeto = () => {
           <div className="carousel-item active">
             <div className="carousel-image-container">
               <img
-                src={projeto1 || "/placeholder.svg"}
+                src={carouselum || "/placeholder.svg"}
                 className="d-block w-100"
-                alt="Projeto Happy Idosos em ação"
+                alt="Voluntárias trabalhando juntas"
                 loading="eager"
               />
             </div>
             <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Happy Idosos</h2>
-              <p className="text-pretty">Conectando gerações, transformando vidas através da tecnologia e empatia</p>
-              <div className="hero-buttons">
-                <a href="#sobre" className="btn btn-outline-primary btn">
-                  Sobre o Projeto
-                </a>
-                <a href="#impacto" className="btn btn-outline-primary btn">
-                  Nosso Impacto
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="carousel-item">
-            <div className="carousel-image-container">
-              <img
-                src={projeto2 || "/placeholder.svg"}
-                className="d-block w-100"
-                alt="Tecnologia a serviço da comunidade"
-                loading="lazy"
-              />
-            </div>
-            <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Tecnologia Social</h2>
+              <h2 className="carrossel text-balance">Conectando Voluntários e Idosos</h2>
               <p className="text-pretty">
-                Inovação digital para promover inclusão social e bem-estar da terceira idade
+                O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
+                bem-estar e alegria.
               </p>
               <div className="hero-buttons">
-                <a href="#tecnologia" className="btn btn-outline-primary btn">
-                  Nossa Tecnologia
-                </a>
-                <a href="#ods" className="btn btn-outline-primary btn">
-                  Compromisso ODS
-                </a>
+                <Link to="/asilos" className="btn btn-outline-primary btn">
+                  Encontrar Asilos
+                </Link>
+                <Link to="/eventos" className="btn btn-outline-primary btn">
+                  Ver Eventos
+                </Link>
               </div>
             </div>
           </div>
           <div className="carousel-item">
             <div className="carousel-image-container">
               <img
-                src={projeto3 || "/placeholder.svg"}
+                src={carouseldois || "/placeholder.svg"}
                 className="d-block w-100"
-                alt="Comunidade unida pelo bem-estar"
+                alt="Enfermeira cuidando de idosa"
                 loading="lazy"
               />
             </div>
             <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Sem Fins Lucrativos</h2>
-              <p className="text-pretty">100% voluntário, 100% comprometido com o bem-estar social</p>
+              <h2 className="carrossel text-balance">Cuidado e Companheirismo</h2>
+              <p className="text-pretty">
+                Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa
+                permanência.
+              </p>
               <div className="hero-buttons">
-                <Link to="/cadastrovoluntario" className="btn btn-outline-primary btn">
-                  Seja Voluntário
+                <Link to="/asilos" className="btn btn-outline-primary btn">
+                  Encontrar Asilos
                 </Link>
-                <Link to="/contato" className="btn btn-outline-primary btn">
-                  Apoie o Projeto
+                <Link to="/eventos" className="btn btn-outline-primary btn">
+                  Ver Eventos
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="carousel-item">
+            <div className="carousel-image-container">
+              <img
+                src={carouseltres || "/placeholder.svg"}
+                className="d-block w-100"
+                alt="Voluntária conversando com idosa"
+                loading="lazy"
+              />
+            </div>
+            <div className="carousel-caption d-none d-md-block">
+              <h2 className="carrossel text-balance">Faça a Diferença</h2>
+              <p className="text-pretty">
+                Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa
+                permanência.
+              </p>
+              <div className="hero-buttons">
+                <Link to="/asilos" className="btn btn-outline-primary btn">
+                  Encontrar Asilos
+                </Link>
+                <Link to="/eventos" className="btn btn-outline-primary btn">
+                  Ver Eventos
                 </Link>
               </div>
             </div>
@@ -217,345 +170,277 @@ const SobreProjeto = () => {
         </button>
       </div>
 
-      <main>
-        {/* Sobre o Projeto */}
-        <section className="sobre-projeto" id="sobre" data-aos="fade-up" data-aos-duration="800">
-          <div className="container">
-            <h2 className="section-title text-balance">Sobre o Happy Idosos</h2>
-            <div className="row">
-              <div className="col-lg-10 mx-auto">
-                <div className="projeto-content" data-aos="fade-up" data-aos-delay="100">
-                  <p className="text-pretty">
-                    O <strong>Happy Idosos</strong> é uma iniciativa social inovadora que utiliza tecnologia para 
-                    conectar jovens voluntários com idosos em instituições de longa permanência. Lorem ipsum dolor 
-                    sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore 
-                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-                  </p>
+      <section className="galeria-projeto" data-aos="fade-up" data-aos-duration="1200">
+        <div className="container">
+          <h2 className="section-title" data-aos="fade-up" data-aos-delay="100">
+            Aplicação Real do Projeto
+          </h2>
+          <p className="section-subtitle" data-aos="fade-up" data-aos-delay="200">
+            Veja como o Happy Idosos está transformando vidas e levando alegria para instituições de longa permanência
+          </p>
+          <div className="galeria-grid">
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="300">
+              <img src={idosos1 || "/placeholder.svg"} alt="Atividade com idosos" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Atividades Recreativas</h4>
+                <p className="galeria-description">
+                  Momentos de descontração e alegria através de jogos, música e atividades lúdicas.
+                </p>
+              </div>
+              <div className="galeria-badge">Diversão</div>
+            </div>
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="400">
+              <img src={idosos2 || "/placeholder.svg"} alt="Acompanhamento emocional" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Acompanhamento Emocional</h4>
+                <p className="galeria-description">
+                  Suporte psicológico e emocional para promover saúde mental e bem-estar.
+                </p>
+              </div>
+              <div className="galeria-badge">Cuidado</div>
+            </div>
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="500">
+              <img src={idosos3 || "/placeholder.svg"} alt="Celebrações especiais" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Celebrações Especiais</h4>
+                <p className="galeria-description">
+                  Festas de aniversário, datas comemorativas e momentos especiais compartilhados.
+                </p>
+              </div>
+              <div className="galeria-badge">Celebração</div>
+            </div>
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="600">
+              <img src={idosos4 || "/placeholder.svg"} alt="Atividades físicas" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Exercícios Físicos</h4>
+                <p className="galeria-description">
+                  Atividades físicas adaptadas para manter a mobilidade e saúde dos idosos.
+                </p>
+              </div>
+              <div className="galeria-badge">Saúde</div>
+            </div>
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="700">
+              <img src={idosos5 || "/placeholder.svg"} alt="Oficinas criativas" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Oficinas Criativas</h4>
+                <p className="galeria-description">
+                  Trabalhos manuais, artesanato e expressão artística para estimular a criatividade.
+                </p>
+              </div>
+              <div className="galeria-badge">Criatividade</div>
+            </div>
+            <div className="galeria-item" data-aos="zoom-in" data-aos-delay="800">
+              <img src={idosos6 || "/placeholder.svg"} alt="Integração social" className="galeria-image" />
+              <div className="galeria-overlay">
+                <h4 className="galeria-title">Integração Social</h4>
+                <p className="galeria-description">
+                  Promovendo a socialização e construção de novas amizades entre os participantes.
+                </p>
+              </div>
+              <div className="galeria-badge">Socialização</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  <p className="text-pretty">
-                    Nosso propósito é combater a solidão na terceira idade através de interações significativas 
-                    e atividades recreativas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
-                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </p>
+      <section className="ods-section" data-aos="fade-up" data-aos-duration="1200">
+        <div className="container">
+          <h2 className="section-title" data-aos="fade-up" data-aos-delay="100">
+            Alinhamento com os ODS
+          </h2>
+          <p className="section-subtitle" data-aos="fade-up" data-aos-delay="200">
+            Nosso projeto está diretamente alinhado com os Objetivos de Desenvolvimento Sustentável da ONU
+          </p>
+          <div className="ods-grid">
+            <div className="ods-card" data-aos="fade-up" data-aos-delay="300">
+              <div className="ods-image-container">
+                <img src={ods3 || "/placeholder.svg"} alt="ODS 3 - Saúde e Bem-Estar" className="ods-image" />
+              </div>
+              <div className="ods-content">
+                <h3 className="ods-title">ODS 3 - Saúde e Bem-Estar</h3>
+                <p className="ods-description">
+                  Assegurar uma vida saudável e promover o bem-estar para todos, em todas as idades.
+                </p>
+                <ul className="ods-list">
+                  <li>Promoção da saúde mental e emocional dos idosos</li>
+                  <li>Atividades físicas adaptadas para a terceira idade</li>
+                  <li>Acompanhamento psicológico e emocional</li>
+                  <li>Prevenção de doenças através de hábitos saudáveis</li>
+                </ul>
+              </div>
+            </div>
+            <div className="ods-card" data-aos="fade-up" data-aos-delay="400">
+              <div className="ods-image-container">
+                <img src={ods16 || "/placeholder.svg"} alt="ODS 16 - Paz, Justiça e Instituições Eficazes" className="ods-image" />
+              </div>
+              <div className="ods-content">
+                <h3 className="ods-title">ODS 16 - Paz, Justiça e Instituições Eficazes</h3>
+                <p className="ods-description">
+                  Promover sociedades pacíficas e inclusivas para o desenvolvimento sustentável.
+                </p>
+                <ul className="ods-list">
+                  <li>Inclusão social da população idosa</li>
+                  <li>Fortalecimento de instituições que cuidam de idosos</li>
+                  <li>Promoção da igualdade e direitos dos idosos</li>
+                  <li>Transparência e prestação de contas</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  <div className="projeto-highlights">
-                    <div className="row">
-                      <div className="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                        <div className="highlight-card">
-                          <div className="highlight-icon">🎯</div>
-                          <h4>Missão Clara</h4>
-                          <p>Promover bem-estar através da conexão intergeracional</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                        <div className="highlight-card">
-                          <div className="highlight-icon">💝</div>
-                          <h4>Sem Fins Lucrativos</h4>
-                          <p>Iniciativa 100% voluntária e comunitária</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4" data-aos="fade-up" data-aos-delay="400">
-                        <div className="highlight-card">
-                          <div className="highlight-icon">🌍</div>
-                          <h4>Impacto Social</h4>
-                          <p>Transformando realidades em escala nacional</p>
-                        </div>
-                      </div>
+      <section className="sustentabilidade" data-aos="fade-up" data-aos-duration="1200">
+        <div className="container">
+          <h2 className="section-title" data-aos="fade-up" data-aos-delay="100">
+            Modelo de Sustentabilidade
+          </h2>
+          <p className="section-subtitle" data-aos="fade-up" data-aos-delay="200">
+            Conheça nosso compromisso com a sustentabilidade e o impacto positivo que geramos na vida dos idosos
+          </p>
+          <div className="sustentabilidade-content" data-aos="fade-up" data-aos-delay="300">
+            <div className="sustentabilidade-grid">
+              <div className="modelo-content">
+                <h3 data-aos="fade-up" data-aos-delay="400">
+                  Sustentabilidade que Transforma Vidas
+                </h3>
+                <p className="modelo-text" data-aos="fade-up" data-aos-delay="500">
+                  Nosso modelo de sustentabilidade é baseado em três pilares fundamentais: impacto social positivo,
+                  viabilidade econômica e responsabilidade ambiental. Através de parcerias estratégicas e do
+                  engajamento da comunidade, garantimos a continuidade e o crescimento do projeto.
+                </p>
+                <div className="principios-grid">
+                  <div className="principio-item" data-aos="fade-up" data-aos-delay="600">
+                    <div className="principio-icon">🌱</div>
+                    <div className="principio-content">
+                      <h5>Sustentabilidade Social</h5>
+                      <p>
+                        Promovemos o bem-estar e a inclusão social dos idosos através de atividades regulares e
+                        acompanhamento personalizado.
+                      </p>
                     </div>
                   </div>
+                  <div className="principio-item" data-aos="fade-up" data-aos-delay="700">
+                    <div className="principio-icon">💚</div>
+                    <div className="principio-content">
+                      <h5>Viabilidade Econômica</h5>
+                      <p>
+                        Desenvolvemos um modelo de negócio sustentável que garante a continuidade do projeto através de
+                        doações, parcerias e captação de recursos.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="principio-item" data-aos="fade-up" data-aos-delay="800">
+                    <div className="principio-icon">🌍</div>
+                    <div className="principio-content">
+                      <h5>Responsabilidade Ambiental</h5>
+                      <p>
+                        Implementamos práticas sustentáveis em todas as nossas atividades, reduzindo nosso impacto
+                        ambiental e promovendo a conscientização.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="impacto-stats" data-aos="fade-up" data-aos-delay="900">
+                  <div className="stat-number">2.500+</div>
+                  <div className="stat-label">Idosos impactados positivamente</div>
+                </div>
+              </div>
+              <div className="doacoes-section" data-aos="fade-up" data-aos-delay="400">
+                <div className="doacoes-header">
+                  <div className="doacoes-icon">💝</div>
+                  <h3 className="doacoes-title">Faça Parte Dessa Transformação</h3>
+                  <p className="doacoes-subtitle">
+                    Sua doação é fundamental para mantermos e expandirmos nosso trabalho. Cada contribuição nos ajuda a
+                    levar mais alegria, cuidado e dignidade para idosos em instituições de longa permanência.
+                  </p>
+                </div>
+
+                <div className="doacao-info-box">
+                  <div className="info-item" data-aos="fade-up" data-aos-delay="500">
+                    <div className="info-icon">🏦</div>
+                    <div className="info-content">
+                      <h4>Transferência Bancária</h4>
+                      <p>
+                        Realize sua doação via transferência bancária para nossa conta corrente. Dados bancários
+                        disponíveis abaixo.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="info-item" data-aos="fade-up" data-aos-delay="600">
+                    <div className="info-icon">📱</div>
+                    <div className="info-content">
+                      <h4>PIX Instantâneo</h4>
+                      <p>
+                        Utilize nossa chave PIX para doações rápidas e seguras. Escaneie o QR Code ou use a chave PIX
+                        abaixo.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="cnpj-box" data-aos="zoom-in" data-aos-delay="700">
+                    <div className="cnpj-label">CNPJ para Doação</div>
+                    <div className="cnpj-number">12.345.678/0001-90</div>
+                    <div className="cnpj-subtitle">Associação Happy Idosos</div>
+                  </div>
+
+                  <div className="info-item" data-aos="fade-up" data-aos-delay="800">
+                    <div className="info-icon">📄</div>
+                    <div className="info-content">
+                      <h4>Recibo para Dedução Fiscal</h4>
+                      <p>
+                        Emitimos recibo para todas as doações, permitindo dedução no imposto de renda de pessoas físicas
+                        e jurídicas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="doacao-footer" data-aos="fade-up" data-aos-delay="900">
+                  <p>
+                    <strong>Transparência Total:</strong> Prestamos contas regularmente de todos os recursos
+                    recebidos e aplicados.
+                  </p>
+                  <small>
+                    Sua doação é 100% destinada aos projetos de cuidado e bem-estar dos idosos. Administração: máximo de
+                    10% para custos operacionais.
+                  </small>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Carousel de Funcionalidades */}
-        <section className="funcionalidades" id="tecnologia" data-aos="fade-up" data-aos-duration="800">
-          <div className="container">
-            <h2 className="section-title text-balance">Nossa Plataforma</h2>
-            <p className="section-subtitle text-balance">
-              Tecnologia desenvolvida para conectar, engajar e transformar
+
+
+      <section className="cta" data-aos="fade-up" data-aos-duration="1200">
+        <div className="container">
+          <div className="cta-content">
+            <div className="cta-icon" data-aos="zoom-in" data-aos-delay="200">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <h2 className="cta-title" data-aos="fade-up" data-aos-delay="300">
+              Pronto para Fazer a Diferença?
+            </h2>
+            <p className="cta-subtitle" data-aos="fade-up" data-aos-delay="400">
+              Tem alguma dúvida?
+              Instituições de longa permanência. Sua participação pode transformar vidas.
             </p>
-
-            <div className="features-carousel-container">
-              <div className="team-carousel" id="featuresCarousel">
-                <div className="carousel-track" id="featuresTrack">
-                  <div className="feature-card">
-                    <div className="feature-image">
-                      <img
-                        src={tecnologia || "/placeholder.svg"}
-                        alt="Sistema de Match Inteligente"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="feature-content">
-                      <h4 className="text-balance">Match Inteligente</h4>
-                      <p className="feature-description text-pretty">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                      </p>
-                      <div className="feature-tags">
-                        <span className="feature-tag">Algoritmo</span>
-                        <span className="feature-tag">Compatibilidade</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="feature-card">
-                    <div className="feature-image">
-                      <img
-                        src={comunidade || "/placeholder.svg"}
-                        alt="Comunidade Engajada"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="feature-content">
-                      <h4 className="text-balance">Comunidade Ativa</h4>
-                      <p className="feature-description text-pretty">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                      </p>
-                      <div className="feature-tags">
-                        <span className="feature-tag">Rede Social</span>
-                        <span className="feature-tag">Interação</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="feature-card">
-                    <div className="feature-image">
-                      <img
-                        src={impacto || "/placeholder.svg"}
-                        alt="Gestão de Eventos"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="feature-content">
-                      <h4 className="text-balance">Eventos Programados</h4>
-                      <p className="feature-description text-pretty">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                      </p>
-                      <div className="feature-tags">
-                        <span className="feature-tag">Agenda</span>
-                        <span className="feature-tag">Atividades</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="feature-card">
-                    <div className="feature-image">
-                      <img
-                        src={tecnologia || "/placeholder.svg"}
-                        alt="Relatórios de Impacto"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="feature-content">
-                      <h4 className="text-balance">Métricas de Impacto</h4>
-                      <p className="feature-description text-pretty">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-                      </p>
-                      <div className="feature-tags">
-                        <span className="feature-tag">Analytics</span>
-                        <span className="feature-tag">Resultados</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="carousel-controls">
-                <button className="carousel-btn" id="featuresPrev" aria-label="Anterior">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="15,18 9,12 15,6"></polyline>
-                  </svg>
-                </button>
-                <button className="carousel-btn" id="featuresNext" aria-label="Próximo">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9,18 15,12 9,6"></polyline>
-                  </svg>
-                </button>
-              </div>
+            <div className="cta-buttons" data-aos="fade-up" data-aos-delay="500">
+              <Link to="/contato" className="videos-btn-cta-secondary">
+                <span>Entre em contato</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </Link>
             </div>
           </div>
-        </section>
-
-        {/* Seção ODS Expandida */}
-        <section className="ods-section" id="ods" data-aos="fade-up" data-aos-duration="800">
-          <div className="container">
-            <h2 className="section-title text-balance">Alinhamento com os ODS da ONU</h2>
-            <p className="section-subtitle text-balance">
-              Contribuindo ativamente para a Agenda 2030 de Desenvolvimento Sustentável
-            </p>
-
-            <div className="row">
-              <div className="col-lg-6 mb-5 mb-lg-0">
-                <div className="ods-grid">
-                  <div className="ods-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src={ods3 || "/placeholder.svg"} alt="ODS 3 - Saúde e Bem-Estar" />
-                    <div className="ods-overlay">
-                      <h5>ODS 3</h5>
-                      <p>Saúde e Bem-Estar</p>
-                    </div>
-                  </div>
-                  <div className="ods-item" data-aos="zoom-in" data-aos-delay="300">
-                    <div className="ods-overlay">
-                      <h5>ODS 10</h5>
-                      <p>Redução das Desigualdades</p>
-                    </div>
-                  </div>
-                  <div className="ods-item" data-aos="zoom-in" data-aos-delay="400">
-                    <img src={ods16 || "/placeholder.svg"} alt="ODS 16 - Paz, Justiça e Instituições Eficazes" />
-                    <div className="ods-overlay">
-                      <h5>ODS 16</h5>
-                      <p>Paz e Justiça</p>
-                    </div>
-                  </div>
-                  <div className="ods-item" data-aos="zoom-in" data-aos-delay="500">
-                    <div className="ods-overlay">
-                      <h5>ODS 17</h5>
-                      <p>Parcerias</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <div className="ods-content">
-                  <div className="ods-detail">
-                    <h4 className="ods-title">ODS 3 - Saúde e Bem-Estar</h4>
-                    <p className="ods-text">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                      ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                    </p>
-                  </div>
-                  
-                  <div className="ods-detail">
-                    <h4 className="ods-title">ODS 10 - Redução das Desigualdades</h4>
-                    <p className="ods-text">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                      ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                    </p>
-                  </div>
-                  
-                  <div className="ods-detail">
-                    <h4 className="ods-title">ODS 16 - Paz, Justiça e Instituições Eficazes</h4>
-                    <p className="ods-text">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt 
-                      ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                    </p>
-                  </div>
-
-                  <div className="impact-stats">
-                    <div className="row text-center">
-                      <div className="col-6 col-md-3">
-                        <div className="stat-item">
-                          <div className="stat-number">+500</div>
-                          <div className="stat-label">Vidas Impactadas</div>
-                        </div>
-                      </div>
-                      <div className="col-6 col-md-3">
-                        <div className="stat-item">
-                          <div className="stat-number">+100</div>
-                          <div className="stat-label">Voluntários</div>
-                        </div>
-                      </div>
-                      <div className="col-6 col-md-3">
-                        <div className="stat-item">
-                          <div className="stat-number">+50</div>
-                          <div className="stat-label">Instituições</div>
-                        </div>
-                      </div>
-                      <div className="col-6 col-md-3">
-                        <div className="stat-item">
-                          <div className="stat-number">4</div>
-                          <div className="stat-label">ODS Atendidos</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Seção Sem Fins Lucrativos */}
-        <section className="sem-fins-lucrativos" data-aos="fade-up" data-aos-duration="800">
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col-lg-6">
-                <div className="nonprofit-content">
-                  <h2 className="section-title text-start text-balance">Projeto Sem Fins Lucrativos</h2>
-                  <p className="nonprofit-text">
-                    O <strong>Happy Idosos</strong> é uma iniciativa 100% voluntária e comunitária. Lorem ipsum 
-                    dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-                    dolore magna aliqua.
-                  </p>
-                  
-                  <div className="nonprofit-features">
-                    <div className="nonprofit-feature">
-                      <span className="feature-icon">🎁</span>
-                      <div>
-                        <h5>Totalmente Gratuito</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                      </div>
-                    </div>
-                    
-                    <div className="nonprofit-feature">
-                      <span className="feature-icon">🤝</span>
-                      <div>
-                        <h5>Voluntariado Puro</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                      </div>
-                    </div>
-                    
-                    <div className="nonprofit-feature">
-                      <span className="feature-icon">🌱</span>
-                      <div>
-                        <h5>Sustentabilidade Social</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <div className="nonprofit-visual" data-aos="zoom-in" data-aos-delay="300">
-                  <div className="impact-circle">
-                    <div className="circle-content">
-                      <div className="circle-main">100%</div>
-                      <div className="circle-label">Voluntário</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Chamada para Ação */}
-        <section className="cta-section" data-aos="fade-up" data-aos-duration="800">
-          <div className="container">
-            <div className="cta-content text-center">
-              <h2 className="cta-title text-balance">Junte-se a Esta Causa</h2>
-              <p className="cta-text text-pretty">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut 
-                labore et dolore magna aliqua. Ut enim ad minim veniam.
-              </p>
-              <div className="cta-buttons">
-                <Link to="/cadastrovoluntario" className="btn btn-primary btn-lg">
-                  Seja Voluntário
-                </Link>
-                <Link to="/contato" className="btn btn-outline-primary btn-lg">
-                  Saiba Mais
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <Footer />
     </div>

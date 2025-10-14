@@ -1,54 +1,122 @@
-import api from '../api';
+import { API_BASE_URL } from "../auth/auth.constants"
+import { getToken } from "../auth/auth.helpers"
 
 export const editarPerfilAsiloService = {
   async buscarPerfil() {
     try {
-      const response = await api.get('/api/perfil/asilo');
-      return response;
+      const token = getToken()
+      const response = await fetch(`${API_BASE_URL}/api/perfil`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.perfil && data.perfil.foto_perfil) {
+        if (!data.perfil.foto_perfil.startsWith("http")) {
+          data.perfil.logo_url = `${API_BASE_URL}/uploads/perfis/${data.perfil.foto_perfil}`
+        } else {
+          data.perfil.logo_url = data.perfil.foto_perfil
+        }
+      }
+
+      console.log("📡 Resposta buscarPerfil asilo:", data)
+      return data
     } catch (error) {
-      console.error('Erro ao buscar perfil asilo:', error);
-      throw error;
+      console.error("❌ Erro ao buscar perfil asilo:", error)
+      throw error
     }
   },
 
-  // Editar dados do cadastro (UPDATE)
   async editarPerfilBasico(dados) {
     try {
-      const response = await api.put('/api/perfil/asilo/basico', dados);
-      return response;
+      const token = getToken()
+      const response = await fetch(`${API_BASE_URL}/api/perfil/editar`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dados),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("📡 Resposta editarPerfilBasico asilo:", data)
+      return data
     } catch (error) {
-      console.error('Erro ao editar perfil básico do asilo:', error);
-      throw error;
+      console.error("❌ Erro ao editar perfil básico do asilo:", error)
+      throw error
     }
   },
 
-  // Editar perfil detalhado (UPDATE)
   async editarPerfilDetalhes(dados) {
     try {
-      const response = await api.put('/api/perfil/asilo/detalhes', dados);
-      return response;
+      const token = getToken()
+      const response = await fetch(`${API_BASE_URL}/api/perfil/editar`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dados),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("📡 Resposta editarPerfilDetalhes asilo:", data)
+      return data
     } catch (error) {
-      console.error('Erro ao editar perfil detalhado do asilo:', error);
-      throw error;
+      console.error("❌ Erro ao editar perfil detalhado do asilo:", error)
+      throw error
     }
   },
 
-  // Upload de logo do asilo
   async uploadLogo(arquivo) {
     try {
-      const formData = new FormData();
-      formData.append('logo', arquivo);
-      
-      const response = await api.post('/api/perfil/asilo/foto', formData, {
+      console.log("🔄 Upload do logo:", arquivo.name)
+
+      const token = getToken()
+      const formData = new FormData()
+      formData.append("foto_perfil", arquivo)
+
+      console.log("📤 Enviando FormData para upload...")
+
+      const response = await fetch(`${API_BASE_URL}/api/perfil/foto`, {
+        method: "POST",
         headers: {
-          // O Content-Type será automaticamente definido pelo browser para FormData
+          Authorization: `Bearer ${token}`,
         },
-      });
-      
-      return response;
+        body: formData,
+      })
+
+      console.log("📡 Status da resposta:", response.status)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error("❌ Erro HTTP:", response.status, errorText)
+        throw new Error(`Erro HTTP: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("📡 Resposta uploadLogo:", data)
+      return data
     } catch (error) {
-      console.error('Erro ao fazer upload do logo do asilo:', error);
-      throw error;
+      console.error("❌ Erro ao fazer upload do logo do asilo:", error)
+      throw error
     }
-  }
-};
+  },
+}

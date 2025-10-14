@@ -1,138 +1,139 @@
-import { useState, useEffect } from 'react';
-import { editarPerfilAsiloService } from '../services/editarperfil/editarperfilasilo.service';
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
+import { editarPerfilAsiloService } from "../services/editarperfil/editarperfilasilo.service"
+import { API_BASE_URL } from "../services/auth/auth.constants"
 
 export const usePerfilAsilo = () => {
-  const [perfil, setPerfil] = useState(null);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState(null);
+  const [perfil, setPerfil] = useState(null)
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState(null)
 
-  const buscarPerfil = async () => {
+  const buscarPerfil = useCallback(async () => {
     try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Buscando perfil do asilo...');
-      
-      const response = await editarPerfilAsiloService.buscarPerfil();
-      
+      setCarregando(true)
+      setErro(null)
+      console.log("🔄 Buscando perfil do asilo...")
+
+      const response = await editarPerfilAsiloService.buscarPerfil()
+
       if (response.status === 200) {
-        setPerfil(response.data);
-        console.log('✅ Perfil asilo carregado:', response.data);
+        const perfilData = response.perfil || response.data?.perfil || response.data
+
+        if (perfilData.foto_perfil && !perfilData.logo_url) {
+          perfilData.logo_url = `${API_BASE_URL}${perfilData.foto_url || `/uploads/perfis/${perfilData.foto_perfil}`}`
+        } else if (perfilData.logo_url && !perfilData.logo_url.startsWith("http")) {
+          perfilData.logo_url = `${API_BASE_URL}${perfilData.logo_url}`
+        }
+
+        setPerfil(perfilData)
+        console.log("✅ Perfil asilo carregado:", perfilData)
+        return perfilData
       } else {
-        throw new Error(response.message || 'Erro ao carregar perfil do asilo');
+        throw new Error(response.message || "Erro ao carregar perfil do asilo")
       }
-      
-      return response;
     } catch (error) {
-      console.error('❌ Erro ao buscar perfil asilo:', error);
-      setErro(error.message);
-      throw error;
+      console.error("❌ Erro ao buscar perfil asilo:", error)
+      setErro(error.message)
+      throw error
     } finally {
-      setCarregando(false);
+      setCarregando(false)
     }
-  };
+  }, [])
 
-  const editarPerfilBasico = async (dados) => {
-    try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Editando perfil básico do asilo:', dados);
-      
-      const response = await editarPerfilAsiloService.editarPerfilBasico(dados);
-      
-      if (response.status === 200) {
-        setPerfil(prev => ({
-          ...prev,
-          asilo: { ...prev.asilo, ...response.data }
-        }));
-        console.log('✅ Perfil básico do asilo atualizado:', response.data);
-      } else {
-        throw new Error(response.message || 'Erro ao atualizar perfil básico do asilo');
-      }
-      
-      return response;
-    } catch (error) {
-      console.error('❌ Erro ao editar perfil básico do asilo:', error);
-      setErro(error.message);
-      throw error;
-    } finally {
-      setCarregando(false);
-    }
-  };
+  const editarPerfil = useCallback(
+    async (dados) => {
+      try {
+        setCarregando(true)
+        setErro(null)
+        console.log("🔄 Editando perfil do asilo:", dados)
 
-  const editarPerfilDetalhes = async (dados) => {
-    try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Editando perfil detalhado do asilo:', dados);
-      
-      const response = await editarPerfilAsiloService.editarPerfilDetalhes(dados);
-      
-      if (response.status === 200) {
-        setPerfil(prev => ({
-          ...prev,
-          perfil_asilo: { 
-            ...prev.perfil_asilo, 
-            ...response.data 
+        const response = await editarPerfilAsiloService.editarPerfilBasico(dados)
+
+        if (response.status === 200) {
+          await buscarPerfil()
+          console.log("✅ Perfil do asilo atualizado")
+          return {
+            success: true,
+            message: response.message || "Perfil atualizado com sucesso",
           }
-        }));
-        console.log('✅ Perfil detalhado do asilo atualizado:', response.data);
-      } else {
-        throw new Error(response.message || 'Erro ao atualizar perfil detalhado do asilo');
+        } else {
+          throw new Error(response.message || "Erro ao atualizar perfil do asilo")
+        }
+      } catch (error) {
+        console.error("❌ Erro ao editar perfil do asilo:", error)
+        setErro(error.message)
+        return {
+          success: false,
+          message: error.message || "Erro ao atualizar perfil",
+        }
+      } finally {
+        setCarregando(false)
       }
-      
-      return response;
-    } catch (error) {
-      console.error('❌ Erro ao editar perfil detalhado do asilo:', error);
-      setErro(error.message);
-      throw error;
-    } finally {
-      setCarregando(false);
-    }
-  };
+    },
+    [buscarPerfil],
+  )
 
-  const uploadFoto = async (arquivo) => {
+  const uploadLogo = useCallback(async (arquivo) => {
     try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Fazendo upload da foto do asilo:', arquivo.name);
-      
-      const response = await editarPerfilAsiloService.uploadFotoPerfil(arquivo);
-      
-      if (response.status === 200 && response.data) {
-        setPerfil(prev => ({
-          ...prev,
-          perfil_asilo: { 
-            ...prev.perfil_asilo, 
-            ...response.data 
-          }
-        }));
-        console.log('✅ Foto do asilo atualizada:', response.data);
-      }
-      
-      return response;
-    } catch (error) {
-      console.error('❌ Erro ao fazer upload da foto do asilo:', error);
-      setErro(error.message);
-      throw error;
-    } finally {
-      setCarregando(false);
-    }
-  };
+      setErro(null)
+      setCarregando(true)
+      console.log("🔄 Fazendo upload do logo:", arquivo.name)
 
-  const limparErro = () => setErro(null);
+      const response = await editarPerfilAsiloService.uploadLogo(arquivo)
+
+      console.log("✅ Resposta upload:", response)
+
+      if (response.status === 200) {
+        const logoUrl = response.foto_url
+          ? `${API_BASE_URL}${response.foto_url}`
+          : response.foto
+            ? `${API_BASE_URL}/uploads/perfis/${response.foto}`
+            : null
+
+        console.log("🖼️ URL ABSOLUTA do logo:", logoUrl)
+
+        setPerfil((prev) => ({
+          ...prev,
+          foto_perfil: response.foto,
+          logo_url: logoUrl,
+        }))
+
+        console.log("✅ Logo atualizado com sucesso:", logoUrl)
+        return {
+          success: true,
+          message: response.message || "Logo atualizado com sucesso",
+          logo_url: logoUrl,
+        }
+      } else {
+        throw new Error(response.message || "Erro ao fazer upload do logo")
+      }
+    } catch (error) {
+      console.error("❌ Erro ao fazer upload do logo:", error)
+      setErro(error.message)
+      return {
+        success: false,
+        message: error.message || "Erro ao fazer upload do logo",
+      }
+    } finally {
+      setCarregando(false)
+    }
+  }, [])
+
+  const limparErro = useCallback(() => setErro(null), [])
 
   useEffect(() => {
-    buscarPerfil();
-  }, []);
+    buscarPerfil()
+  }, [buscarPerfil])
 
   return {
     perfil,
     carregando,
     erro,
     buscarPerfil,
-    editarPerfilBasico,
-    editarPerfilDetalhes,
-    uploadFoto,
-    limparErro
-  };
-};
+    editarPerfil,
+    uploadLogo,
+    limparErro,
+    recarregarPerfil: buscarPerfil,
+  }
+}

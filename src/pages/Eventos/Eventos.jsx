@@ -177,19 +177,36 @@ const Eventos = () => {
         return
       }
 
+      // Verificar se é voluntário
+      const userDataStr = localStorage.getItem('user_data')
+      if (userDataStr) {
+        const user = JSON.parse(userDataStr)
+        if (user.tipo !== 'voluntario') {
+          showModalError("Somente voluntários podem se inscrever em eventos.")
+          return
+        }
+      }
+
       const response = await api.post('/api/eventos/participar', {
         id_evento: eventId
       })
       
-      if (response.status === 200) {
-        showModalSuccess("Inscrito no evento com sucesso!", "Sucesso!")
+      console.log("Resposta da inscrição:", response)
+      
+      if (response.status === 200 || response.status === 201) {
+        showModalSuccess("Inscrição realizada com sucesso! Você agora está participando deste evento.", "Inscrição Confirmada!")
         loadEvents() // Recarregar eventos para atualizar contagem
       } else {
         showModalError(response.message || "Erro ao se inscrever no evento.")
       }
     } catch (error) {
       console.error("Error registering for event:", error)
-      showModalError(error.message || "Erro ao se inscrever no evento.")
+      // Verificar se é um erro de duplicação (já inscrito)
+      if (error.message && error.message.includes("já está inscrito")) {
+        showModalError("Você já está inscrito neste evento.")
+      } else {
+        showModalError(error.message || "Erro ao se inscrever no evento. Tente novamente.")
+      }
     } finally {
       setIsLoadingAction(false)
     }
@@ -552,8 +569,12 @@ const Eventos = () => {
             <button
               className="btn-inscricao"
               onClick={() => inscreverEvento(event.id)}
-              disabled={event.status === "lotado" || event.status === "cancelado" || isLoadingAction || !isAuthenticated}
-              title={!isAuthenticated ? "Efetue login para se inscrever" : ""}
+              disabled={event.status === "lotado" || event.status === "cancelado" || isLoadingAction || !isAuthenticated || currentUser?.tipo !== 'voluntario'}
+              title={
+                !isAuthenticated ? "Efetue login para se inscrever" :
+                currentUser?.tipo !== 'voluntario' ? "Somente voluntários podem se inscrever" :
+                ""
+              }
             >
               {isLoadingAction ? (
                 <>
@@ -566,6 +587,8 @@ const Eventos = () => {
                 "Evento Cancelado"
               ) : !isAuthenticated ? (
                 "Efetue Login para Inscrever-se"
+              ) : currentUser?.tipo !== 'voluntario' ? (
+                "Somente para Voluntários"
               ) : (
                 "Inscrever-se"
               )}

@@ -1,125 +1,181 @@
-import { useState, useEffect } from 'react';
-import { editarPerfilVoluntarioService } from '../services/editarperfil/editarPerfilVoluntario.service.js';
+"use client"
+
+// hooks/usePerfilVoluntario.jsx
+import { useState, useEffect, useCallback } from "react"
+import { perfilService } from "../services/editarperfil/perfilService"
+import { API_BASE_URL } from "../services/auth/auth.constants" // ✅ IMPORTAR AQUI
 
 export const usePerfilVoluntario = () => {
-  const [perfil, setPerfil] = useState(null);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState(null);
+  const [perfil, setPerfil] = useState(null)
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState(null)
 
-  const buscarPerfil = async () => {
+  // Buscar perfil do backend
+  const buscarPerfil = useCallback(async () => {
     try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Buscando perfil do voluntário...');
-      
-      const response = await editarPerfilVoluntarioService.buscarPerfil();
-      
-      if (response.data.status === 200) {
-        setPerfil(response.data.data);
-        console.log('✅ Perfil voluntário carregado:', response.data.data);
+      setCarregando(true)
+      setErro(null)
+      console.log("🔄 Buscando perfil do voluntário...")
+
+      const response = await perfilService.buscarPerfil()
+
+      if (response.status === 200 && response.perfil) {
+        setPerfil(response.perfil)
+        console.log("✅ Perfil carregado:", response.perfil)
+        return response.perfil
       } else {
-        throw new Error(response.data.message || 'Erro ao carregar perfil do voluntário');
+        throw new Error(response.message || "Erro ao carregar perfil")
       }
-      
-      return response.data;
     } catch (error) {
-      console.error('❌ Erro ao buscar perfil voluntário:', error);
-      setErro(error.message);
-      throw error;
+      console.error("❌ Erro ao buscar perfil:", error)
+      setErro(error.message)
+      throw error
     } finally {
-      setCarregando(false);
+      setCarregando(false)
     }
-  };
+  }, [])
 
-  const editarPerfilBasico = async (dados) => {
+  // Editar perfil básico
+  const editarPerfilBasico = useCallback(
+    async (dados) => {
+      try {
+        setErro(null)
+        setCarregando(true)
+        console.log("🔄 Editando perfil básico:", dados)
+
+        const dadosCompletos = {
+          nome: dados.nome || perfil?.nome,
+          email: dados.email || perfil?.email,
+          ...dados,
+        }
+
+        const response = await perfilService.editarPerfil(dadosCompletos)
+
+        if (response.status === 200) {
+          setPerfil((prev) => ({ ...prev, ...dadosCompletos }))
+          return {
+            success: true,
+            message: response.message || "Perfil atualizado com sucesso",
+          }
+        } else {
+          throw new Error(response.message || "Erro ao atualizar perfil")
+        }
+      } catch (error) {
+        console.error("❌ Erro ao editar perfil básico:", error)
+        setErro(error.message)
+        return {
+          success: false,
+          message: error.message || "Erro ao atualizar perfil",
+        }
+      } finally {
+        setCarregando(false)
+      }
+    },
+    [perfil],
+  )
+
+  // Editar perfil voluntário
+  const editarPerfilVoluntario = useCallback(
+    async (dados) => {
+      try {
+        setErro(null)
+        setCarregando(true)
+        console.log("🔄 Editando perfil voluntário:", dados)
+
+        const dadosCompletos = {
+          nome: perfil?.nome,
+          email: perfil?.email,
+          ...dados,
+        }
+
+        const response = await perfilService.editarPerfil(dadosCompletos)
+
+        if (response.status === 200) {
+          setPerfil((prev) => ({ ...prev, ...dados }))
+          return {
+            success: true,
+            message: response.message || "Perfil atualizado com sucesso",
+          }
+        } else {
+          throw new Error(response.message || "Erro ao atualizar perfil")
+        }
+      } catch (error) {
+        console.error("❌ Erro ao editar perfil voluntário:", error)
+        setErro(error.message)
+        return {
+          success: false,
+          message: error.message || "Erro ao atualizar perfil",
+        }
+      } finally {
+        setCarregando(false)
+      }
+    },
+    [perfil],
+  )
+
+  const uploadFoto = useCallback(async (arquivo) => {
     try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Editando perfil básico do voluntário:', dados);
-      
-      const response = await editarPerfilVoluntarioService.editarPerfilBasico(dados);
-      
-      if (response.data.status === 200) {
-        setPerfil(prev => ({
+      setErro(null)
+      setCarregando(true)
+      console.log("🔄 Fazendo upload da foto:", arquivo.name)
+
+      let response
+
+      try {
+        console.log("🔄 Tentando com rota específica de foto...")
+        response = await perfilService.uploadFoto(arquivo)
+      } catch (error) {
+        console.log("🔄 Rota específica falhou, tentando com rota de editar perfil...", error.message)
+        response = await perfilService.uploadFotoComDados(arquivo)
+      }
+
+      console.log("✅ Resposta upload:", response)
+
+      if (response.status === 200 && response.foto) {
+        // ✅ CORREÇÃO: Construir URL ABSOLUTA
+        const fotoUrl = response.foto_url
+          ? `${API_BASE_URL}${response.foto_url}`
+          : `${API_BASE_URL}/uploads/perfis/${response.foto}`
+
+        console.log("🖼️ URL ABSOLUTA da foto:", fotoUrl)
+
+        // Atualizar perfil localmente
+        setPerfil((prev) => ({
           ...prev,
-          ...response.data.data
-        }));
-        console.log('✅ Perfil básico do voluntário atualizado:', response.data.data);
-      } else {
-        throw new Error(response.data.message || 'Erro ao atualizar perfil básico do voluntário');
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erro ao editar perfil básico do voluntário:', error);
-      setErro(error.message);
-      throw error;
-    } finally {
-      setCarregando(false);
-    }
-  };
+          foto_perfil: response.foto,
+          foto_url: fotoUrl,
+        }))
 
-  const editarPerfilVoluntario = async (dados) => {
-    try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Editando perfil específico do voluntário:', dados);
-      
-      const response = await editarPerfilVoluntarioService.editarPerfilVoluntario(dados);
-      
-      if (response.data.status === 200) {
-        setPerfil(prev => ({
-          ...prev,
-          ...response.data.data
-        }));
-        console.log('✅ Perfil específico do voluntário atualizado:', response.data.data);
+        console.log("✅ Foto atualizada com sucesso:", fotoUrl)
+        return {
+          success: true,
+          message: response.message || "Foto atualizada com sucesso",
+          foto_url: fotoUrl,
+        }
       } else {
-        throw new Error(response.data.message || 'Erro ao atualizar perfil específico do voluntário');
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erro ao editar perfil específico do voluntário:', error);
-      setErro(error.message);
-      throw error;
-    } finally {
-      setCarregando(false);
-    }
-  };
-
-  const uploadFoto = async (arquivo) => {
-    try {
-      setCarregando(true);
-      setErro(null);
-      console.log('🔄 Fazendo upload da foto do voluntário:', arquivo.name);
-      
-      const response = await editarPerfilVoluntarioService.uploadFotoPerfil(arquivo);
-      
-      if (response.data.status === 200 && response.data.data) {
-        setPerfil(prev => ({
-          ...prev,
-          foto_perfil: response.data.data.foto_perfil
-        }));
-        console.log('✅ Foto do voluntário atualizada:', response.data.data);
-        return { success: true, foto_url: response.data.data.foto_perfil };
-      } else {
-        throw new Error(response.data.message || 'Erro ao fazer upload da foto');
+        throw new Error(response.message || "Erro ao fazer upload da foto")
       }
     } catch (error) {
-      console.error('❌ Erro ao fazer upload da foto do voluntário:', error);
-      setErro(error.message);
-      return { success: false, message: error.message };
+      console.error("❌ Erro ao fazer upload da foto:", error)
+      setErro(error.message)
+      return {
+        success: false,
+        message: error.message || "Erro ao fazer upload da foto",
+      }
     } finally {
-      setCarregando(false);
+      setCarregando(false)
     }
-  };
+  }, [])
 
-  const limparErro = () => setErro(null);
+  // Limpar erro
+  const limparErro = useCallback(() => {
+    setErro(null)
+  }, [])
 
-  // Carrega o perfil automaticamente quando o hook é usado
+  // Carregar perfil na inicialização
   useEffect(() => {
-    buscarPerfil();
-  }, []);
+    buscarPerfil()
+  }, [buscarPerfil])
 
   return {
     perfil,
@@ -129,6 +185,7 @@ export const usePerfilVoluntario = () => {
     editarPerfilBasico,
     editarPerfilVoluntario,
     uploadFoto,
-    limparErro
-  };
-};
+    limparErro,
+    recarregarPerfil: buscarPerfil,
+  }
+}

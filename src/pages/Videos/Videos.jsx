@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import AOS from "aos"
 import "aos/dist/aos.css"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -15,6 +15,7 @@ import { api } from "../../services/api"
 import { API_BASE_URL } from "../../services/auth/auth.constants"
 
 function Videos() {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [currentSearch, setCurrentSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -23,10 +24,36 @@ function Videos() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [notification, setNotification] = useState({ show: false, type: '', message: '' })
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
 
   const videoPlayerModalRef = useRef(null)
   const uploadModalRef = useRef(null)
   const notificationModalRef = useRef(null)
+
+  // Verificar autenticação
+  useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const userDataStr = localStorage.getItem('user_data')
+        const token = localStorage.getItem('auth_token')
+        
+        if (userDataStr && token) {
+          const user = JSON.parse(userDataStr)
+          setCurrentUser(user)
+          setIsAuthenticated(true)
+        } else {
+          setIsAuthenticated(false)
+          setCurrentUser(null)
+        }
+      } catch (error) {
+        console.error("Erro ao verificar autenticação:", error)
+        setIsAuthenticated(false)
+      }
+    }
+
+    checkAuth()
+  }, [])
 
   // Inicialização
   useEffect(() => {
@@ -42,8 +69,11 @@ function Videos() {
       uploadModalRef.current = new window.bootstrap.Modal(document.getElementById("uploadModal"))
       notificationModalRef.current = new window.bootstrap.Modal(document.getElementById("notificationModal"))
     }
-    loadVideos(true)
-  }, [])
+    
+    if (isAuthenticated) {
+      loadVideos(true)
+    }
+  }, [isAuthenticated])
 
   // 🔹 Mostrar notificação
   const showNotification = (type, message) => {
@@ -67,118 +97,114 @@ function Videos() {
   }
 
   // 🔹 Buscar vídeos
- // 🔹 Buscar vídeos - VERSÃO CORRIGIDA
-const loadVideos = async (reset = true) => {
-  if (isLoading) return
-  setIsLoading(true)
-  try {
-    // Use a função api com credentials configurada
-    const data = await api.get("/api/videos")
-    if (!data?.data) throw new Error("Resposta inválida da API")
+  const loadVideos = async (reset = true) => {
+    if (isLoading || !isAuthenticated) return
+    setIsLoading(true)
+    try {
+      const data = await api.get("/api/videos")
+      if (!data?.data) throw new Error("Resposta inválida da API")
 
-    let fetchedVideos = data.data
+      let fetchedVideos = data.data
 
-    // Filtro de busca apenas (categorias removidas)
-    if (currentSearch) {
-      fetchedVideos = fetchedVideos.filter(v =>
-        v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
-        (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
-      )
+      // Filtro de busca
+      if (currentSearch) {
+        fetchedVideos = fetchedVideos.filter(v =>
+          v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
+        )
+      }
+
+      const paginated = fetchedVideos.slice(0, currentPage * 6)
+      setVideos(paginated)
+      setHasMore(fetchedVideos.length > paginated.length)
+    } catch (error) {
+      console.error(error)
+      showNotification('error', error.message)
+    } finally {
+      setIsLoading(false)
     }
-
-    const paginated = fetchedVideos.slice(0, currentPage * 6)
-    setVideos(paginated)
-    setHasMore(fetchedVideos.length > paginated.length)
-  } catch (error) {
-    console.error(error)
-    showNotification('error', error.message)
-  } finally {
-    setIsLoading(false)
   }
-}
 
   const loadMoreVideos = () => {
+    if (!isAuthenticated) return
     setCurrentPage(prev => prev + 1)
     loadVideos(false)
   }
 
   const searchVideos = (q) => {
+    if (!isAuthenticated) return
     setCurrentSearch(q)
     setCurrentPage(1)
     loadVideos(true)
   }
 
   const openVideoPlayer = (video) => {
+    if (!isAuthenticated) return
     setSelectedVideo(video)
     videoPlayerModalRef.current?.show()
   }
 
-
-// 📤 Upload de vídeo - VERSÃO COMPLETAMENTE CORRIGIDA
-const handleVideoUpload = async (e) => {
-  e.preventDefault()
-  const form = e.target
-  const fileInput = form.querySelector("#videoFile")
-  const file = fileInput.files[0]
-  const titulo = form.querySelector("#videoTitle").value
-  const descricao = form.querySelector("#videoDescription").value
-
-  if (!validateVideoFile(file)) return
-
-  const formData = new FormData()
-  formData.append("video", file)
-  formData.append("titulo", titulo)
-  formData.append("descricao", descricao)
-
-  try {
-    setUploadProgress(15)
+  // 📤 Upload de vídeo
+  const handleVideoUpload = async (e) => {
+    e.preventDefault()
     
-    const token = localStorage.getItem('token')
-    
-    // DEBUG - Verifique o que está sendo enviado
-    console.log('🔐 Token:', token ? 'PRESENTE' : 'AUSENTE')
-    console.log('📁 Arquivo:', file.name, file.size, file.type)
-    console.log('🌐 URL:', `${API_BASE_URL}/api/videos`)
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para enviar vídeos.")
+      setTimeout(() => navigate('/login'), 2000)
+      return
+    }
 
-    const response = await fetch(`${API_BASE_URL}/api/videos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-        // ❌ NÃO inclua Content-Type - o browser define automaticamente para FormData
-      },
-      credentials: 'include', // ← CRÍTICO para CORS
-      body: formData
-    })
+    const form = e.target
+    const fileInput = form.querySelector("#videoFile")
+    const file = fileInput.files[0]
+    const titulo = form.querySelector("#videoTitle").value
+    const descricao = form.querySelector("#videoDescription").value
 
-    console.log('✅ Status da resposta:', response.status)
-    console.log('✅ Headers:', Object.fromEntries(response.headers.entries()))
+    if (!validateVideoFile(file)) return
 
-    const responseText = await response.text()
-    console.log('📄 Resposta bruta:', responseText)
-    
-    let data
+    const formData = new FormData()
+    formData.append("video", file)
+    formData.append("titulo", titulo)
+    formData.append("descricao", descricao)
+
     try {
-      data = JSON.parse(responseText)
-    } catch (parseError) {
-      throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
-    }
-    
-    if (!response.ok) {
-      throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
-    }
+      setUploadProgress(15)
+      
+      const token = localStorage.getItem('auth_token')
+      
+      const response = await fetch(`${API_BASE_URL}/api/videos`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: formData
+      })
 
-    setUploadProgress(100)
-    showNotification('success', "Vídeo enviado com sucesso!")
-    uploadModalRef.current?.hide()
-    form.reset()
-    loadVideos(true)
-  } catch (err) {
-    console.error("❌ Erro completo no upload:", err)
-    showNotification('error', err.message || "Erro desconhecido no upload.")
-  } finally {
-    setTimeout(() => setUploadProgress(0), 1000)
+      const responseText = await response.text()
+      let data
+      try {
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
+      }
+      
+      if (!response.ok) {
+        throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
+      }
+
+      setUploadProgress(100)
+      showNotification('success', "Vídeo enviado com sucesso!")
+      uploadModalRef.current?.hide()
+      form.reset()
+      loadVideos(true)
+    } catch (err) {
+      console.error("❌ Erro completo no upload:", err)
+      showNotification('error', err.message || "Erro desconhecido no upload.")
+    } finally {
+      setTimeout(() => setUploadProgress(0), 1000)
+    }
   }
-}
 
   const validateVideoFile = (file) => {
     if (!file) {
@@ -199,6 +225,47 @@ const handleVideoUpload = async (e) => {
   }
 
   const formatDate = (date) => new Date(date).toLocaleDateString("pt-BR")
+
+  // Modal de Notificação Component
+  const NotificationModal = () => (
+    <div 
+      className={`modal fade ${notification.show ? 'show' : ''}`} 
+      style={{ 
+        display: notification.show ? 'block' : 'none',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+      }} 
+      tabIndex="-1"
+    >
+      <div className="modal-dialog modal-dialog-centered modal-sm">
+        <div className="modal-content">
+          <div className={`notification-body ${notification.type}`}>
+            <div className="notification-icon">
+              {notification.type === 'success' ? (
+                <i className="fas fa-check-circle"></i>
+              ) : (
+                <i className="fas fa-exclamation-circle"></i>
+              )}
+            </div>
+            <div className="notification-content">
+              <h4 className="notification-title">
+                {notification.type === 'success' ? 'Sucesso!' : 'Erro!'}
+              </h4>
+              <p className="notification-message">{notification.message}</p>
+            </div>
+            {notification.type === 'error' && (
+              <button 
+                type="button" 
+                className="btn btn-close-notification"
+                onClick={hideNotification}
+              >
+                Fechar
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
   return (
     <div className="videos-page">
@@ -228,9 +295,14 @@ const handleVideoUpload = async (e) => {
             <div className="carousel-caption d-none d-md-block">
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
-              <button className="btn btn-outline-light btn-lg">
-                Explorar Vídeos
-              </button>
+              {!isAuthenticated && (
+                <button 
+                  className="btn btn-outline-light btn-lg"
+                  onClick={() => navigate('/login')}
+                >
+                  Fazer Login para Acessar
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -247,36 +319,57 @@ const handleVideoUpload = async (e) => {
           <div className="container">
             <h2 className="text-center mb-4 videos-main-title">Nossa Galeria de Vídeos</h2>
 
-            <div className="text-center mb-5">
-              <button 
-                className="btn-criar-video" 
-                onClick={() => uploadModalRef.current?.show()}
-              >
-                <i className="fas fa-plus-circle me-2"></i>
-                Enviar Novo Vídeo
-              </button>
-            </div>
+            {/* Botão de upload - só mostra se estiver logado */}
+            {isAuthenticated && (
+              <div className="text-center mb-5">
+                <button 
+                  className="btn-criar-video" 
+                  onClick={() => uploadModalRef.current?.show()}
+                >
+                  <i className="fas fa-plus-circle me-2"></i>
+                  Enviar Novo Vídeo
+                </button>
+              </div>
+            )}
 
-            {/* Filtros e Busca */}
-            <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
-              <div className="row g-3">
-                <div className="col-md-12 mb-3">
-                  <div className="search-box">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Buscar vídeos por título ou descrição..."
-                      value={currentSearch}
-                      onChange={(e) => searchVideos(e.target.value)}
-                    />
-                    <i className="fas fa-search search-icon"></i>
+            {/* Mensagem quando usuário não está logado */}
+            {!isAuthenticated && (
+              <div className="text-center py-5">
+                <i className="fas fa-sign-in-alt fa-3x text-muted mb-3"></i>
+                <h4 className="text-muted">Efetue login para acessar os vídeos</h4>
+                <p className="text-muted mb-4">Faça login ou cadastre-se para visualizar e enviar vídeos.</p>
+                <button 
+                  className="btn btn-primary btn-lg"
+                  onClick={() => navigate('/login')}
+                >
+                  <i className="fas fa-sign-in-alt me-2"></i>
+                  Fazer Login
+                </button>
+              </div>
+            )}
+
+            {/* Filtros e Busca - só mostra se estiver logado */}
+            {isAuthenticated && (
+              <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
+                <div className="row g-3">
+                  <div className="col-md-12 mb-3">
+                    <div className="search-box">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Buscar vídeos por título ou descrição..."
+                        value={currentSearch}
+                        onChange={(e) => searchVideos(e.target.value)}
+                      />
+                      <i className="fas fa-search search-icon"></i>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Loading spinner */}
-            {isLoading && videos.length === 0 && (
+            {isLoading && isAuthenticated && (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Carregando...</span>
@@ -284,8 +377,8 @@ const handleVideoUpload = async (e) => {
               </div>
             )}
 
-            {/* Grid de Vídeos */}
-            {!isLoading && videos.length > 0 && (
+            {/* Grid de Vídeos - só mostra se estiver logado */}
+            {!isLoading && isAuthenticated && videos.length > 0 && (
               <div className="row">
                 {videos.map((video, index) => (
                   <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
@@ -331,8 +424,8 @@ const handleVideoUpload = async (e) => {
               </div>
             )}
 
-            {/* Mensagem quando não há vídeos */}
-            {!isLoading && videos.length === 0 && (
+            {/* Mensagem quando não há vídeos - só mostra se estiver logado */}
+            {!isLoading && isAuthenticated && videos.length === 0 && (
               <div className="text-center py-5">
                 <i className="fas fa-video-slash fa-3x text-muted mb-3"></i>
                 <h4 className="text-muted">Nenhum vídeo encontrado</h4>
@@ -351,8 +444,8 @@ const handleVideoUpload = async (e) => {
               </div>
             )}
 
-            {/* Botão carregar mais */}
-            {hasMore && !isLoading && (
+            {/* Botão carregar mais - só mostra se estiver logado */}
+            {hasMore && !isLoading && isAuthenticated && (
               <div className="text-center mt-4">
                 <button className="btn btn-outline-primary btn-lg" onClick={loadMoreVideos}>
                   Carregar Mais Vídeos
@@ -486,36 +579,7 @@ const handleVideoUpload = async (e) => {
       </div>
 
       {/* Modal de Notificação */}
-      <div className="modal fade notification-modal" id="notificationModal" tabIndex="-1">
-        <div className="modal-dialog modal-dialog-centered modal-sm">
-          <div className="modal-content">
-            <div className={`notification-body ${notification.type}`}>
-              <div className="notification-icon">
-                {notification.type === 'success' ? (
-                  <i className="fas fa-check-circle"></i>
-                ) : (
-                  <i className="fas fa-exclamation-circle"></i>
-                )}
-              </div>
-              <div className="notification-content">
-                <h4 className="notification-title">
-                  {notification.type === 'success' ? 'Sucesso!' : 'Erro!'}
-                </h4>
-                <p className="notification-message">{notification.message}</p>
-              </div>
-              {notification.type === 'error' && (
-                <button 
-                  type="button" 
-                  className="btn btn-close-notification"
-                  onClick={hideNotification}
-                >
-                  Fechar
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <NotificationModal />
 
       <Footer />
     </div>

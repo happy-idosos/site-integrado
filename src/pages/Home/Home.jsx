@@ -781,23 +781,7 @@ function Home() {
                   </svg>
                   Contate-nos
                 </Link>
-              </div>
-              <div className="cta-stats">
-                <div className="cta-stat-item">
-                  <div className="cta-stat-number">500+</div>
-                  <div className="cta-stat-label">Voluntários Ativos</div>
-                </div>
-                <div className="cta-stat-divider"></div>
-                <div className="cta-stat-item">
-                  <div className="cta-stat-number">150+</div>
-                  <div className="cta-stat-label">Asilos Parceiros</div>
-                </div>
-                <div className="cta-stat-divider"></div>
-                <div className="cta-stat-item">
-                  <div className="cta-stat-number">1000+</div>
-                  <div className="cta-stat-label">Idosos Atendidos</div>
-                </div>
-              </div>
+              </div>  
             </div>
           </div>
         </section>

@@ -113,8 +113,8 @@ const loadVideos = async (reset = true) => {
     videoPlayerModalRef.current?.show()
   }
 
-  // 📤 Upload de vídeo
-// 📤 Upload de vídeo - VERSÃO CORRIGIDA
+
+// 📤 Upload de vídeo - VERSÃO COMPLETAMENTE CORRIGIDA
 const handleVideoUpload = async (e) => {
   e.preventDefault()
   const form = e.target
@@ -133,19 +133,29 @@ const handleVideoUpload = async (e) => {
   try {
     setUploadProgress(15)
     
-    const token = localStorage.getItem('token') // ← Mudei de 'auth_token' para 'token'
+    const token = localStorage.getItem('token')
+    
+    // DEBUG - Verifique o que está sendo enviado
+    console.log('🔐 Token:', token ? 'PRESENTE' : 'AUSENTE')
+    console.log('📁 Arquivo:', file.name, file.size, file.type)
+    console.log('🌐 URL:', `${API_BASE_URL}/api/videos`)
 
     const response = await fetch(`${API_BASE_URL}/api/videos`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`
-        // ❌ REMOVA 'Content-Type' - o browser define automaticamente para FormData
+        // ❌ NÃO inclua Content-Type - o browser define automaticamente para FormData
       },
-      credentials: 'include', // ← ADICIONE ESTA LINHA (resolve CORS)
+      credentials: 'include', // ← CRÍTICO para CORS
       body: formData
     })
 
+    console.log('✅ Status da resposta:', response.status)
+    console.log('✅ Headers:', Object.fromEntries(response.headers.entries()))
+
     const responseText = await response.text()
+    console.log('📄 Resposta bruta:', responseText)
+    
     let data
     try {
       data = JSON.parse(responseText)
@@ -163,7 +173,7 @@ const handleVideoUpload = async (e) => {
     form.reset()
     loadVideos(true)
   } catch (err) {
-    console.error("❌ Erro no upload:", err)
+    console.error("❌ Erro completo no upload:", err)
     showNotification('error', err.message || "Erro desconhecido no upload.")
   } finally {
     setTimeout(() => setUploadProgress(0), 1000)

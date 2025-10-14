@@ -33,6 +33,8 @@ const Eventos = () => {
   const [modalMessage, setModalMessage] = useState("")
   const [modalTitle, setModalTitle] = useState("")
   const [isLoadingAction, setIsLoadingAction] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [eventForm, setEventForm] = useState({
     title: "",
     category: "",
@@ -44,6 +46,38 @@ const Eventos = () => {
     capacity: 1,
   })
   const eventosSectionRef = useRef(null)
+
+  // Carregar dados do usuário logado
+  useEffect(() => {
+    const loadUserData = () => {
+      try {
+        const userDataStr = localStorage.getItem('user_data')
+        const token = localStorage.getItem('auth_token')
+        
+        if (userDataStr && token) {
+          const user = JSON.parse(userDataStr)
+          setCurrentUser(user)
+          setIsAuthenticated(true)
+          
+          // Auto-preenche telefone se for asilo
+          if (user.tipo === 'asilo' && user.telefone) {
+            setEventForm(prev => ({
+              ...prev,
+              contact: formatPhoneNumber(user.telefone)
+            }))
+          }
+        } else {
+          setIsAuthenticated(false)
+          setCurrentUser(null)
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error)
+        setIsAuthenticated(false)
+      }
+    }
+
+    loadUserData()
+  }, [])
 
   // Função para mapear categorias baseadas na descrição
   const mapCategory = (description) => {
@@ -59,15 +93,17 @@ const Eventos = () => {
   }
 
   // Função para determinar status do evento
-  const getEventStatus = (event) => {
+  const getEventStatus = (event, registeredCount) => {
     const eventDate = new Date(event.data_evento)
     const today = new Date()
     
     if (eventDate < today) return 'cancelado'
     
-    // Simular lotação baseada em algum critério
-    const isFull = Math.random() > 0.7 // 30% de chance de estar lotado
-    return isFull ? 'lotado' : 'disponivel'
+    // Verificar se atingiu a capacidade máxima
+    const capacity = event.capacidade || 50
+    if (registeredCount >= capacity) return 'lotado'
+    
+    return 'disponivel'
   }
 
   const loadEvents = async () => {
@@ -80,7 +116,8 @@ const Eventos = () => {
         // Mapear dados do backend para o formato esperado no frontend
         const formattedEvents = data.eventos.map(event => {
           const category = mapCategory(event.descricao)
-          const status = getEventStatus(event)
+          const registeredCount = event.inscritos_count || Math.floor(Math.random() * (event.capacidade || 50))
+          const status = getEventStatus(event, registeredCount)
           
           return {
             id: event.id_evento,
@@ -88,17 +125,17 @@ const Eventos = () => {
             category: category,
             description: event.descricao,
             date: event.data_evento,
-            time: "14:00", // Valor padrão
-            location: event.nome_asilo || "Local a definir",
-            contact: event.email_asilo || "",
-            capacity: 50, // Valor padrão
-            registered: Math.floor(Math.random() * 50), // Simular inscrições
+            time: event.horario || "14:00",
+            location: event.nome_asilo || event.localizacao || "Local a definir",
+            contact: event.telefone_contato || event.email_asilo || "",
+            capacity: event.capacidade || 50,
+            registered: registeredCount,
             status: status
           }
         })
         
         setEvents(formattedEvents)
-        setHasMore(false) // Backend atual não suporta paginação
+        setHasMore(false)
       } else {
         console.error("Erro ao carregar eventos:", data.message)
         setEvents([])
@@ -132,12 +169,20 @@ const Eventos = () => {
   const inscreverEvento = async (eventId) => {
     setIsLoadingAction(true)
     try {
+      // Verificar se usuário está logado
+      const token = localStorage.getItem('auth_token')
+      if (!token) {
+        showModalError("Você precisa estar logado para se inscrever em eventos.")
+        setTimeout(() => navigate('/login'), 2000)
+        return
+      }
+
       const response = await api.post('/api/eventos/participar', {
         id_evento: eventId
       })
       
       if (response.status === 200) {
-        showModalSuccess("Inscrição realizada com sucesso!", "Sucesso!")
+        showModalSuccess("Inscrito no evento com sucesso!", "Sucesso!")
         loadEvents() // Recarregar eventos para atualizar contagem
       } else {
         showModalError(response.message || "Erro ao se inscrever no evento.")
@@ -158,44 +203,27 @@ const Eventos = () => {
 
   const showCreateEventModal = () => {
     // Verificação mais robusta
-    const token = localStorage.getItem('auth_token');
-    const userDataStr = localStorage.getItem('user_data');
-    
-    console.log('🔐 Modal - Token:', token ? 'PRESENTE' : 'AUSENTE');
-    console.log('👤 Modal - User Data:', userDataStr);
+    const token = localStorage.getItem('auth_token')
+    const userDataStr = localStorage.getItem('user_data')
     
     if (!token || !userDataStr) {
-      showModalError("Você precisa estar logado para criar um evento.");
-      setTimeout(() => navigate('/login'), 2000);
-      return;
+      showModalError("Você precisa estar logado para criar um evento.")
+      setTimeout(() => navigate('/login'), 2000)
+      return
     }
   
     try {
-      const user = JSON.parse(userDataStr);
-      console.log('👤 Modal - User object:', user);
-      console.log('👤 Modal - Tipo de usuário:', user.tipo);
-      
-      // Debug do token
-      if (token) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          console.log('🔐 Modal - Payload do token:', payload);
-          console.log('🔐 Modal - Tem campo data?:', !!payload.data);
-          console.log('🔐 Modal - Data content:', payload.data);
-        } catch (e) {
-          console.log('🔐 Modal - Erro ao decodificar token:', e);
-        }
-      }
+      const user = JSON.parse(userDataStr)
       
       if (user.tipo !== 'asilo') {
-        showModalError(`Somente asilos podem criar eventos. Seu tipo é: ${user.tipo || 'não definido'}`);
-        return;
+        showModalError("Somente asilos podem criar eventos.")
+        return
       }
       
-      setShowModal(true);
+      setShowModal(true)
     } catch (error) {
-      console.error('Erro ao verificar usuário:', error);
-      showModalError('Erro ao verificar permissões. Tente fazer login novamente.');
+      console.error('Erro ao verificar usuário:', error)
+      showModalError('Erro ao verificar permissões. Tente fazer login novamente.')
     }
   }
 
@@ -211,58 +239,87 @@ const Eventos = () => {
     setShowErrorModal(true)
   }
 
+  // Função para formatar telefone com limite de caracteres
+  const formatPhoneNumber = (value) => {
+    // Remove tudo que não é número
+    let numbers = value.replace(/\D/g, '')
+    
+    // Limita a 11 caracteres (máximo para telefone brasileiro)
+    numbers = numbers.substring(0, 11)
+    
+    // Aplica a formatação (11) 99999-9999
+    if (numbers.length <= 11) {
+      const match = numbers.match(/^(\d{0,2})(\d{0,5})(\d{0,4})/)
+      if (match) {
+        let formatted = ''
+        if (match[1]) formatted += `(${match[1]}`
+        if (match[2]) formatted += `) ${match[2]}`
+        if (match[3]) formatted += `-${match[3]}`
+        return formatted
+      }
+    }
+    return value
+  }
+
+  // Handler para mudança do telefone com validação
+  const handlePhoneChange = (value) => {
+    const formatted = formatPhoneNumber(value)
+    setEventForm(prev => ({ 
+      ...prev, 
+      contact: formatted 
+    }))
+  }
+
   const createEvent = async () => {
     setIsLoadingAction(true)
     try {
-      // DEBUG: Verificar autenticação detalhadamente
-      const token = localStorage.getItem('auth_token');
-      const userDataStr = localStorage.getItem('user_data');
-      
-      console.log('🔐 DEBUG - Token:', token);
-      console.log('👤 DEBUG - User Data string:', userDataStr);
+      const token = localStorage.getItem('auth_token')
+      const userDataStr = localStorage.getItem('user_data')
       
       if (!token || !userDataStr) {
-        showModalError("Você precisa estar logado para criar um evento.");
-        setTimeout(() => navigate('/login'), 2000);
-        return;
+        showModalError("Você precisa estar logado para criar um evento.")
+        setTimeout(() => navigate('/login'), 2000)
+        return
       }
 
-      const user = JSON.parse(userDataStr);
-      console.log('👤 DEBUG - User object:', user);
-      console.log('👤 DEBUG - Tipo de usuário:', user.tipo);
+      const user = JSON.parse(userDataStr)
       
       if (user.tipo !== 'asilo') {
-        showModalError("Somente asilos podem criar eventos. Seu tipo é: " + (user.tipo || 'não definido'));
-        return;
-      }
-
-      // DEBUG: Verificar o que há no token JWT
-      if (token) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          console.log('🔐 DEBUG - Payload do token:', payload);
-        } catch (e) {
-          console.log('🔐 DEBUG - Não foi possível decodificar o token:', e);
-        }
+        showModalError("Somente asilos podem criar eventos.")
+        return
       }
 
       // Validar campos obrigatórios
       if (!eventForm.title || !eventForm.description || !eventForm.date) {
-        showModalError("Preencha todos os campos obrigatórios: título, descrição e data.");
-        return;
+        showModalError("Preencha todos os campos obrigatórios: título, descrição e data.")
+        return
+      }
+
+      // Validar telefone
+      const phoneNumbers = eventForm.contact.replace(/\D/g, '')
+      if (phoneNumbers.length < 10 || phoneNumbers.length > 11) {
+        showModalError("Por favor, insira um número de telefone válido com DDD (10 ou 11 dígitos).")
+        return
+      }
+
+      // Validar capacidade
+      if (!eventForm.capacity || eventForm.capacity < 1) {
+        showModalError("A capacidade deve ser pelo menos 1 pessoa.")
+        return
       }
 
       const eventData = {
         titulo: eventForm.title,
         descricao: eventForm.description,
-        data_evento: eventForm.date
+        data_evento: eventForm.date,
+        horario: eventForm.time || "14:00",
+        localizacao: eventForm.location,
+        capacidade: parseInt(eventForm.capacity),
+        telefone_contato: phoneNumbers,
+        categoria: eventForm.category || 'conversa'
       }
 
-      console.log('📤 DEBUG - Enviando dados:', eventData);
-
-      const response = await api.post('/api/eventos/criar', eventData);
-      
-      console.log('📥 DEBUG - Resposta:', response);
+      const response = await api.post('/api/eventos/criar', eventData)
       
       if (response.status === 201) {
         showModalSuccess("Evento criado com sucesso!", "Evento Criado!")
@@ -274,7 +331,7 @@ const Eventos = () => {
           date: "",
           time: "",
           location: "",
-          contact: "",
+          contact: currentUser?.telefone ? formatPhoneNumber(currentUser.telefone) : "",
           capacity: 1,
         })
         loadEvents()
@@ -290,7 +347,6 @@ const Eventos = () => {
   }
 
   const loadMoreEvents = async () => {
-    // Backend atual não suporta paginação
     console.warn("Paginação não implementada no backend")
   }
 
@@ -306,60 +362,84 @@ const Eventos = () => {
     loadStats()
   }, [])
 
+  // Filtro de eventos aprimorado
   useEffect(() => {
     const filterEvents = () => {
       let filtered = events
-      if (searchTerm) {
-        filtered = filtered.filter(
-          (event) =>
-            event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.location.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
-      }
+      
+      // Filtro por categoria
       if (selectedCategory) {
         filtered = filtered.filter((event) => event.category === selectedCategory)
       }
+      
+      // Filtro por data
       if (selectedDate) {
-        const today = new Date().toISOString().split("T")[0]
-        const weekLater = new Date(today)
-        weekLater.setDate(weekLater.getDate() + 7)
-        const monthLater = new Date(today)
-        monthLater.setMonth(monthLater.getMonth() + 1)
-
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        
         filtered = filtered.filter((event) => {
-          const eventDate = new Date(event.date).toISOString().split("T")[0]
-          if (selectedDate === "hoje") {
-            return eventDate === today
-          } else if (selectedDate === "semana") {
-            return eventDate >= today && eventDate <= weekLater.toISOString().split("T")[0]
-          } else if (selectedDate === "mes") {
-            return eventDate >= today && eventDate <= monthLater.toISOString().split("T")[0]
+          const eventDate = new Date(event.date)
+          eventDate.setHours(0, 0, 0, 0)
+          
+          switch (selectedDate) {
+            case "hoje":
+              return eventDate.getTime() === today.getTime()
+            case "semana":
+              const weekLater = new Date(today)
+              weekLater.setDate(weekLater.getDate() + 7)
+              return eventDate >= today && eventDate <= weekLater
+            case "mes":
+              const monthLater = new Date(today)
+              monthLater.setMonth(monthLater.getMonth() + 1)
+              return eventDate >= today && eventDate <= monthLater
+            default:
+              return true
           }
-          return true
         })
       }
+      
+      // Filtro por busca
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase()
+        filtered = filtered.filter(
+          (event) =>
+            event.title.toLowerCase().includes(term) ||
+            event.description.toLowerCase().includes(term) ||
+            event.location.toLowerCase().includes(term) ||
+            event.category.toLowerCase().includes(term)
+        )
+      }
+      
       setFilteredEvents(filtered)
     }
 
     filterEvents()
   }, [events, searchTerm, selectedCategory, selectedDate])
 
-  // Modal de Sucesso
+  // Modal de Sucesso - Centralizado
   const SuccessModal = () => (
-    <div className={`modal fade ${showSuccessModal ? 'show' : ''}`} style={{ display: showSuccessModal ? 'block' : 'none' }} tabIndex="-1">
+    <div 
+      className={`modal fade ${showSuccessModal ? 'show' : ''}`} 
+      style={{ 
+        display: showSuccessModal ? 'block' : 'none',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+      }} 
+      tabIndex="-1"
+    >
       <div className="modal-dialog modal-dialog-centered modal-confirm">
         <div className="modal-content">
-          <div className="modal-header">
+          <div className="modal-header justify-content-center border-0 pt-4">
             <div className="icon-box success">
               <i className="fas fa-check"></i>
             </div>
-            <button type="button" className="btn-close" onClick={() => setShowSuccessModal(false)}></button>
           </div>
-          <div className="modal-body text-center">
-            <h4>{modalTitle}</h4>
-            <p>{modalMessage}</p>
-            <button className="btn btn-success" onClick={() => setShowSuccessModal(false)}>
+          <div className="modal-body text-center p-4">
+            <h4 className="modal-title w-100 mb-3">{modalTitle}</h4>
+            <p className="mb-4">{modalMessage}</p>
+            <button 
+              className="btn btn-success btn-lg px-4" 
+              onClick={() => setShowSuccessModal(false)}
+            >
               <i className="fas fa-thumbs-up me-2"></i>
               Continuar
             </button>
@@ -369,21 +449,30 @@ const Eventos = () => {
     </div>
   )
 
-  // Modal de Erro
+  // Modal de Erro - Centralizado
   const ErrorModal = () => (
-    <div className={`modal fade ${showErrorModal ? 'show' : ''}`} style={{ display: showErrorModal ? 'block' : 'none' }} tabIndex="-1">
+    <div 
+      className={`modal fade ${showErrorModal ? 'show' : ''}`} 
+      style={{ 
+        display: showErrorModal ? 'block' : 'none',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+      }} 
+      tabIndex="-1"
+    >
       <div className="modal-dialog modal-dialog-centered modal-confirm">
         <div className="modal-content">
-          <div className="modal-header">
+          <div className="modal-header justify-content-center border-0 pt-4">
             <div className="icon-box error">
               <i className="fas fa-times"></i>
             </div>
-            <button type="button" className="btn-close" onClick={() => setShowErrorModal(false)}></button>
           </div>
-          <div className="modal-body text-center">
-            <h4>{modalTitle}</h4>
-            <p>{modalMessage}</p>
-            <button className="btn btn-error" onClick={() => setShowErrorModal(false)}>
+          <div className="modal-body text-center p-4">
+            <h4 className="modal-title w-100 mb-3">{modalTitle}</h4>
+            <p className="mb-4">{modalMessage}</p>
+            <button 
+              className="btn btn-error btn-lg px-4" 
+              onClick={() => setShowErrorModal(false)}
+            >
               <i className="fas fa-redo me-2"></i>
               Tentar Novamente
             </button>
@@ -419,7 +508,17 @@ const Eventos = () => {
     }
 
     const formatTime = (timeStr) => {
+      if (!timeStr) return "A definir"
       return timeStr.substring(0, 5)
+    }
+
+    const formatPhone = (phone) => {
+      if (!phone) return "Não informado"
+      const numbers = phone.replace(/\D/g, '')
+      if (numbers.length === 11) {
+        return `(${numbers.substring(0,2)}) ${numbers.substring(2,7)}-${numbers.substring(7)}`
+      }
+      return phone
     }
 
     return (
@@ -444,13 +543,17 @@ const Eventos = () => {
                 <i className="fas fa-location-dot"></i> {event.location}
               </li>
               <li>
+                <i className="fas fa-phone"></i> {formatPhone(event.contact)}
+              </li>
+              <li>
                 <i className="fas fa-users"></i> {event.registered}/{event.capacity} inscritos
               </li>
             </ul>
             <button
               className="btn-inscricao"
               onClick={() => inscreverEvento(event.id)}
-              disabled={event.status === "lotado" || event.status === "cancelado" || isLoadingAction}
+              disabled={event.status === "lotado" || event.status === "cancelado" || isLoadingAction || !isAuthenticated}
+              title={!isAuthenticated ? "Efetue login para se inscrever" : ""}
             >
               {isLoadingAction ? (
                 <>
@@ -461,6 +564,8 @@ const Eventos = () => {
                 "Evento Lotado"
               ) : event.status === "cancelado" ? (
                 "Evento Cancelado"
+              ) : !isAuthenticated ? (
+                "Efetue Login para Inscrever-se"
               ) : (
                 "Inscrever-se"
               )}
@@ -565,7 +670,7 @@ const Eventos = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Buscar eventos por título, descrição ou local..."
+                      placeholder="Buscar eventos por título, descrição, local ou categoria..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -610,8 +715,24 @@ const Eventos = () => {
               </div>
             )}
 
-            {/* Container para os eventos */}
-            {!isLoading && filteredEvents.length > 0 && (
+            {/* Mensagem quando usuário não está logado */}
+            {!isLoading && !isAuthenticated && (
+              <div className="text-center py-5">
+                <i className="fas fa-sign-in-alt fa-3x text-muted mb-3"></i>
+                <h4 className="text-muted">Efetue login para participar dos eventos</h4>
+                <p className="text-muted mb-4">Faça login ou cadastre-se para visualizar e se inscrever nos eventos.</p>
+                <button 
+                  className="btn btn-primary btn-lg"
+                  onClick={() => navigate('/login')}
+                >
+                  <i className="fas fa-sign-in-alt me-2"></i>
+                  Fazer Login
+                </button>
+              </div>
+            )}
+
+            {/* Container para os eventos - só mostra se estiver logado */}
+            {!isLoading && isAuthenticated && filteredEvents.length > 0 && (
               <div className="row">
                 {filteredEvents.map((event) => (
                   <EventCard key={event.id} event={event} />
@@ -619,8 +740,8 @@ const Eventos = () => {
               </div>
             )}
 
-            {/* Mensagem quando não há eventos */}
-            {!isLoading && filteredEvents.length === 0 && (
+            {/* Mensagem quando não há eventos - só mostra se estiver logado */}
+            {!isLoading && isAuthenticated && filteredEvents.length === 0 && (
               <div className="text-center py-5">
                 <i className="fas fa-calendar-times fa-3x text-muted mb-3"></i>
                 <h4 className="text-muted">Nenhum evento encontrado</h4>
@@ -629,7 +750,7 @@ const Eventos = () => {
             )}
 
             {/* Botão carregar mais */}
-            {hasMore && (
+            {hasMore && isAuthenticated && (
               <div className="text-center mt-4">
                 <button className="btn btn-outline-primary btn-lg" onClick={loadMoreEvents}>
                   Carregar Mais Eventos
@@ -642,7 +763,7 @@ const Eventos = () => {
 
       {/* Modal para Criar Evento */}
       {showModal && (
-        <div className="modal fade show" style={{ display: "block" }} tabIndex="-1">
+        <div className="modal fade show" style={{ display: "block", backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
@@ -668,6 +789,7 @@ const Eventos = () => {
                         value={eventForm.title}
                         onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
                         required
+                        maxLength={100}
                       />
                     </div>
                     <div className="col-md-6 mb-3">
@@ -700,7 +822,9 @@ const Eventos = () => {
                       value={eventForm.description}
                       onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
                       required
+                      maxLength={500}
                     ></textarea>
+                    <div className="form-text">{eventForm.description.length}/500 caracteres</div>
                   </div>
                   <div className="row">
                     <div className="col-md-6 mb-3">
@@ -714,6 +838,7 @@ const Eventos = () => {
                         value={eventForm.date}
                         onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
                         required
+                        min={new Date().toISOString().split('T')[0]}
                       />
                     </div>
                     <div className="col-md-6 mb-3">
@@ -740,33 +865,46 @@ const Eventos = () => {
                         id="eventLocation"
                         value={eventForm.location}
                         onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
+                        maxLength={200}
                       />
                     </div>
                     <div className="col-md-4 mb-3">
                       <label htmlFor="eventCapacity" className="form-label">
-                        Capacidade
+                        Capacidade *
                       </label>
                       <input
                         type="number"
                         className="form-control"
                         id="eventCapacity"
                         min="1"
+                        max="1000"
                         value={eventForm.capacity}
-                        onChange={(e) => setEventForm({ ...eventForm, capacity: e.target.value })}
+                        onChange={(e) => setEventForm({ ...eventForm, capacity: parseInt(e.target.value) || 1 })}
+                        required
                       />
+                      <div className="form-text">Número máximo de participantes</div>
                     </div>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="eventContact" className="form-label">
-                      Contato do Organizador
+                      Telefone para Contato *
                     </label>
                     <input
-                      type="email"
+                      type="text"
                       className="form-control"
                       id="eventContact"
+                      placeholder="(11) 99999-9999"
                       value={eventForm.contact}
-                      onChange={(e) => setEventForm({ ...eventForm, contact: e.target.value })}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      required
+                      maxLength={15}
                     />
+                    <div className="form-text">
+                      {currentUser?.telefone ? 
+                        `Telefone do asilo preenchido automaticamente` : 
+                        `Digite o telefone para contato sobre o evento (máximo 11 dígitos)`
+                      }
+                    </div>
                   </div>
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>

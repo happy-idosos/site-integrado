@@ -197,14 +197,18 @@ export default function CadastroVoluntario() {
         }))
       }
       
-      // Validação de confirmação de senha em tempo real
+      // Validação de confirmação de senha em tempo real - CORREÇÃO APLICADA
       if (name === "confirmarSenha" || (name === "senha" && formData.confirmarSenha)) {
-        if (processedValue && formData.confirmarSenha && processedValue !== formData.confirmarSenha) {
+        const confirmPassword = name === "confirmarSenha" ? processedValue : formData.confirmarSenha
+        const currentPassword = name === "senha" ? processedValue : formData.senha
+        
+        if (confirmPassword && currentPassword && confirmPassword !== currentPassword) {
           setErrors((prev) => ({
             ...prev,
             confirmarSenha: "As senhas não coincidem."
           }))
-        } else if (errors.confirmarSenha) {
+        } else {
+          // Remove o erro se as senhas coincidem
           setErrors((prev) => ({
             ...prev,
             confirmarSenha: ""
@@ -681,8 +685,9 @@ export default function CadastroVoluntario() {
                         )}
                       </button>
                     </div>
+                    {/* CORREÇÃO: Exibe apenas uma mensagem por vez */}
                     {errors.confirmarSenha && <div className="cadastro-voluntario-error-message">{errors.confirmarSenha}</div>}
-                    {formData.senha && formData.confirmarSenha && formData.senha === formData.confirmarSenha && (
+                    {formData.senha && formData.confirmarSenha && !errors.confirmarSenha && formData.senha === formData.confirmarSenha && (
                       <div className="cadastro-voluntario-success-message">
                         ✅ As senhas coincidem
                       </div>

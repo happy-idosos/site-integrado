@@ -9,9 +9,9 @@ import Footer from "../../components/layout/Footer"
 import "./SobreProjeto.css"
 
 // Import das imagens do carousel
-import carouselum from "../../assets/img/carousels/carousel-1.jpg"
-import carouseldois from "../../assets/img/carousels/carousel-2.jpg"
-import carouseltres from "../../assets/img/carousels/carousel-3.jpg"
+import carouselum from "../../assets/img/carousels/carousel-8.jpg"
+import carouseldois from "../../assets/img/carousels/carousel-9.jpg"
+import carouseltres from "../../assets/img/carousels/carousel-7.jpg"
 
 // Import das ODS
 import ods3 from "../../assets/img/ods3.png"

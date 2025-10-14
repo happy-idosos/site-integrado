@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "aos/dist/aos.css"
 import AOS from "aos"
@@ -9,12 +9,15 @@ import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./Contato.css"
 import { contatoService } from "../../services/contato/contato.service"
+import { authService } from "../../services/auth/auth.service" 
 
 import carouselum from "../../assets/img/carousels/carousel-10.jpg"
-import carouseldois from "../../assets/img/carousels/carousel-2.jpg"
+import carouseldois from "../../assets/img/carousels/carousel-12.jpg"
 import carouseltres from "../../assets/img/carousels/carousel-3.jpg"
 
 export default function Contato() {
+  const navigate = useNavigate()
+  
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -25,9 +28,15 @@ export default function Contato() {
 
   const [fileName, setFileName] = useState("Nenhum arquivo escolhido")
   const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState({ text: "", type: "" })
   const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState("") // "success", "error" ou "auth_required"
+  const [modalMessage, setModalMessage] = useState("")
+  const [modalTitle, setModalTitle] = useState("")
   const [charCount, setCharCount] = useState(0)
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    user: null
+  })
   const carouselRef = useRef(null)
   const fileInputRef = useRef(null)
 
@@ -47,14 +56,33 @@ export default function Contato() {
         pause: "hover",
       })
     }
+
+    // ✅ USA O MÉTODO checkAuth() DO SEU SERVIÇO QUE JÁ FUNCIONA
+    checkAuthentication()
   }, [])
+
+  // ✅ FUNÇÃO QUE USA SEU auth.service.js EXISTENTE
+  const checkAuthentication = () => {
+    const authData = authService.checkAuth()
+    setAuthState({
+      isAuthenticated: authData.isAuthenticated,
+      user: authData.user
+    })
+
+    // Preenche automaticamente os dados do usuário logado
+    if (authData.isAuthenticated && authData.user) {
+      setFormData(prev => ({
+        ...prev,
+        nome: authData.user.nome || "",
+        email: authData.user.email || ""
+      }))
+    }
+  }
 
   // Formatação do telefone em tempo real
   const formatPhoneNumber = (value) => {
-    // Remove tudo que não é dígito
     const cleaned = value.replace(/\D/g, '')
     
-    // Aplica a formatação (XX) XXXXX-XXXX
     if (cleaned.length <= 2) {
       return `(${cleaned}`
     } else if (cleaned.length <= 6) {
@@ -76,7 +104,6 @@ export default function Contato() {
         [name]: formattedPhone,
       }))
     } else if (name === "mensagem") {
-      // Limita a 256 caracteres
       if (value.length <= 256) {
         setFormData((prevState) => ({
           ...prevState,
@@ -93,11 +120,19 @@ export default function Contato() {
   }
 
   const handleFileChange = (e) => {
+    // ✅ VERIFICA AUTENTICAÇÃO USANDO SEU SERVIÇO
+    if (!authState.isAuthenticated) {
+      showAuthRequiredModal()
+      return
+    }
+
     const file = e.target.files[0]
     if (file) {
-      // Validação básica do arquivo
-      if (file.size > 10 * 1024 * 1024) { // 10MB
-        showMessage("Arquivo muito grande. Tamanho máximo: 10MB", "error")
+      if (file.size > 10 * 1024 * 1024) {
+        showErrorModal(
+          "Arquivo muito grande", 
+          "O tamanho máximo permitido é 10MB. Por favor, escolha um arquivo menor."
+        )
         return
       }
       
@@ -128,27 +163,76 @@ export default function Contato() {
     }
   }
 
-  const showMessage = (text, type = "success") => {
-    setMessage({ text, type })
-    setTimeout(() => setMessage({ text: "", type: "" }), 5000)
+  const showSuccessModal = () => {
+    setModalType("success")
+    setModalTitle("Mensagem Enviada!")
+    setModalMessage("Sua mensagem foi enviada com sucesso. Nossa equipe entrará em contato em breve.")
+    setShowModal(true)
   }
 
-  const showSuccessModal = () => {
+  const showErrorModal = (title, message) => {
+    setModalType("error")
+    setModalTitle(title)
+    setModalMessage(message)
+    setShowModal(true)
+  }
+
+  // ✅ MODAL PARA AUTENTICAÇÃO NECESSÁRIA
+  const showAuthRequiredModal = () => {
+    setModalType("auth_required")
+    setModalTitle("Login Necessário")
+    setModalMessage("Para enviar mensagens e anexar arquivos, você precisa estar logado em sua conta.")
     setShowModal(true)
   }
 
   const closeModal = () => {
     setShowModal(false)
+    setModalType("")
+    setModalMessage("")
+    setModalTitle("")
+  }
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  // ✅ REDIRECIONAMENTOS PARA SUAS PÁGINAS EXISTENTES
+  const redirectToLogin = () => {
+    navigate('/login')
+  }
+
+  const redirectToRegister = () => {
+    navigate('/cadastro')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // ✅ BLOQUEIA SE NÃO ESTIVER LOGADO (USA SEU auth.service)
+    if (!authState.isAuthenticated) {
+      showAuthRequiredModal()
+      return
+    }
+
     setIsLoading(true)
-    setMessage({ text: "", type: "" })
 
     // Validação básica do frontend
     if (!formData.nome || !formData.email || !formData.telefone || !formData.mensagem) {
-      showMessage("Por favor, preencha todos os campos obrigatórios.", "error")
+      showErrorModal(
+        "Campos obrigatórios", 
+        "Por favor, preencha todos os campos obrigatórios marcados com *."
+      )
+      setIsLoading(false)
+      return
+    }
+
+    // Validação do email
+    if (!validateEmail(formData.email)) {
+      showErrorModal(
+        "E-mail inválido", 
+        "Por favor, insira um endereço de e-mail válido."
+      )
       setIsLoading(false)
       return
     }
@@ -156,7 +240,10 @@ export default function Contato() {
     // Validação do telefone (pelo menos 10 dígitos)
     const phoneDigits = formData.telefone.replace(/\D/g, '')
     if (phoneDigits.length < 10) {
-      showMessage("Por favor, insira um número de telefone válido.", "error")
+      showErrorModal(
+        "Telefone inválido", 
+        "Por favor, insira um número de telefone válido com DDD."
+      )
       setIsLoading(false)
       return
     }
@@ -164,17 +251,24 @@ export default function Contato() {
     try {
       console.log("Enviando dados para o backend:", formData)
       
-      const resultado = await contatoService.enviarMensagem(formData)
+      // ✅ ADICIONA O ID DO USUÁRIO LOGADO AOS DADOS
+      const formDataWithUser = {
+        ...formData,
+        usuarioId: authState.user?.id,
+        usuarioTipo: authState.user?.tipo // ✅ INCLUI O TIPO DO USUÁRIO
+      }
+      
+      const resultado = await contatoService.enviarMensagem(formDataWithUser)
       
       console.log("Resposta do servidor:", resultado)
       
       // Mostra o modal de sucesso
       showSuccessModal()
 
-      // Reset do formulário
+      // Reset do formulário (mantém nome e email do usuário logado)
       setFormData({
-        nome: "",
-        email: "",
+        nome: authState.user?.nome || "",
+        email: authState.user?.email || "",
         telefone: "",
         mensagem: "",
         arquivo: null,
@@ -187,7 +281,10 @@ export default function Contato() {
 
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error)
-      showMessage(error.message || "Erro ao enviar mensagem. Tente novamente.", "error")
+      showErrorModal(
+        "Erro no envio", 
+        error.message || "Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente."
+      )
     } finally {
       setIsLoading(false)
     }
@@ -239,9 +336,14 @@ export default function Contato() {
               />
               <div className="carousel-caption d-none d-md-block">
                 <h2 className="carrossel">Entre em Contato Conosco</h2>
-                <p>Estamos aqui para ajudar você a conectar-se com asilos e fazer a diferença na vida dos idosos.</p>
+                <p>
+                  {authState.isAuthenticated 
+                    ? "Envie sua mensagem para nossa equipe. Estamos aqui para ajudar!"
+                    : "Faça login para enviar mensagens e entrar em contato com nossa equipe."
+                  }
+                </p>
                 <button onClick={scrollToContato} className="btn btn-outline-primary btn">
-                  Fale Conosco
+                  {authState.isAuthenticated ? "Enviar Mensagem" : "Ver Formulário"}
                 </button>
               </div>
             </div>
@@ -254,9 +356,14 @@ export default function Contato() {
               />
               <div className="carousel-caption d-none d-md-block">
                 <h2 className="carrossel">Suporte e Orientação</h2>
-                <p>Nossa equipe está pronta para esclarecer suas dúvidas sobre voluntariado e parcerias.</p>
+                <p>
+                  {authState.isAuthenticated 
+                    ? "Nossa equipe está pronta para esclarecer suas dúvidas."
+                    : "Acesse sua conta para falar com nossa equipe de suporte."
+                  }
+                </p>
                 <button onClick={scrollToContato} className="btn btn-outline-primary btn">
-                  Fale Conosco
+                  {authState.isAuthenticated ? "Fale Conosco" : "Fazer Login"}
                 </button>
               </div>
             </div>
@@ -269,9 +376,14 @@ export default function Contato() {
               />
               <div className="carousel-caption d-none d-md-block">
                 <h2 className="carrossel">Juntos Fazemos a Diferença</h2>
-                <p>Conte conosco para construir pontes entre voluntários e instituições de cuidado aos idosos.</p>
+                <p>
+                  {authState.isAuthenticated 
+                    ? "Conte conosco para construir pontes e fazer a diferença."
+                    : "Junte-se a nós! Crie uma conta para começar a fazer a diferença."
+                  }
+                </p>
                 <button onClick={scrollToContato} className="btn btn-outline-primary btn">
-                  Fale Conosco
+                  {authState.isAuthenticated ? "Continuar" : "Cadastrar"}
                 </button>
               </div>
             </div>
@@ -296,37 +408,72 @@ export default function Contato() {
           </button>
         </div>
 
-        {/* Mensagem de feedback */}
-        {message.text && (
-          <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-danger'} alert-dismissible fade show m-3`} role="alert" style={{maxWidth: '600px', margin: '20px auto'}}>
-            {message.text}
-            <button type="button" className="btn-close" onClick={() => setMessage({ text: "", type: "" })}></button>
-          </div>
-        )}
-
-        {/* Modal de sucesso */}
+        {/* Modal de sucesso/erro/auth */}
         {showModal && (
-          <div className="modal fade show d-block" tabIndex="-1" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+          <div className={`modal fade show d-block ${
+            modalType === 'error' ? 'modal-error' : 
+            modalType === 'auth_required' ? 'modal-auth' : 
+            'modal-success'
+          }`} tabIndex="-1" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content">
                 <div className="modal-header border-0">
-                  <h5 className="modal-title text-success">
-                    <i className="fas fa-check-circle me-2"></i>
-                    Mensagem Enviada!
+                  <h5 className="modal-title">
+                    {modalType === 'error' ? (
+                      <i className="fas fa-exclamation-circle me-2"></i>
+                    ) : modalType === 'auth_required' ? (
+                      <i className="fas fa-lock me-2"></i>
+                    ) : (
+                      <i className="fas fa-check-circle me-2"></i>
+                    )}
+                    {modalTitle}
                   </h5>
                   <button type="button" className="btn-close" onClick={closeModal}></button>
                 </div>
                 <div className="modal-body text-center py-4">
-                  <i className="fas fa-paper-plane fa-3x text-primary mb-3"></i>
-                  <h4 className="mb-3">Obrigado pelo seu contato!</h4>
-                  <p className="text-muted">
-                    Sua mensagem foi enviada com sucesso. Nossa equipe entrará em contato em breve.
+                  <div className="modal-icon">
+                    {modalType === 'error' ? (
+                      <i className="fas fa-exclamation-triangle"></i>
+                    ) : modalType === 'auth_required' ? (
+                      <i className="fas fa-user-lock"></i>
+                    ) : (
+                      <i className="fas fa-paper-plane"></i>
+                    )}
+                  </div>
+                  <h4 className="mb-3">{modalTitle}</h4>
+                  <p className="text-muted mb-0">
+                    {modalMessage}
                   </p>
                 </div>
                 <div className="modal-footer border-0 justify-content-center">
-                  <button type="button" className="btn btn-primary px-4" onClick={closeModal}>
-                    Entendido
-                  </button>
+                  {modalType === 'auth_required' ? (
+                    <div className="d-flex gap-3">
+                      <button 
+                        type="button" 
+                        className="btn btn-outline-primary px-4" 
+                        onClick={redirectToLogin}
+                      >
+                        Fazer Login
+                      </button>
+                      <button 
+                        type="button" 
+                        className="btn btn-primary px-4" 
+                        onClick={redirectToRegister}
+                      >
+                        Cadastrar
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      type="button" 
+                      className={`btn ${
+                        modalType === 'error' ? 'btn-warning' : 'btn-primary'
+                      } px-4`} 
+                      onClick={closeModal}
+                    >
+                      {modalType === 'error' ? 'Tentar Novamente' : 'Entendido'}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -339,10 +486,40 @@ export default function Contato() {
             <div className="row justify-content-center">
               <div className="col-lg-8 col-xl-6">
                 <div className="contato-header text-center mb-5">
-                  <h2 className="section-title text-balance">Faça seu registro abaixo e entraremos em contato</h2>
+                  <h2 className="section-title text-balance">
+                    {authState.isAuthenticated 
+                      ? "Envie sua mensagem" 
+                      : "Faça login para entrar em contato"
+                    }
+                  </h2>
+                  {!authState.isAuthenticated && (
+                    <p className="text-muted mt-3">
+                      Você precisa estar logado para enviar mensagens para nossa equipe.
+                    </p>
+                  )}
                 </div>
 
                 <div className="contato-form-container">
+                  {/* Indicador de Status de Login */}
+                  {!authState.isAuthenticated && (
+                    <div className="alert alert-warning text-center mb-4">
+                      <i className="fas fa-info-circle me-2"></i>
+                      <strong>Login necessário</strong> - Faça login ou cadastre-se para enviar mensagens
+                    </div>
+                  )}
+
+                  {authState.isAuthenticated && (
+                    <div className="alert alert-success text-center mb-4">
+                      <i className="fas fa-check-circle me-2"></i>
+                      <strong>Logado como:</strong> {authState.user?.nome} ({authState.user?.email})
+                      {authState.user?.tipo && (
+                        <span className="badge bg-primary ms-2">
+                          {authState.user.tipo === 'asilo' ? 'Asilo' : 'Voluntário'}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <form className="contato-form" onSubmit={handleSubmit} data-aos="fade-up" data-aos-delay="200">
                     <div className="form-group mb-4">
                       <input
@@ -353,7 +530,7 @@ export default function Contato() {
                         value={formData.nome}
                         onChange={handleInputChange}
                         required
-                        disabled={isLoading}
+                        disabled={isLoading || !authState.isAuthenticated}
                       />
                     </div>
 
@@ -366,7 +543,7 @@ export default function Contato() {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        disabled={isLoading}
+                        disabled={isLoading || !authState.isAuthenticated}
                       />
                     </div>
 
@@ -379,7 +556,7 @@ export default function Contato() {
                         value={formData.telefone}
                         onChange={handleInputChange}
                         required
-                        disabled={isLoading}
+                        disabled={isLoading || !authState.isAuthenticated}
                         maxLength={15}
                       />
                       <small className="text-muted">Formato: (11) 99999-9999</small>
@@ -394,7 +571,7 @@ export default function Contato() {
                         value={formData.mensagem}
                         onChange={handleInputChange}
                         required
-                        disabled={isLoading}
+                        disabled={isLoading || !authState.isAuthenticated}
                         maxLength={256}
                       ></textarea>
                       <div className="position-absolute bottom-0 end-0 p-2">
@@ -412,13 +589,15 @@ export default function Contato() {
                           id="arquivo" 
                           className="file-input" 
                           onChange={handleFileChange}
-                          disabled={isLoading}
+                          disabled={isLoading || !authState.isAuthenticated}
                           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                         />
                         <label htmlFor="arquivo" className="file-label">
-                          <span className="file-button">Escolher arquivo</span>
+                          <span className="file-button">
+                            {authState.isAuthenticated ? "Escolher arquivo" : "Login Necessário"}
+                          </span>
                           <span className="file-text">{fileName}</span>
-                          {formData.arquivo && (
+                          {formData.arquivo && authState.isAuthenticated && (
                             <button 
                               type="button" 
                               className="btn-close ms-2"
@@ -432,20 +611,26 @@ export default function Contato() {
                     </div>
 
                     <div className="text-center">
-                      <button 
-                        type="submit" 
-                        className="btn-enviar"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            ENVIANDO...
-                          </>
-                        ) : (
-                          'ENVIAR'
-                        )}
-                      </button>
+                      {authState.isAuthenticated ? (
+                        <button 
+                          type="submit" 
+                          className="btn-enviar"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                              ENVIANDO...
+                            </>
+                          ) : (
+                            'ENVIAR MENSAGEM'
+                          )}
+                        </button>
+                      ) : (
+                        <div className="d-flex gap-3 justify-content-center">
+
+                        </div>
+                      )}
                     </div>
                   </form>
                 </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import AOS from "aos"
 import "aos/dist/aos.css"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -15,6 +15,7 @@ import { api } from "../../services/api"
 import { API_BASE_URL } from "../../services/auth/auth.constants"
 
 function Videos() {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [currentSearch, setCurrentSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -22,14 +23,43 @@ function Videos() {
   const [hasMore, setHasMore] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedVideo, setSelectedVideo] = useState(null)
-  const [notification, setNotification] = useState({ show: false, type: '', message: '' })
+  const [notification, setNotification] = useState({ show: false, type: '', message: '', title: '' })
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [isLoadingAction, setIsLoadingAction] = useState(false)
 
   const videoPlayerModalRef = useRef(null)
   const uploadModalRef = useRef(null)
   const notificationModalRef = useRef(null)
 
-  // Inicialização
+  // Verificar autenticação
   useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const userDataStr = localStorage.getItem('user_data')
+        const token = localStorage.getItem('auth_token')
+        
+        if (userDataStr && token) {
+          const user = JSON.parse(userDataStr)
+          setCurrentUser(user)
+          setIsAuthenticated(true)
+        } else {
+          setIsAuthenticated(false)
+          setCurrentUser(null)
+        }
+      } catch (error) {
+        console.error("Erro ao verificar autenticação:", error)
+        setIsAuthenticated(false)
+      }
+    }
+
+    checkAuth()
+  }, [])
+
+  // Inicialização - SÓ quando estiver autenticado
+  useEffect(() => {
+    if (!isAuthenticated) return
+
     AOS.init({
       duration: 800,
       easing: "ease-in-out",
@@ -37,20 +67,33 @@ function Videos() {
       offset: 100,
     })
     
-    if (window.bootstrap) {
-      videoPlayerModalRef.current = new window.bootstrap.Modal(document.getElementById("videoPlayerModal"))
-      uploadModalRef.current = new window.bootstrap.Modal(document.getElementById("uploadModal"))
-      notificationModalRef.current = new window.bootstrap.Modal(document.getElementById("notificationModal"))
+    // Inicializar modais do Bootstrap
+    const initModals = () => {
+      if (window.bootstrap) {
+        const videoModalEl = document.getElementById("videoPlayerModal")
+        const uploadModalEl = document.getElementById("uploadModal")
+        const notificationModalEl = document.getElementById("notificationModal")
+        
+        if (videoModalEl) videoPlayerModalRef.current = new window.bootstrap.Modal(videoModalEl)
+        if (uploadModalEl) uploadModalRef.current = new window.bootstrap.Modal(uploadModalEl)
+        if (notificationModalEl) notificationModalRef.current = new window.bootstrap.Modal(notificationModalEl)
+      }
     }
+
+    initModals()
     loadVideos(true)
-  }, [])
+  }, [isAuthenticated])
 
   // 🔹 Mostrar notificação
-  const showNotification = (type, message) => {
-    setNotification({ show: true, type, message })
+  const showNotification = (type, message, title = "") => {
+    setNotification({ 
+      show: true, 
+      type, 
+      message,
+      title: title || (type === 'success' ? 'Sucesso!' : 'Erro!')
+    })
     notificationModalRef.current?.show()
     
-    // Auto close para sucesso após 3 segundos
     if (type === 'success') {
       setTimeout(() => {
         hideNotification()
@@ -62,143 +105,220 @@ function Videos() {
   const hideNotification = () => {
     notificationModalRef.current?.hide()
     setTimeout(() => {
-      setNotification({ show: false, type: '', message: '' })
+      setNotification({ show: false, type: '', message: '', title: '' })
     }, 300)
   }
 
   // 🔹 Buscar vídeos
- // 🔹 Buscar vídeos - VERSÃO CORRIGIDA
-const loadVideos = async (reset = true) => {
-  if (isLoading) return
-  setIsLoading(true)
-  try {
-    // Use a função api com credentials configurada
-    const data = await api.get("/api/videos")
-    if (!data?.data) throw new Error("Resposta inválida da API")
-
-    let fetchedVideos = data.data
-
-    // Filtro de busca apenas (categorias removidas)
-    if (currentSearch) {
-      fetchedVideos = fetchedVideos.filter(v =>
-        v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
-        (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
-      )
+  const loadVideos = async (reset = true) => {
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para acessar os vídeos.")
+      return
     }
 
-    const paginated = fetchedVideos.slice(0, currentPage * 6)
-    setVideos(paginated)
-    setHasMore(fetchedVideos.length > paginated.length)
-  } catch (error) {
-    console.error(error)
-    showNotification('error', error.message)
-  } finally {
-    setIsLoading(false)
+    if (isLoading) return
+    setIsLoading(true)
+    try {
+      const response = await api.get("/api/videos")
+      
+      if (response.status === 200 && response.data) {
+        let fetchedVideos = response.data
+
+        // Filtro de busca
+        if (currentSearch) {
+          fetchedVideos = fetchedVideos.filter(v =>
+            v.nome_midia?.toLowerCase().includes(currentSearch.toLowerCase()) ||
+            (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
+          )
+        }
+
+        const paginated = fetchedVideos.slice(0, currentPage * 6)
+        setVideos(paginated)
+        setHasMore(fetchedVideos.length > paginated.length)
+      } else {
+        throw new Error("Resposta inválida da API")
+      }
+    } catch (error) {
+      console.error("Erro ao carregar vídeos:", error)
+      showNotification('error', error.message || "Erro ao carregar vídeos")
+    } finally {
+      setIsLoading(false)
+    }
   }
-}
 
   const loadMoreVideos = () => {
+    if (!isAuthenticated) return
     setCurrentPage(prev => prev + 1)
     loadVideos(false)
   }
 
   const searchVideos = (q) => {
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para buscar vídeos.")
+      return
+    }
     setCurrentSearch(q)
     setCurrentPage(1)
     loadVideos(true)
   }
 
   const openVideoPlayer = (video) => {
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para assistir vídeos.")
+      return
+    }
     setSelectedVideo(video)
     videoPlayerModalRef.current?.show()
   }
 
-
-// 📤 Upload de vídeo - VERSÃO COMPLETAMENTE CORRIGIDA
-const handleVideoUpload = async (e) => {
-  e.preventDefault()
-  const form = e.target
-  const fileInput = form.querySelector("#videoFile")
-  const file = fileInput.files[0]
-  const titulo = form.querySelector("#videoTitle").value
-  const descricao = form.querySelector("#videoDescription").value
-
-  if (!validateVideoFile(file)) return
-
-  const formData = new FormData()
-  formData.append("video", file)
-  formData.append("titulo", titulo)
-  formData.append("descricao", descricao)
-
-  try {
-    setUploadProgress(15)
-    
-    const token = localStorage.getItem('token')
-    
-    // DEBUG - Verifique o que está sendo enviado
-    console.log('🔐 Token:', token ? 'PRESENTE' : 'AUSENTE')
-    console.log('📁 Arquivo:', file.name, file.size, file.type)
-    console.log('🌐 URL:', `${API_BASE_URL}/api/videos`)
-
-    const response = await fetch(`${API_BASE_URL}/api/videos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-        // ❌ NÃO inclua Content-Type - o browser define automaticamente para FormData
-      },
-      credentials: 'include', // ← CRÍTICO para CORS
-      body: formData
-    })
-
-    console.log('✅ Status da resposta:', response.status)
-    console.log('✅ Headers:', Object.fromEntries(response.headers.entries()))
-
-    const responseText = await response.text()
-    console.log('📄 Resposta bruta:', responseText)
-    
-    let data
-    try {
-      data = JSON.parse(responseText)
-    } catch (parseError) {
-      throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
+  const showUploadModal = () => {
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para enviar vídeos.")
+      setTimeout(() => navigate('/login'), 2000)
+      return
     }
-    
-    if (!response.ok) {
-      throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
-    }
-
-    setUploadProgress(100)
-    showNotification('success', "Vídeo enviado com sucesso!")
-    uploadModalRef.current?.hide()
-    form.reset()
-    loadVideos(true)
-  } catch (err) {
-    console.error("❌ Erro completo no upload:", err)
-    showNotification('error', err.message || "Erro desconhecido no upload.")
-  } finally {
-    setTimeout(() => setUploadProgress(0), 1000)
+    uploadModalRef.current?.show()
   }
-}
+
+  // 📤 Upload de vídeo - VERSÃO FINAL CORRIGIDA
+  const handleVideoUpload = async (e) => {
+    e.preventDefault()
+    
+    if (!isAuthenticated) {
+      showNotification('error', "Você precisa estar logado para enviar vídeos.")
+      return
+    }
+
+    setIsLoadingAction(true)
+    const form = e.target
+    const fileInput = form.querySelector("#videoFile")
+    const file = fileInput.files[0]
+    const titulo = form.querySelector("#videoTitle").value
+    const descricao = form.querySelector("#videoDescription").value
+
+    if (!validateVideoFile(file)) {
+      setIsLoadingAction(false)
+      return
+    }
+
+    try {
+      setUploadProgress(10)
+      
+      const formData = new FormData()
+      formData.append("video", file)
+      formData.append("titulo", titulo)
+      formData.append("descricao", descricao)
+
+      console.log('📤 Iniciando upload do vídeo:', {
+        titulo,
+        descricao,
+        file: file.name,
+        size: file.size,
+        type: file.type
+      })
+
+      // Simular progresso (em produção, isso seria com axios e onUploadProgress)
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval)
+            return prev
+          }
+          return prev + 10
+        })
+      }, 200)
+
+      // Usar a API configurada que já inclui o token de autenticação
+      const response = await api.post('/api/videos', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+
+      clearInterval(progressInterval)
+      setUploadProgress(100)
+
+      console.log('✅ Resposta do upload:', response)
+
+      if (response.status === 200 || response.status === 201) {
+        showNotification('success', "Vídeo enviado com sucesso!", "Upload Concluído!")
+        uploadModalRef.current?.hide()
+        form.reset()
+        // Recarregar a lista de vídeos
+        loadVideos(true)
+      } else {
+        throw new Error(response.message || "Erro ao enviar vídeo")
+      }
+    } catch (err) {
+      console.error("❌ Erro no upload:", err)
+      showNotification('error', err.message || "Erro ao enviar vídeo. Tente novamente.")
+    } finally {
+      setIsLoadingAction(false)
+      setTimeout(() => setUploadProgress(0), 1000)
+    }
+  }
 
   const validateVideoFile = (file) => {
     if (!file) {
       showNotification('error', "Por favor, selecione um arquivo de vídeo.")
       return false
     }
-    const maxSize = 100 * 1024 * 1024
+    
+    const maxSize = 100 * 1024 * 1024 // 100MB
     if (file.size > maxSize) {
       showNotification('error', "O arquivo é muito grande (máximo 100MB).")
       return false
     }
-    const allowed = ["video/mp4", "video/avi", "video/mov", "video/quicktime", "video/webm"]
-    if (!allowed.includes(file.type)) {
+    
+    const allowedTypes = [
+      "video/mp4", 
+      "video/avi", 
+      "video/mov", 
+      "video/quicktime", 
+      "video/webm",
+      "video/x-msvideo"
+    ]
+    
+    if (!allowedTypes.includes(file.type)) {
       showNotification('error', "Formato inválido. Use MP4, AVI, MOV ou WEBM.")
       return false
     }
+    
     return true
   }
 
-  const formatDate = (date) => new Date(date).toLocaleDateString("pt-BR")
+  const formatDate = (date) => {
+    if (!date) return "Data não disponível"
+    return new Date(date).toLocaleDateString("pt-BR", {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
+
+  // Se não estiver autenticado, mostrar mensagem
+  if (!isAuthenticated) {
+    return (
+      <div className="videos-page">
+        <Header />
+        <div className="container text-center py-5">
+          <div className="auth-required-message">
+            <i className="fas fa-sign-in-alt fa-3x text-muted mb-3"></i>
+            <h3 className="text-muted">Acesso Restrito</h3>
+            <p className="text-muted mb-4">Você precisa estar logado para acessar a galeria de vídeos.</p>
+            <button 
+              className="btn btn-primary btn-lg"
+              onClick={() => navigate('/login')}
+            >
+              <i className="fas fa-sign-in-alt me-2"></i>
+              Fazer Login
+            </button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="videos-page">
@@ -250,10 +370,20 @@ const handleVideoUpload = async (e) => {
             <div className="text-center mb-5">
               <button 
                 className="btn-criar-video" 
-                onClick={() => uploadModalRef.current?.show()}
+                onClick={showUploadModal}
+                disabled={isLoadingAction}
               >
-                <i className="fas fa-plus-circle me-2"></i>
-                Enviar Novo Vídeo
+                {isLoadingAction ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    Carregando...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-plus-circle me-2"></i>
+                    Enviar Novo Vídeo
+                  </>
+                )}
               </button>
             </div>
 
@@ -268,6 +398,7 @@ const handleVideoUpload = async (e) => {
                       placeholder="Buscar vídeos por título ou descrição..."
                       value={currentSearch}
                       onChange={(e) => searchVideos(e.target.value)}
+                      disabled={isLoading}
                     />
                     <i className="fas fa-search search-icon"></i>
                   </div>
@@ -281,6 +412,7 @@ const handleVideoUpload = async (e) => {
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Carregando...</span>
                 </div>
+                <p className="mt-2">Carregando vídeos...</p>
               </div>
             )}
 
@@ -288,7 +420,7 @@ const handleVideoUpload = async (e) => {
             {!isLoading && videos.length > 0 && (
               <div className="row">
                 {videos.map((video, index) => (
-                  <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
+                  <div key={video.id_midia || index} className="col-lg-4 col-md-6 mb-4">
                     <div className="card video-card" data-aos="fade-up" data-aos-delay={index % 3 * 100}>
                       <div className="video-thumbnail-container" onClick={() => openVideoPlayer(video)}>
                         <video
@@ -308,7 +440,7 @@ const handleVideoUpload = async (e) => {
                         <div className="video-icon">
                           <i className="fas fa-play-circle"></i>
                         </div>
-                        <h3 className="video-title">{video.nome_midia}</h3>
+                        <h3 className="video-title">{video.nome_midia || "Vídeo Sem Título"}</h3>
                         {video.descricao && (
                           <p className="video-description">
                             {video.descricao.length > 120 
@@ -318,7 +450,7 @@ const handleVideoUpload = async (e) => {
                         )}
                         <ul className="video-details">
                           <li>
-                            <i className="fas fa-user"></i> {video.autor_nome}
+                            <i className="fas fa-user"></i> {video.autor_nome || "Autor Desconhecido"}
                           </li>
                           <li>
                             <i className="fas fa-calendar"></i> {formatDate(video.criado_em)}
@@ -343,7 +475,7 @@ const handleVideoUpload = async (e) => {
                 </p>
                 <button 
                   className="btn-criar-video"
-                  onClick={() => uploadModalRef.current?.show()}
+                  onClick={showUploadModal}
                 >
                   <i className="fas fa-plus-circle me-2"></i>
                   Enviar Primeiro Vídeo
@@ -352,7 +484,7 @@ const handleVideoUpload = async (e) => {
             )}
 
             {/* Botão carregar mais */}
-            {hasMore && !isLoading && (
+            {hasMore && !isLoading && videos.length > 0 && (
               <div className="text-center mt-4">
                 <button className="btn btn-outline-primary btn-lg" onClick={loadMoreVideos}>
                   Carregar Mais Vídeos
@@ -368,7 +500,7 @@ const handleVideoUpload = async (e) => {
         <div className="modal-dialog modal-xl modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{selectedVideo?.nome_midia}</h5>
+              <h5 className="modal-title">{selectedVideo?.nome_midia || "Reproduzindo Vídeo"}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div className="modal-body">
@@ -379,6 +511,7 @@ const handleVideoUpload = async (e) => {
                     controls
                     autoPlay
                     className="video-player"
+                    style={{ width: '100%', maxHeight: '70vh' }}
                   />
                 </div>
               )}
@@ -386,7 +519,8 @@ const handleVideoUpload = async (e) => {
             {selectedVideo?.descricao && (
               <div className="modal-footer">
                 <div className="video-description-full">
-                  <p>{selectedVideo.descricao}</p>
+                  <h6>Descrição:</h6>
+                  <p className="mb-0">{selectedVideo.descricao}</p>
                 </div>
               </div>
             )}
@@ -415,6 +549,7 @@ const handleVideoUpload = async (e) => {
                       id="videoTitle"
                       placeholder="Digite um título descritivo..."
                       required
+                      maxLength={100}
                     />
                   </div>
                   <div className="col-12 mb-3">
@@ -426,7 +561,9 @@ const handleVideoUpload = async (e) => {
                       id="videoDescription"
                       rows="3"
                       placeholder="Descreva o conteúdo do vídeo (opcional)..."
+                      maxLength={500}
                     ></textarea>
+                    <div className="form-text">Máximo 500 caracteres</div>
                   </div>
                   <div className="col-12 mb-3">
                     <label htmlFor="videoFile" className="form-label">
@@ -462,13 +599,22 @@ const handleVideoUpload = async (e) => {
                   </div>
                 )}
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    data-bs-dismiss="modal"
+                    disabled={isLoadingAction}
+                  >
                     Cancelar
                   </button>
-                  <button type="submit" className="btn btn-primary" disabled={uploadProgress > 0}>
-                    {uploadProgress > 0 ? (
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary" 
+                    disabled={isLoadingAction || uploadProgress > 0}
+                  >
+                    {isLoadingAction ? (
                       <>
-                        <i className="fas fa-spinner fa-spin me-2"></i>
+                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
                         Enviando...
                       </>
                     ) : (
@@ -498,9 +644,7 @@ const handleVideoUpload = async (e) => {
                 )}
               </div>
               <div className="notification-content">
-                <h4 className="notification-title">
-                  {notification.type === 'success' ? 'Sucesso!' : 'Erro!'}
-                </h4>
+                <h4 className="notification-title">{notification.title}</h4>
                 <p className="notification-message">{notification.message}</p>
               </div>
               {notification.type === 'error' && (

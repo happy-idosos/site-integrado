@@ -67,33 +67,35 @@ function Videos() {
   }
 
   // 🔹 Buscar vídeos
-  const loadVideos = async (reset = true) => {
-    if (isLoading) return
-    setIsLoading(true)
-    try {
-      const data = await api.get("/api/videos")
-      if (!data?.data) throw new Error("Resposta inválida da API")
+ // 🔹 Buscar vídeos - VERSÃO CORRIGIDA
+const loadVideos = async (reset = true) => {
+  if (isLoading) return
+  setIsLoading(true)
+  try {
+    // Use a função api com credentials configurada
+    const data = await api.get("/api/videos")
+    if (!data?.data) throw new Error("Resposta inválida da API")
 
-      let fetchedVideos = data.data
+    let fetchedVideos = data.data
 
-      // Filtro de busca apenas (categorias removidas)
-      if (currentSearch) {
-        fetchedVideos = fetchedVideos.filter(v =>
-          v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
-          (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
-        )
-      }
-
-      const paginated = fetchedVideos.slice(0, currentPage * 6)
-      setVideos(paginated)
-      setHasMore(fetchedVideos.length > paginated.length)
-    } catch (error) {
-      console.error(error)
-      showNotification('error', error.message)
-    } finally {
-      setIsLoading(false)
+    // Filtro de busca apenas (categorias removidas)
+    if (currentSearch) {
+      fetchedVideos = fetchedVideos.filter(v =>
+        v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
+        (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
+      )
     }
+
+    const paginated = fetchedVideos.slice(0, currentPage * 6)
+    setVideos(paginated)
+    setHasMore(fetchedVideos.length > paginated.length)
+  } catch (error) {
+    console.error(error)
+    showNotification('error', error.message)
+  } finally {
+    setIsLoading(false)
   }
+}
 
   const loadMoreVideos = () => {
     setCurrentPage(prev => prev + 1)
@@ -112,58 +114,61 @@ function Videos() {
   }
 
   // 📤 Upload de vídeo
-  const handleVideoUpload = async (e) => {
-    e.preventDefault()
-    const form = e.target
-    const fileInput = form.querySelector("#videoFile")
-    const file = fileInput.files[0]
-    const titulo = form.querySelector("#videoTitle").value
-    const descricao = form.querySelector("#videoDescription").value
+// 📤 Upload de vídeo - VERSÃO CORRIGIDA
+const handleVideoUpload = async (e) => {
+  e.preventDefault()
+  const form = e.target
+  const fileInput = form.querySelector("#videoFile")
+  const file = fileInput.files[0]
+  const titulo = form.querySelector("#videoTitle").value
+  const descricao = form.querySelector("#videoDescription").value
 
-    if (!validateVideoFile(file)) return
+  if (!validateVideoFile(file)) return
 
-    const formData = new FormData()
-    formData.append("video", file)
-    formData.append("titulo", titulo)
-    formData.append("descricao", descricao)
+  const formData = new FormData()
+  formData.append("video", file)
+  formData.append("titulo", titulo)
+  formData.append("descricao", descricao)
 
+  try {
+    setUploadProgress(15)
+    
+    const token = localStorage.getItem('token') // ← Mudei de 'auth_token' para 'token'
+
+    const response = await fetch(`${API_BASE_URL}/api/videos`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+        // ❌ REMOVA 'Content-Type' - o browser define automaticamente para FormData
+      },
+      credentials: 'include', // ← ADICIONE ESTA LINHA (resolve CORS)
+      body: formData
+    })
+
+    const responseText = await response.text()
+    let data
     try {
-      setUploadProgress(15)
-      
-      const token = localStorage.getItem('auth_token')
-
-      const response = await fetch(`${API_BASE_URL}/api/videos`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      })
-
-      const responseText = await response.text()
-      let data
-      try {
-        data = JSON.parse(responseText)
-      } catch (parseError) {
-        throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
-      }
-      
-      if (!response.ok) {
-        throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
-      }
-
-      setUploadProgress(100)
-      showNotification('success', "Vídeo enviado com sucesso!")
-      uploadModalRef.current?.hide()
-      form.reset()
-      loadVideos(true)
-    } catch (err) {
-      console.error("❌ Erro no upload:", err)
-      showNotification('error', err.message || "Erro desconhecido no upload.")
-    } finally {
-      setTimeout(() => setUploadProgress(0), 1000)
+      data = JSON.parse(responseText)
+    } catch (parseError) {
+      throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
     }
+    
+    if (!response.ok) {
+      throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
+    }
+
+    setUploadProgress(100)
+    showNotification('success', "Vídeo enviado com sucesso!")
+    uploadModalRef.current?.hide()
+    form.reset()
+    loadVideos(true)
+  } catch (err) {
+    console.error("❌ Erro no upload:", err)
+    showNotification('error', err.message || "Erro desconhecido no upload.")
+  } finally {
+    setTimeout(() => setUploadProgress(0), 1000)
   }
+}
 
   const validateVideoFile = (file) => {
     if (!file) {

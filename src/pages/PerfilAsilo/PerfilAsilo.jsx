@@ -1,194 +1,155 @@
-// src/pages/PerfilAsilo/PerfilAsilo.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePerfilAsilo } from '../../hooks/usePerfilAsilo';
-import './PerfilAsilo.css';
+"use client"
+
+import React from "react"
+import { useNavigate } from "react-router-dom"
+import { usePerfilAsilo } from "../../hooks/usePerfilAsilo"
+import "./PerfilAsilo.css"
 
 const PerfilAsilo = () => {
-  const navigate = useNavigate();
-  const {
-    perfil,
-    carregando,
-    erro,
-    editarPerfilBasico,
-    editarPerfilDetalhes,
-    uploadLogo,
-    atualizarPerfil
-  } = usePerfilAsilo();
+  const navigate = useNavigate()
+  const { perfil, carregando, erro, editarPerfil, uploadLogo } = usePerfilAsilo()
 
-  const [editando, setEditando] = React.useState(false);
-  const [mostrarModal, setMostrarModal] = React.useState(false);
-  const [mostrarModalErro, setMostrarModalErro] = React.useState(false);
-  const [logo, setLogo] = React.useState(perfil?.logo || null);
-  const [erroMensagem, setErroMensagem] = React.useState('');
+  const [editando, setEditando] = React.useState(false)
+  const [mostrarModal, setMostrarModal] = React.useState(false)
+  const [mostrarModalErro, setMostrarModalErro] = React.useState(false)
+  const [logo, setLogo] = React.useState(null)
+  const [erroMensagem, setErroMensagem] = React.useState("")
   const [dadosForm, setDadosForm] = React.useState({
-    nome: perfil?.nome || '',
-    email: perfil?.email || '',
-    telefone: perfil?.telefone || '',
-    cnpj: perfil?.cnpj || '',
-    responsavel: perfil?.responsavel || '',
-    endereco: perfil?.endereco || '',
-    cidade: perfil?.cidade || '',
-    estado: perfil?.estado || '',
-    cep: perfil?.cep || '',
-    capacidade: perfil?.capacidade || '',
-    tipo: perfil?.tipo || '',
-    descricao: perfil?.descricao || '',
-    necessidades: perfil?.necessidades || '',
-    site: perfil?.site || '',
-    redesSociais: perfil?.redesSociais || ''
-  });
+    nome: "",
+    email: "",
+    telefone: "",
+    cnpj: "",
+    responsavel_legal: "",
+    endereco: "",
+    cidade: "",
+    estado: "",
+    cep: "",
+    capacidade: "",
+    tipo_instituicao: "",
+    descricao: "",
+    necessidades_voluntariado: "",
+    site: "",
+    redes_sociais: "",
+  })
 
-  // Atualizar dados do formulário quando o perfil carregar
   React.useEffect(() => {
     if (perfil) {
+      console.log("[v0] Perfil carregado:", perfil)
       setDadosForm({
-        nome: perfil.nome || '',
-        email: perfil.email || '',
-        telefone: perfil.telefone || '',
-        cnpj: perfil.cnpj || '',
-        responsavel: perfil.responsavel || '',
-        endereco: perfil.endereco || '',
-        cidade: perfil.cidade || '',
-        estado: perfil.estado || '',
-        cep: perfil.cep || '',
-        capacidade: perfil.capacidade || '',
-        tipo: perfil.tipo || '',
-        descricao: perfil.descricao || '',
-        necessidades: perfil.necessidades || '',
-        site: perfil.site || '',
-        redesSociais: perfil.redesSociais || ''
-      });
-      setLogo(perfil.logo || null);
+        nome: perfil.nome || "",
+        email: perfil.email || "",
+        telefone: perfil.telefone || "",
+        cnpj: perfil.cnpj || "",
+        responsavel_legal: perfil.responsavel_legal || "",
+        endereco: perfil.endereco || "",
+        cidade: perfil.cidade || "",
+        estado: perfil.estado || "",
+        cep: perfil.cep || "",
+        capacidade: perfil.capacidade || "",
+        tipo_instituicao: perfil.tipo_instituicao || "",
+        descricao: perfil.descricao || "",
+        necessidades_voluntariado: perfil.necessidades_voluntariado || "",
+        site: perfil.site || "",
+        redes_sociais: perfil.redes_sociais || "",
+      })
+      setLogo(perfil.logo_url || null)
+      console.log("[v0] Logo URL definido:", perfil.logo_url)
     }
-  }, [perfil]);
+  }, [perfil])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDadosForm(prev => ({
+    const { name, value } = e.target
+    setDadosForm((prev) => ({
       ...prev,
-      [name]: value
-    }));
-  };
+      [name]: value,
+    }))
+  }
 
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setErroMensagem('A imagem deve ter no máximo 5MB.');
-        setMostrarModalErro(true);
-        return;
+        setErroMensagem("A imagem deve ter no máximo 5MB.")
+        setMostrarModalErro(true)
+        return
       }
 
-      if (!file.type.startsWith('image/')) {
-        setErroMensagem('Por favor, selecione um arquivo de imagem válido.');
-        setMostrarModalErro(true);
-        return;
+      if (!file.type.startsWith("image/")) {
+        setErroMensagem("Por favor, selecione um arquivo de imagem válido.")
+        setMostrarModalErro(true)
+        return
       }
 
       try {
-        const resultado = await uploadLogo(file);
+        const resultado = await uploadLogo(file)
         if (resultado.success) {
-          setLogo(resultado.logo_url);
+          setLogo(resultado.logo_url)
+          console.log("✅ Logo atualizado na UI:", resultado.logo_url)
         } else {
-          setErroMensagem(resultado.message || 'Erro ao fazer upload da logo.');
-          setMostrarModalErro(true);
+          setErroMensagem(resultado.message || "Erro ao fazer upload da logo.")
+          setMostrarModalErro(true)
         }
       } catch (error) {
-        setErroMensagem('Erro ao carregar a imagem. Tente novamente.');
-        setMostrarModalErro(true);
+        console.error("❌ Erro ao carregar a imagem:", error)
+        setErroMensagem("Erro ao carregar a imagem. Tente novamente.")
+        setMostrarModalErro(true)
       }
     }
-  };
+  }
 
   const validarFormulario = () => {
     if (!dadosForm.nome.trim()) {
-      setErroMensagem('O nome do asilo é obrigatório.');
-      return false;
+      setErroMensagem("O nome do asilo é obrigatório.")
+      return false
     }
 
-    if (!dadosForm.email.trim() || !dadosForm.email.includes('@')) {
-      setErroMensagem('Por favor, insira um e-mail válido.');
-      return false;
+    if (!dadosForm.email.trim() || !dadosForm.email.includes("@")) {
+      setErroMensagem("Por favor, insira um e-mail válido.")
+      return false
     }
 
-    if (!dadosForm.telefone.trim()) {
-      setErroMensagem('O telefone é obrigatório.');
-      return false;
-    }
-
-    if (!dadosForm.cnpj.trim()) {
-      setErroMensagem('O CNPJ é obrigatório.');
-      return false;
-    }
-
-    if (!dadosForm.responsavel.trim()) {
-      setErroMensagem('O responsável legal é obrigatório.');
-      return false;
-    }
-
-    return true;
-  };
+    return true
+  }
 
   const salvarAlteracoes = async () => {
     if (!validarFormulario()) {
-      setMostrarModalErro(true);
-      return;
+      setMostrarModalErro(true)
+      return
     }
 
     try {
-      // Separar dados básicos e dados de perfil detalhado
-      const dadosBasicos = {
-        nome: dadosForm.nome,
-        email: dadosForm.email,
-        telefone: dadosForm.telefone,
-        cnpj: dadosForm.cnpj,
-        endereco: dadosForm.endereco,
-        cidade: dadosForm.cidade,
-        estado: dadosForm.estado,
-        cep: dadosForm.cep,
-        capacidade: dadosForm.capacidade
-      };
+      console.log("[v0] Salvando alterações:", dadosForm)
 
-      const dadosDetalhes = {
-        responsavel: dadosForm.responsavel,
-        tipo: dadosForm.tipo,
-        descricao: dadosForm.descricao,
-        necessidades: dadosForm.necessidades,
-        site: dadosForm.site,
-        redesSociais: dadosForm.redesSociais
-      };
+      const resultado = await editarPerfil(dadosForm)
 
-      // Atualizar dados básicos
-      await editarPerfilBasico(dadosBasicos);
-      
-      // Atualizar perfil detalhado
-      await editarPerfilDetalhes(dadosDetalhes);
-
-      setEditando(false);
-      setMostrarModal(true);
-      
+      if (resultado.success) {
+        setEditando(false)
+        setMostrarModal(true)
+      } else {
+        throw new Error(resultado.message || "Erro ao salvar as alterações")
+      }
     } catch (error) {
-      setErroMensagem(error.message || 'Erro ao salvar as alterações. Tente novamente.');
-      setMostrarModalErro(true);
+      console.error("❌ Erro ao salvar alterações:", error)
+      setErroMensagem(error.message || "Erro ao salvar as alterações. Tente novamente.")
+      setMostrarModalErro(true)
     }
-  };
+  }
 
   const fecharModal = () => {
-    setMostrarModal(false);
-  };
+    setMostrarModal(false)
+  }
 
   const fecharModalErro = () => {
-    setMostrarModalErro(false);
-  };
+    setMostrarModalErro(false)
+  }
 
   const iniciarEdicao = () => {
-    setEditando(true);
-  };
+    setEditando(true)
+  }
 
   const voltarParaHome = () => {
-    navigate('/');
-  };
+    navigate("/")
+  }
 
   if (carregando && !perfil) {
     return (
@@ -198,7 +159,7 @@ const PerfilAsilo = () => {
           <p>Carregando perfil...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -223,10 +184,19 @@ const PerfilAsilo = () => {
               <div className="pa-photo-container">
                 <div className="pa-photo">
                   {logo ? (
-                    <img src={logo} alt="Logo do asilo" className="pa-photo-img" />
+                    <img
+                      src={logo || "/placeholder.svg"}
+                      alt="Logo do asilo"
+                      className="pa-photo-img"
+                      onError={(e) => {
+                        console.error("❌ Erro ao carregar logo:", logo)
+                        console.error("❌ Elemento:", e.target)
+                        setLogo(null)
+                      }}
+                    />
                   ) : (
                     <div className="pa-avatar">
-                      <span>{dadosForm.nome ? dadosForm.nome.substring(0, 2).toUpperCase() : 'AE'}</span>
+                      <span>{dadosForm.nome ? dadosForm.nome.substring(0, 2).toUpperCase() : "AE"}</span>
                     </div>
                   )}
                   <div className="pa-photo-overlay">
@@ -287,10 +257,7 @@ const PerfilAsilo = () => {
                 <h2 className="pa-card-title">Informações da Instituição</h2>
                 <div className="pa-card-actions">
                   {!editando ? (
-                    <button 
-                      className="pa-btn pa-btn-primary pa-btn-edit"
-                      onClick={iniciarEdicao}
-                    >
+                    <button className="pa-btn pa-btn-primary pa-btn-edit" onClick={iniciarEdicao}>
                       <span className="pa-icon">✏️</span>
                       Editar Perfil
                     </button>
@@ -338,7 +305,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">Telefone *</label>
+                      <label className="pa-label">Telefone</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="tel"
@@ -354,7 +321,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">CNPJ *</label>
+                      <label className="pa-label">CNPJ</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
@@ -370,12 +337,12 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">Responsável Legal *</label>
+                      <label className="pa-label">Responsável Legal</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
-                          name="responsavel"
-                          value={dadosForm.responsavel}
+                          name="responsavel_legal"
+                          value={dadosForm.responsavel_legal}
                           onChange={handleChange}
                           className="pa-input"
                           placeholder="Nome do responsável"
@@ -386,7 +353,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group pa-full-width">
-                      <label className="pa-label">Endereço Completo *</label>
+                      <label className="pa-label">Endereço Completo</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
@@ -402,7 +369,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">Cidade *</label>
+                      <label className="pa-label">Cidade</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
@@ -418,7 +385,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">Estado *</label>
+                      <label className="pa-label">Estado</label>
                       <div className="pa-input-wrapper">
                         <select
                           name="estado"
@@ -461,7 +428,7 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">CEP *</label>
+                      <label className="pa-label">CEP</label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
@@ -496,8 +463,8 @@ const PerfilAsilo = () => {
                       <label className="pa-label">Tipo de Instituição</label>
                       <div className="pa-input-wrapper">
                         <select
-                          name="tipo"
-                          value={dadosForm.tipo}
+                          name="tipo_instituicao"
+                          value={dadosForm.tipo_instituicao}
                           onChange={handleChange}
                           className="pa-select"
                           disabled={!editando}
@@ -533,8 +500,8 @@ const PerfilAsilo = () => {
                       <label className="pa-label">Necessidades de Voluntariado</label>
                       <div className="pa-input-wrapper">
                         <textarea
-                          name="necessidades"
-                          value={dadosForm.necessidades}
+                          name="necessidades_voluntariado"
+                          value={dadosForm.necessidades_voluntariado}
                           onChange={handleChange}
                           className="pa-textarea"
                           rows="3"
@@ -566,8 +533,8 @@ const PerfilAsilo = () => {
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
-                          name="redesSociais"
-                          value={dadosForm.redesSociais}
+                          name="redes_sociais"
+                          value={dadosForm.redes_sociais}
                           onChange={handleChange}
                           className="pa-input"
                           placeholder="@usuario"
@@ -580,7 +547,7 @@ const PerfilAsilo = () => {
 
                   {editando && (
                     <div className="pa-form-actions">
-                      <button 
+                      <button
                         className="pa-btn pa-btn-success pa-btn-save"
                         onClick={salvarAlteracoes}
                         disabled={carregando}
@@ -588,7 +555,7 @@ const PerfilAsilo = () => {
                         <span className="pa-icon">{carregando ? "⏳" : "✅"}</span>
                         {carregando ? "Salvando..." : "Salvar Alterações"}
                       </button>
-                      <button 
+                      <button
                         className="pa-btn pa-btn-outline pa-btn-cancel"
                         onClick={() => setEditando(false)}
                         disabled={carregando}
@@ -621,18 +588,11 @@ const PerfilAsilo = () => {
               </div>
               <div className="pa-modal-body">
                 <p>As informações do seu asilo foram salvas com sucesso.</p>
-                <p>Você será redirecionado para a página inicial.</p>
               </div>
               <div className="pa-modal-footer">
-                <button 
-                  className="pa-btn pa-btn-primary pa-modal-btn"
-                  onClick={() => {
-                    fecharModal();
-                    setTimeout(() => navigate('/'), 1000);
-                  }}
-                >
-                  <span className="pa-icon">🏠</span>
-                  Ir para Home
+                <button className="pa-btn pa-btn-primary pa-modal-btn" onClick={fecharModal}>
+                  <span className="pa-icon">👍</span>
+                  Entendi
                 </button>
               </div>
             </div>
@@ -659,10 +619,7 @@ const PerfilAsilo = () => {
                 <p>Por favor, verifique os dados e tente novamente.</p>
               </div>
               <div className="pa-modal-footer">
-                <button 
-                  className="pa-btn pa-btn-primary pa-modal-btn"
-                  onClick={fecharModalErro}
-                >
+                <button className="pa-btn pa-btn-primary pa-modal-btn" onClick={fecharModalErro}>
                   <span className="pa-icon">🔄</span>
                   Tentar Novamente
                 </button>
@@ -672,7 +629,7 @@ const PerfilAsilo = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PerfilAsilo;
+export default PerfilAsilo

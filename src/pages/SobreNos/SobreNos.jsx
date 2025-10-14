@@ -490,7 +490,7 @@ const SobreNos = () => {
                     <div className="perfil-card">
                       <div className="perfil-image">
                          <img
-                             src={tiago || "/placeholder.svg"}
+                             src={pedro || "/placeholder.svg"}
                              className="d-block w-100"
                              alt="Voluntárias trabalhando juntas"
                              loading="eager"
@@ -519,7 +519,7 @@ const SobreNos = () => {
                     <div className="perfil-card">
                       <div className="perfil-image">
                          <img
-                             src={pedro || "/placeholder.svg"}
+                             src={tiago || "/placeholder.svg"}
                              className="d-block w-100"
                              alt="Voluntárias trabalhando juntas"
                              loading="eager"

@@ -46,7 +46,7 @@ const SobreProjeto = () => {
         // Inicializa o carousel se existir
         if (carouselRef.current) {
           new bootstrap.Carousel(carouselRef.current, {
-            interval: 5000,
+            interval: 6000,
             ride: "carousel",
             pause: "hover",
             wrap: true
@@ -64,8 +64,10 @@ const SobreProjeto = () => {
     <div className="sobre-projeto-page">
       <Header />
 
+      {/* Hero Carousel - IDÊNTICO AO CONTATO */}
       <div
-        id="heroCarousel"
+        ref={carouselRef}
+        id="carouselExampleCaptions"
         className="carousel slide hero-carousel"
         data-bs-ride="carousel"
         data-aos="fade-up"
@@ -74,32 +76,37 @@ const SobreProjeto = () => {
         <div className="carousel-indicators">
           <button
             type="button"
-            data-bs-target="#heroCarousel"
+            data-bs-target="#carouselExampleCaptions"
             data-bs-slide-to="0"
             className="active"
             aria-current="true"
             aria-label="Slide 1"
           ></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <div className="carousel-image-container">
-              <img
-                src={carouselum || "/placeholder.svg"}
-                className="d-block w-100"
-                alt="Voluntárias trabalhando juntas"
-                loading="eager"
-              />
-            </div>
+            <img
+              src={carouselum || "/placeholder.svg"}
+              className="d-block w-100"
+              alt="Voluntárias trabalhando juntas"
+              loading="eager"
+            />
             <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Conectando Voluntários e Idosos</h2>
-              <p className="text-pretty">
-                O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
-                bem-estar e alegria.
-              </p>
-              <div className="hero-buttons">
+              <h2 className="carrossel">Conectando Voluntários e Idosos</h2>
+              <p>O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo bem-estar e alegria.</p>
+              <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
                 </Link>
@@ -110,46 +117,36 @@ const SobreProjeto = () => {
             </div>
           </div>
           <div className="carousel-item">
-            <div className="carousel-image-container">
-              <img
-                src={carouseldois || "/placeholder.svg"}
-                className="d-block w-100"
-                alt="Enfermeira cuidando de idosa"
-                loading="lazy"
-              />
-            </div>
+            <img
+              src={carouseldois || "/placeholder.svg"}
+              className="d-block w-100"
+              alt="Enfermeira cuidando de idosa"
+              loading="lazy"
+            />
             <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Cuidado e Companheirismo</h2>
-              <p className="text-pretty">
-                Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa
-                permanência.
-              </p>
-              <div className="hero-buttons">
+              <h2 className="carrossel">Cuidado e Companheirismo</h2>
+              <p>Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa permanência.</p>
+              <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
                 </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
+                <Link to="/eventos" className="btn btn-outline-primary btnn">
                   Ver Eventos
                 </Link>
               </div>
             </div>
           </div>
           <div className="carousel-item">
-            <div className="carousel-image-container">
-              <img
-                src={carouseltres || "/placeholder.svg"}
-                className="d-block w-100"
-                alt="Voluntária conversando com idosa"
-                loading="lazy"
-              />
-            </div>
+            <img
+              src={carouseltres || "/placeholder.svg"}
+              className="d-block w-100"
+              alt="Voluntária conversando com idosa"
+              loading="lazy"
+            />
             <div className="carousel-caption d-none d-md-block">
-              <h2 className="carrossel text-balance">Faça a Diferença</h2>
-              <p className="text-pretty">
-                Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa
-                permanência.
-              </p>
-              <div className="hero-buttons">
+              <h2 className="carrossel">Faça a Diferença</h2>
+              <p>Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa permanência.</p>
+              <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
                 </Link>
@@ -160,13 +157,23 @@ const SobreProjeto = () => {
             </div>
           </div>
         </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
           <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Anterior</span>
+          <span className="visually-hidden">Previous</span>
         </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Próximo</span>
+          <span className="visually-hidden">Next</span>
         </button>
       </div>
 
@@ -341,10 +348,6 @@ const SobreProjeto = () => {
                     </div>
                   </div>
                 </div>
-                <div className="impacto-stats" data-aos="fade-up" data-aos-delay="900">
-                  <div className="stat-number">2.500+</div>
-                  <div className="stat-label">Idosos impactados positivamente</div>
-                </div>
               </div>
               <div className="doacoes-section" data-aos="fade-up" data-aos-delay="400">
                 <div className="doacoes-header">
@@ -413,8 +416,6 @@ const SobreProjeto = () => {
         </div>
       </section>
 
-
-
       <section className="cta" data-aos="fade-up" data-aos-duration="1200">
         <div className="container">
           <div className="cta-content">
@@ -427,8 +428,7 @@ const SobreProjeto = () => {
               Pronto para Fazer a Diferença?
             </h2>
             <p className="cta-subtitle" data-aos="fade-up" data-aos-delay="400">
-              Tem alguma dúvida?
-              Instituições de longa permanência. Sua participação pode transformar vidas.
+              Tem alguma dúvida? Entre em contato conosco e descubra como você pode ajudar a transformar a vida de idosos em instituições de longa permanência.
             </p>
             <div className="cta-buttons" data-aos="fade-up" data-aos-delay="500">
               <Link to="/contato" className="videos-btn-cta-secondary">

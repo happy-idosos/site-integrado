@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { editarPerfilAsiloService } from "../services/editarperfil/editarperfilasilo.service"
+import { editarPerfilAsiloService } from "../services/editarperfil/EditarPerfilAsilo.service"
 import { API_BASE_URL } from "../services/auth/auth.constants"
 
 export const usePerfilAsilo = () => {

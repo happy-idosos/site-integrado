@@ -221,7 +221,7 @@ function Header() {
           ) : (
             <div className="drawer-user-info">
               <div className="drawer-avatar">
-                <span className="avatar-icon">👤</span>
+                <span className="avatar-icon"></span>
               </div>
               <div className="drawer-user-details">
                 <div className="drawer-user-name">Visitante</div>
@@ -238,31 +238,31 @@ function Header() {
           <div className="nav-section">
             <div className="nav-section-label">Navegação Principal</div>
             <Link to="/" className={`nav-item ${isActive("/")}`} onClick={handleNavClick}>
-              <span className="nav-icon">🏠</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Início</span>
             </Link>
             <Link to="/asilos" className={`nav-item ${isActive("/asilos")}`} onClick={handleNavClick}>
-              <span className="nav-icon">🏥</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Buscar Asilos</span>
             </Link>
             <Link to="/eventos" className={`nav-item ${isActive("/eventos")}`} onClick={handleNavClick}>
-              <span className="nav-icon">📅</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Eventos</span>
             </Link>
             <Link to="/videos" className={`nav-item ${isActive("/videos")}`} onClick={handleNavClick}>
-              <span className="nav-icon">🎥</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Vídeos</span>
             </Link>
             <Link to="/sobreprojeto" className={`nav-item ${isActive("/sobreprojeto")}`} onClick={handleNavClick}>
-              <span className="nav-icon">💙</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Happy Idosos</span>
             </Link>
             <Link to="/sobrenos" className={`nav-item ${isActive("/sobrenos")}`} onClick={handleNavClick}>
-              <span className="nav-icon">👥</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Equipe</span>
             </Link>
             <Link to="/contato" className={`nav-item ${isActive("/contato")}`} onClick={handleNavClick}>
-              <span className="nav-icon">📧</span>
+              <span className="nav-icon"></span>
               <span className="nav-text">Contato</span>
             </Link>
           </div>
@@ -272,26 +272,26 @@ function Header() {
             {isAuthenticated ? (
               <>
                 <Link to={getProfileRoute()} className="nav-item" onClick={handleNavClick}>
-                  <span className="nav-icon">👤</span>
+                  <span className="nav-icon"></span>
                   <span className="nav-text">Meu Perfil</span>
                 </Link>
                 <button className="nav-item nav-button" onClick={handleOpenLogoutModal}>
-                  <span className="nav-icon">🚪</span>
+                  <span className="nav-icon"></span>
                   <span className="nav-text">Sair</span>
                 </button>
               </>
             ) : (
               <>
                 <button className="nav-item nav-button" onClick={handleOpenLoginModal}>
-                  <span className="nav-icon">🔑</span>
+                  <span className="nav-icon"></span>
                   <span className="nav-text">Entrar</span>
                 </button>
                 <Link to="/cadastrovoluntario" className="nav-item" onClick={handleNavClick}>
-                  <span className="nav-icon">👨‍⚕️</span>
+                  <span className="nav-icon"></span>
                   <span className="nav-text">Cadastrar - Voluntário</span>
                 </Link>
                 <Link to="/cadastroasilo" className="nav-item" onClick={handleNavClick}>
-                  <span className="nav-icon">🏠</span>
+                  <span className="nav-icon"></span>
                   <span className="nav-text">Cadastrar - Asilo</span>
                 </Link>
               </>

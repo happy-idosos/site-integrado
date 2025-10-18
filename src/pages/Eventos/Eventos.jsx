@@ -45,34 +45,32 @@ const Eventos = () => {
   })
   const eventosSectionRef = useRef(null)
 
-  // 🔥 CARREGAMENTO CORRIGIDO do usuário
+  // ✅ CARREGAMENTO CORRETO do usuário
   useEffect(() => {
     const loadUserData = () => {
       try {
         const userDataStr = localStorage.getItem('user_data')
         const token = localStorage.getItem('auth_token')
         
-        console.log("🔍 Verificando autenticação:", { 
-          hasUserData: !!userDataStr, 
-          hasToken: !!token,
-          userData: userDataStr 
-        })
-        
         if (userDataStr && token) {
           const user = JSON.parse(userDataStr)
-          console.log("👤 Dados do usuário carregados:", user)
           
-          setCurrentUser(user)
+          // ✅ VERIFICAÇÃO ROBUSTA do tipo de usuário
+          const userType = user.tipo || user.tipo_usuario || user.type || 'desconhecido'
+          
+          setCurrentUser({
+            ...user,
+            tipo: userType
+          })
           setIsAuthenticated(true)
           
-          if (user.tipo === 'asilo' && user.telefone) {
+          if (userType === 'asilo' && user.telefone) {
             setEventForm(prev => ({
               ...prev,
               contact: formatPhoneNumber(user.telefone)
             }))
           }
         } else {
-          console.log("❌ Usuário não autenticado")
           setIsAuthenticated(false)
           setCurrentUser(null)
         }
@@ -84,14 +82,6 @@ const Eventos = () => {
     }
 
     loadUserData()
-    
-    // Ouvir mudanças no localStorage
-    const handleStorageChange = () => {
-      loadUserData()
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
   // Função para mapear categorias
@@ -113,16 +103,13 @@ const Eventos = () => {
       const eventDate = new Date(event.data_evento)
       const today = new Date()
       
-      // Se a data do evento já passou, marca como cancelado
       if (eventDate < today) return 'cancelado'
       
       const capacity = event.capacidade || 50
-      // Se atingiu ou ultrapassou a capacidade, marca como lotado
       if (registeredCount >= capacity) return 'lotado'
       
       return 'disponivel'
     } catch (error) {
-      console.error("Erro ao determinar status do evento:", error)
       return 'disponivel'
     }
   }
@@ -131,12 +118,8 @@ const Eventos = () => {
     setIsLoading(true)
     try {
       const data = await api.get('/api/eventos')
-      console.log("📦 Dados recebidos da API:", data)
       
       if (data.status === 200) {
-        const userDataStr = localStorage.getItem('user_data')
-        const currentUserData = userDataStr ? JSON.parse(userDataStr) : null
-        
         const formattedEvents = data.eventos.map(event => {
           const category = mapCategory(event.descricao || event.titulo)
           const registeredCount = event.total_inscritos || event.inscritos_count || 0
@@ -158,9 +141,7 @@ const Eventos = () => {
         })
         
         setEvents(formattedEvents)
-        console.log("🎯 Eventos formatados:", formattedEvents)
       } else {
-        console.error("Erro ao carregar eventos:", data.message)
         setEvents([])
       }
     } catch (error) {
@@ -171,15 +152,11 @@ const Eventos = () => {
     }
   }
 
-  // 🔥 FUNÇÃO DE INSCRIÇÃO COMPLETAMENTE CORRIGIDA
+  // ✅ FUNÇÃO DE INSCRIÇÃO CORRETA
   const inscreverEvento = async (eventId) => {
-    console.log("🎯 Iniciando inscrição no evento:", eventId)
-    console.log("👤 Estado atual do usuário:", { currentUser, isAuthenticated })
-    
     setIsLoadingAction(true)
     
     try {
-      // Verificar autenticação diretamente do localStorage
       const token = localStorage.getItem('auth_token')
       const userDataStr = localStorage.getItem('user_data')
       
@@ -190,15 +167,13 @@ const Eventos = () => {
       }
 
       const userData = JSON.parse(userDataStr)
-      console.log("🔍 Verificando tipo do usuário:", userData.tipo)
+      const userType = userData.tipo || userData.tipo_usuario || userData.type
       
-      // 🔥 VERIFICAÇÃO CRÍTICA CORRIGIDA
-      if (userData.tipo !== 'voluntario') {
+      // ✅ VERIFICAÇÃO CORRETA
+      if (userType !== 'voluntario') {
         showModalError("Somente voluntários podem se inscrever em eventos.")
         return
       }
-
-      console.log("✅ Usuário validado como voluntário, prosseguindo com inscrição...")
 
       // Fazer a inscrição
       const response = await api.post('/api/eventos/participar', {
@@ -206,11 +181,8 @@ const Eventos = () => {
         id_voluntario: userData.id_voluntario || userData.id
       })
 
-      console.log("📨 Resposta da API de inscrição:", response)
-
       if (response.status === 200 || response.status === 201) {
         showInscricaoSuccess("Inscrição realizada com sucesso! Você agora está participando deste evento.")
-        // Recarregar eventos para atualizar contagem
         setTimeout(() => {
           loadEvents()
         }, 1500)
@@ -219,7 +191,7 @@ const Eventos = () => {
       }
 
     } catch (error) {
-      console.error("❌ Erro completo na inscrição:", error)
+      console.error("Erro na inscrição:", error)
       
       if (error.response) {
         const errorMessage = error.response.data?.message || error.response.data?.error || "Erro do servidor"
@@ -232,7 +204,7 @@ const Eventos = () => {
       } else if (error.message && error.message.includes("Network Error")) {
         showModalError("Erro de conexão. Verifique sua internet e tente novamente.")
       } else {
-        showModalError(error.message || "Erro ao se inscrever no evento. Tente novamente.")
+        showModalError("Erro ao se inscrever no evento. Tente novamente.")
       }
     } finally {
       setIsLoadingAction(false)
@@ -257,15 +229,15 @@ const Eventos = () => {
   
     try {
       const user = JSON.parse(userDataStr)
+      const userType = user.tipo || user.tipo_usuario || user.type
       
-      if (user.tipo !== 'asilo') {
+      if (userType !== 'asilo') {
         showModalError("Somente asilos podem criar eventos.")
         return
       }
       
       setShowModal(true)
     } catch (error) {
-      console.error('Erro ao verificar usuário:', error)
       showModalError('Erro ao verificar permissões. Tente fazer login novamente.')
     }
   }
@@ -287,7 +259,6 @@ const Eventos = () => {
     setShowInscricaoModal(true)
   }
 
-  // Função para formatar telefone
   const formatPhoneNumber = (value) => {
     let numbers = value.replace(/\D/g, '')
     numbers = numbers.substring(0, 11)
@@ -321,18 +292,17 @@ const Eventos = () => {
       
       if (!token || !userDataStr) {
         showModalError("Você precisa estar logado para criar um evento.")
-        setTimeout(() => navigate('/login'), 2000)
         return
       }
 
       const user = JSON.parse(userDataStr)
+      const userType = user.tipo || user.tipo_usuario || user.type
       
-      if (user.tipo !== 'asilo') {
+      if (userType !== 'asilo') {
         showModalError("Somente asilos podem criar eventos.")
         return
       }
 
-      // Validar campos obrigatórios
       if (!eventForm.title || !eventForm.description || !eventForm.date) {
         showModalError("Preencha todos os campos obrigatórios: título, descrição e data.")
         return
@@ -380,8 +350,7 @@ const Eventos = () => {
         showModalError(response.message || "Erro ao criar o evento.")
       }
     } catch (error) {
-      console.error("Error creating event:", error)
-      showModalError(error.message || "Erro ao criar o evento. Verifique se você está logado como asilo.")
+      showModalError("Erro ao criar o evento. Verifique se você está logado como asilo.")
     } finally {
       setIsLoadingAction(false)
     }
@@ -398,7 +367,6 @@ const Eventos = () => {
     loadEvents()
   }, [])
 
-  // Filtro de eventos
   useEffect(() => {
     const filterEvents = () => {
       let filtered = events
@@ -449,14 +417,10 @@ const Eventos = () => {
     filterEvents()
   }, [events, searchTerm, selectedCategory, selectedDate])
 
-  // Modal de Inscrição Realizada
   const InscricaoModal = () => (
     <div 
       className={`modal fade ${showInscricaoModal ? 'show' : ''}`} 
-      style={{ 
-        display: showInscricaoModal ? 'block' : 'none',
-        backgroundColor: 'rgba(0,0,0,0.5)'
-      }} 
+      style={{ display: showInscricaoModal ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }} 
       tabIndex="-1"
     >
       <div className="modal-dialog modal-dialog-centered modal-confirm">
@@ -478,7 +442,6 @@ const Eventos = () => {
                 className="btn btn-outline-secondary btn-lg px-4" 
                 onClick={() => setShowInscricaoModal(false)}
               >
-                <i className="fas fa-times me-2"></i>
                 Fechar
               </button>
               <button 
@@ -488,7 +451,6 @@ const Eventos = () => {
                   scrollToEvents()
                 }}
               >
-                <i className="fas fa-calendar-check me-2"></i>
                 Ver Meus Eventos
               </button>
             </div>
@@ -498,14 +460,10 @@ const Eventos = () => {
     </div>
   )
 
-  // Modal de Sucesso
   const SuccessModal = () => (
     <div 
       className={`modal fade ${showSuccessModal ? 'show' : ''}`} 
-      style={{ 
-        display: showSuccessModal ? 'block' : 'none',
-        backgroundColor: 'rgba(0,0,0,0.5)'
-      }} 
+      style={{ display: showSuccessModal ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }} 
       tabIndex="-1"
     >
       <div className="modal-dialog modal-dialog-centered modal-confirm">
@@ -522,7 +480,6 @@ const Eventos = () => {
               className="btn btn-success btn-lg px-4" 
               onClick={() => setShowSuccessModal(false)}
             >
-              <i className="fas fa-thumbs-up me-2"></i>
               Continuar
             </button>
           </div>
@@ -531,14 +488,10 @@ const Eventos = () => {
     </div>
   )
 
-  // Modal de Erro
   const ErrorModal = () => (
     <div 
       className={`modal fade ${showErrorModal ? 'show' : ''}`} 
-      style={{ 
-        display: showErrorModal ? 'block' : 'none',
-        backgroundColor: 'rgba(0,0,0,0.5)'
-      }} 
+      style={{ display: showErrorModal ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }} 
       tabIndex="-1"
     >
       <div className="modal-dialog modal-dialog-centered modal-confirm">
@@ -555,7 +508,6 @@ const Eventos = () => {
               className="btn btn-error btn-lg px-4" 
               onClick={() => setShowErrorModal(false)}
             >
-              <i className="fas fa-redo me-2"></i>
               Tentar Novamente
             </button>
           </div>
@@ -564,7 +516,7 @@ const Eventos = () => {
     </div>
   )
 
-  // 🔥 COMPONENTE EventCard COMPLETAMENTE CORRIGIDO
+  // ✅ COMPONENTE EventCard CORRETO
   const EventCard = ({ event }) => {
     const categoryIcons = {
       musica: "fas fa-music",
@@ -607,7 +559,7 @@ const Eventos = () => {
       return phone
     }
 
-    // 🔥 FUNÇÃO CRITICAMENTE CORRIGIDA - Lógica do botão
+    // ✅ LÓGICA CORRETA do botão
     const getButtonText = () => {
       if (isLoadingAction) {
         return (
@@ -622,25 +574,23 @@ const Eventos = () => {
       if (event.status === "cancelado") return "Evento Cancelado"
       if (!isAuthenticated) return "Efetue Login para Inscrever-se"
       
-      // 🔥 VERIFICAÇÃO CORRETA: Se é voluntário, mostra "Inscrever-se"
-      if (currentUser && currentUser.tipo === 'voluntario') {
+      // ✅ VERIFICAÇÃO CORRETA
+      if (currentUser?.tipo === 'voluntario') {
         return "Inscrever-se"
       } else {
-        // Se não é voluntário, mostra "Somente para Voluntários"
         return "Somente para Voluntários"
       }
     }
 
-    // 🔥 FUNÇÃO CRITICAMENTE CORRIGIDA - Desabilitação do botão
+    // ✅ LÓGICA CORRETA de desabilitação
     const isButtonDisabled = () => {
-      // Verificar diretamente do localStorage para garantir precisão
       const userDataStr = localStorage.getItem('user_data')
       let userType = null
       
       if (userDataStr) {
         try {
           const userData = JSON.parse(userDataStr)
-          userType = userData.tipo
+          userType = userData.tipo || userData.tipo_usuario || userData.type
         } catch (error) {
           console.error("Erro ao parsear user_data:", error)
         }
@@ -649,25 +599,9 @@ const Eventos = () => {
       const isVoluntario = userType === 'voluntario'
       const isEventAvailable = event.status === "disponivel"
       
-      console.log(`🔍 Estado do botão para evento ${event.id}:`, {
-        isVoluntario,
-        isAuthenticated,
-        isEventAvailable,
-        eventStatus: event.status,
-        isLoadingAction
-      })
-      
-      // 🔥 LÓGICA CORRETA: Botão habilitado apenas se:
-      // - É voluntário E
-      // - Está autenticado E  
-      // - Evento está disponível E
-      // - Não está carregando
-      const shouldDisable = !isVoluntario || !isAuthenticated || !isEventAvailable || isLoadingAction
-      
-      return shouldDisable
+      return !isVoluntario || !isAuthenticated || !isEventAvailable || isLoadingAction
     }
 
-    // 🔥 FUNÇÃO CORRIGIDA - Tooltip do botão
     const getButtonTitle = () => {
       if (!isAuthenticated) return "Efetue login para se inscrever"
       if (currentUser?.tipo !== 'voluntario') return "Somente voluntários podem se inscrever"
@@ -721,25 +655,6 @@ const Eventos = () => {
   return (
     <div className="eventos-page">
       <Header />
-
-      {/* Debug info - remover em produção */}
-      <div style={{ 
-        position: 'fixed', 
-        top: '80px', 
-        right: '10px', 
-        background: 'rgba(0,0,0,0.8)', 
-        color: 'white', 
-        padding: '10px', 
-        borderRadius: '5px', 
-        fontSize: '12px',
-        zIndex: 1000,
-        display: 'none' // Alterar para 'block' para debug
-      }}>
-        <strong>Debug Info:</strong><br/>
-        Autenticado: {isAuthenticated ? 'Sim' : 'Não'}<br/>
-        Tipo: {currentUser?.tipo || 'N/A'}<br/>
-        User: {currentUser ? JSON.stringify(currentUser) : 'Nenhum'}
-      </div>
 
       <div
         id="carouselExampleCaptions"

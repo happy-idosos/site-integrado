@@ -1,6 +1,5 @@
 // URL base da sua API PHP - CORRIGIDA
-export const API_BASE_URL = 'https://api.happyidosos.com.br'; // Substitua pela URL correta
-//export const API_BASE_URL = 'http://localhost/back-end/api-php'; // URL para desenvolvimento local
+export const API_BASE_URL = 'http://localhost/back-end/api-php'; // URL para desenvolvimento local
 
 // Endpoints da API
 export const API_ENDPOINTS = {

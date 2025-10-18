@@ -13,6 +13,7 @@ import SobreNos from "../pages/SobreNos/SobreNos"
 import SobreProjeto from "../pages/SobreProjeto/SobreProjeto"
 import Contato from "../pages/Contato/Contato"
 import TermosDeUso from "../pages/TermosDeUso/TermosDeUso"
+import PoliticaDePrivacidade from "../pages/PoliticaDePrivacidade/PoliticaDePrivacidade"
 import EsqueciASenha from "../pages/EsqueciASenha/EsqueciASenha"
 import PerfilAsilo from "../pages/PerfilAsilo/PerfilAsilo"
 import PerfilVoluntario from "../pages/PerfilVoluntario/PerfilVoluntario"
@@ -29,6 +30,7 @@ function AppRoutes() {
       <Route path="/sobreprojeto" element={<SobreProjeto />} />
       <Route path="/contato" element={<Contato />} />
       <Route path="/termosdeuso" element={<TermosDeUso />} />
+      <Route path="/politicadeprivacidade" element={<PoliticaDePrivacidade />} />
       <Route path="/esqueciasenha" element={<EsqueciASenha />} />
       <Route path="/perfilasilo" element={<PerfilAsilo />} />
       <Route path="/perfilvoluntario" element={<PerfilVoluntario />} />

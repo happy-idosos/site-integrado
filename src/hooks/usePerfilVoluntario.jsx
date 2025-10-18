@@ -3,12 +3,14 @@
 // hooks/usePerfilVoluntario.jsx
 import { useState, useEffect, useCallback } from "react"
 import { perfilService } from "../services/editarperfil/perfilService"
-import { API_BASE_URL } from "../services/auth/auth.constants" // ✅ IMPORTAR AQUI
+import { API_BASE_URL } from "../services/auth/auth.constants"
+import { useAuth } from "./useAuth" // ✅ NOVO IMPORT
 
 export const usePerfilVoluntario = () => {
   const [perfil, setPerfil] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
+  const { updateUserPhoto } = useAuth() // ✅ NOVO: Acesso ao contexto de autenticação
 
   // Buscar perfil do backend
   const buscarPerfil = useCallback(async () => {
@@ -139,12 +141,16 @@ export const usePerfilVoluntario = () => {
 
         console.log("🖼️ URL ABSOLUTA da foto:", fotoUrl)
 
-        // Atualizar perfil localmente
+        // ✅ ATUALIZAR PERFIL LOCALMENTE
         setPerfil((prev) => ({
           ...prev,
           foto_perfil: response.foto,
           foto_url: fotoUrl,
         }))
+
+        // ✅ NOVO: ATUALIZAR NO CONTEXTO DE AUTENTICAÇÃO PARA O HEADER
+        updateUserPhoto(fotoUrl)
+        console.log("✅ Foto atualizada no contexto de autenticação")
 
         console.log("✅ Foto atualizada com sucesso:", fotoUrl)
         return {
@@ -165,7 +171,7 @@ export const usePerfilVoluntario = () => {
     } finally {
       setCarregando(false)
     }
-  }, [])
+  }, [updateUserPhoto]) // ✅ NOVO: Adicionar dependência
 
   // Limpar erro
   const limparErro = useCallback(() => {

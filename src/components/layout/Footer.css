@@ -8,13 +8,13 @@
 }
 
 .footer::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 3px;
-background: linear-gradient(90deg, #1e3c72, #2a5298);
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
 }
 
 .footer h5 {
@@ -27,13 +27,13 @@ background: linear-gradient(90deg, #1e3c72, #2a5298);
 }
 
 .footer h5::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -8px;
   left: 0;
   width: 40px;
   height: 3px;
-background: linear-gradient(90deg, #1e3c72, #2a5298);
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
   border-radius: 2px;
 }
 
@@ -67,12 +67,12 @@ background: linear-gradient(90deg, #1e3c72, #2a5298);
 }
 
 .footer-links a::before {
-  content: '▸';
+  content: "▸";
   position: absolute;
   left: -15px;
   opacity: 0;
   transition: all 0.3s ease;
-color: #2a5298;
+  color: #2a5298;
 }
 
 .footer-links a:hover {
@@ -89,16 +89,19 @@ color: #2a5298;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
+/* Removed bullet before contact info, now using SVG icons */
 .contact-info p::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-background: #2a5298;
-  border-radius: 50%;
-  margin-right: 10px;
+  display: none;
+}
+
+/* Added styles for contact icons */
+.contact-icon {
+  flex-shrink: 0;
+  color: #2a5298;
+  stroke-width: 2;
 }
 
 .social-media {
@@ -108,12 +111,13 @@ background: #2a5298;
 .instagram-link {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   transition: all 0.3s ease;
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -124,13 +128,29 @@ background: #2a5298;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.instagram-link i {
-  font-size: 1.2rem;
-  margin-right: 8px;
-  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737, #FCAF45, #FFDC80);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Updated Instagram icon to use SVG with gradient */
+.instagram-icon {
+  flex-shrink: 0;
+  stroke: url(#instagram-gradient);
+}
+
+.instagram-link:hover .instagram-icon {
+  animation: instagram-pulse 0.6s ease;
+}
+
+@keyframes instagram-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Added gradient definition for Instagram icon */
+.instagram-icon {
+  stroke: #e1306c;
 }
 
 .footer-bottom {
@@ -141,22 +161,53 @@ background: #2a5298;
   position: relative;
 }
 
-/* .footer-bottom::before {
-  content: '❤';
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #1a1a1a, #4a4a4a);
-  padding: 0 15px;
-  color: #ff7e5f;
-  font-size: 1.2rem;
-} */
-
 .footer-bottom p {
   margin: 0;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* Added back-to-top button styles */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(42, 82, 152, 0.4);
+}
+
+.back-to-top:active {
+  transform: translateY(-2px);
+}
+
+.back-to-top svg {
+  width: 24px;
+  height: 24px;
 }
 
 /* Responsividade */
@@ -165,17 +216,29 @@ background: #2a5298;
     text-align: center;
     padding: 40px 0 20px;
   }
-  
+
   .footer h5::after {
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   .footer-brand p {
     margin: 0 auto;
   }
-  
+
   .instagram-link {
     justify-content: center;
+  }
+
+  .contact-info p {
+    justify-content: center;
+  }
+
+  /* Adjusted back-to-top button for mobile */
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
   }
 }

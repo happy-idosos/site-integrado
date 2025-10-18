@@ -726,7 +726,7 @@ export default function CadastroVoluntario() {
                       Termos de Uso
                     </Link>{" "}
                     e a{" "}
-                    <Link to="/politica-privacidade" className="cadastro-voluntario-link">
+                    <Link to="/politicadeprivacidade" className="cadastro-voluntario-link">
                       Política de Privacidade
                     </Link>{" "}
                     da plataforma Happy Idosos *

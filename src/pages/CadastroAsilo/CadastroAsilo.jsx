@@ -795,7 +795,7 @@ export default function CadastroAsilo() {
                       Termos de Uso
                     </Link>{" "}
                     e a{" "}
-                    <Link to="/politica-privacidade" className="cadastro-asilo-link">
+                    <Link to="/politicadeprivacidade" className="cadastro-asilo-link">
                       Política de Privacidade
                     </Link>{" "}
                     da plataforma Happy Idosos *

@@ -29,8 +29,16 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (authenticated && userData) {
-        setUser(userData);
+        // ✅ CARREGAR FOTO DO PERFIL SE EXISTIR
+        const userWithPhoto = {
+          ...userData,
+          foto_url: userData.foto_url || userData.logo_url || null
+        };
+        
+        setUser(userWithPhoto);
         setIsAuthenticated(true);
+        
+        console.log('✅ Usuário carregado com foto:', userWithPhoto.foto_url);
       } else {
         setUser(null);
         setIsAuthenticated(false);
@@ -51,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     loadAuthState();
   }, [loadAuthState]);
 
-  // ✅ LOGIN MELHORADO
+  // ✅ LOGIN MELHORADO - AGORA COM FOTO
   const login = useCallback(async (email, senha) => {
     try {
       setLoading(true);
@@ -62,23 +70,27 @@ export const AuthProvider = ({ children }) => {
       if (result.status === 200 && result.data) {
         console.log('✅ Login bem-sucedido:', result.data);
         
-        // Salva os dados de autenticação
+        // ✅ SALVAR DADOS COMPLETOS COM FOTO
         saveAuthData(result.data.token, {
           id: result.data.id,
           nome: result.data.nome,
           email: result.data.email,
           tipo: result.data.tipo,
-          role: result.data.tipo // Para compatibilidade
+          role: result.data.tipo,
+          foto_url: result.data.foto_url || result.data.logo_url || null
         });
 
-        // Atualiza o estado
-        setUser({
+        // ✅ ATUALIZAR ESTADO COM FOTO
+        const userData = {
           id: result.data.id,
           nome: result.data.nome,
           email: result.data.email,
           tipo: result.data.tipo,
-          role: result.data.tipo
-        });
+          role: result.data.tipo,
+          foto_url: result.data.foto_url || result.data.logo_url || null
+        };
+
+        setUser(userData);
         setIsAuthenticated(true);
 
         return { success: true, data: result.data };
@@ -100,7 +112,81 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ CADASTRO DE USUÁRIO
+  // ✅ ATUALIZAR FOTO DO PERFIL - NOVA FUNÇÃO
+  const updateUserPhoto = useCallback((photoUrl) => {
+    if (!user) {
+      console.error('❌ Nenhum usuário logado para atualizar foto');
+      return;
+    }
+
+    try {
+      console.log('🔄 Atualizando foto do usuário:', photoUrl);
+      
+      // ✅ ATUALIZAR ESTADO DO USUÁRIO
+      const updatedUser = {
+        ...user,
+        foto_url: photoUrl,
+        logo_url: photoUrl // Para compatibilidade com asilos
+      };
+      
+      setUser(updatedUser);
+
+      // ✅ ATUALIZAR NO LOCALSTORAGE
+      const token = getToken();
+      if (token) {
+        saveAuthData(token, updatedUser);
+        console.log('✅ Foto atualizada no localStorage');
+      }
+
+      console.log('✅ Foto do usuário atualizada com sucesso');
+      
+    } catch (error) {
+      console.error('❌ Erro ao atualizar foto do usuário:', error);
+    }
+  }, [user]);
+
+  // ✅ ATUALIZAR DADOS DO USUÁRIO - MELHORADA
+  const updateUser = useCallback((newUserData) => {
+    const updatedUser = { ...user, ...newUserData };
+    setUser(updatedUser);
+
+    // ✅ SINCRONIZAR COM LOCALSTORAGE
+    const token = getToken();
+    if (token) {
+      saveAuthData(token, updatedUser);
+    }
+  }, [user]);
+
+  // ✅ OBTER URL DA FOTO DO USUÁRIO - CONVENIÊNCIA
+  const getUserPhoto = useCallback(() => {
+    return user?.foto_url || user?.logo_url || null;
+  }, [user]);
+
+  // ✅ OBTER INICIAIS DO NOME - PARA FALLBACK
+  const getUserInitials = useCallback(() => {
+    if (!user?.nome) return 'U';
+    
+    return user.nome
+      .split(' ')
+      .map(name => name[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }, [user]);
+
+  // ✅ OBTER COR DO AVATAR BASEADA NO TIPO DE USUÁRIO
+  const getAvatarColor = useCallback(() => {
+    switch (user?.tipo) {
+      case 'usuario':
+        return 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+      case 'asilo':
+        return 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+      default:
+        return 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+    }
+  }, [user?.tipo]);
+
+  // ✅ CADASTRO DE USUÁRIO - AGORA COM SUPORTE A FOTO
   const registerUser = useCallback(async (userData) => {
     try {
       setLoading(true);
@@ -110,6 +196,29 @@ export const AuthProvider = ({ children }) => {
       
       if (result.status === 201) {
         console.log('✅ Usuário registrado com sucesso');
+        
+        // ✅ SE O REGISTRO INCLUIR LOGIN AUTOMÁTICO, SALVAR FOTO
+        if (result.data?.token) {
+          saveAuthData(result.data.token, {
+            id: result.data.id,
+            nome: result.data.nome,
+            email: result.data.email,
+            tipo: result.data.tipo,
+            role: result.data.tipo,
+            foto_url: result.data.foto_url || null
+          });
+
+          setUser({
+            id: result.data.id,
+            nome: result.data.nome,
+            email: result.data.email,
+            tipo: result.data.tipo,
+            role: result.data.tipo,
+            foto_url: result.data.foto_url || null
+          });
+          setIsAuthenticated(true);
+        }
+        
         return { success: true, data: result.data };
       } else {
         console.error('❌ Registro falhou:', result.message);
@@ -129,7 +238,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ CADASTRO DE ASILO
+  // ✅ CADASTRO DE ASILO - AGORA COM SUPORTE A LOGO
   const registerAsilo = useCallback(async (asiloData) => {
     try {
       setLoading(true);
@@ -139,6 +248,31 @@ export const AuthProvider = ({ children }) => {
       
       if (result.status === 201) {
         console.log('✅ Asilo registrado com sucesso');
+        
+        // ✅ SE O REGISTRO INCLUIR LOGIN AUTOMÁTICO, SALVAR LOGO
+        if (result.data?.token) {
+          saveAuthData(result.data.token, {
+            id: result.data.id,
+            nome: result.data.nome,
+            email: result.data.email,
+            tipo: result.data.tipo,
+            role: result.data.tipo,
+            logo_url: result.data.logo_url || null,
+            foto_url: result.data.logo_url || null // Para compatibilidade
+          });
+
+          setUser({
+            id: result.data.id,
+            nome: result.data.nome,
+            email: result.data.email,
+            tipo: result.data.tipo,
+            role: result.data.tipo,
+            logo_url: result.data.logo_url || null,
+            foto_url: result.data.logo_url || null
+          });
+          setIsAuthenticated(true);
+        }
+        
         return { success: true, data: result.data };
       } else {
         console.error('❌ Registro de asilo falhou:', result.message);
@@ -187,7 +321,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ VALIDAR TOKEN DE REDEFINIÇÃO - CORRIGIDA
+  // ✅ VALIDAR TOKEN DE REDEFINIÇÃO
   const validateResetToken = useCallback(async (token) => {
     try {
       setLoading(true);
@@ -195,7 +329,6 @@ export const AuthProvider = ({ children }) => {
 
       const result = await authService.validateResetToken(token);
       
-      // ✅ VERIFICAÇÃO CORRIGIDA
       if (result.success || result.status === 200) {
         console.log('✅ Token válido');
         return { success: true, data: result };
@@ -217,7 +350,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ REDEFINIR SENHA - CORRIGIDA
+  // ✅ REDEFINIR SENHA
   const resetPassword = useCallback(async (token, novaSenha) => {
     try {
       setLoading(true);
@@ -225,7 +358,6 @@ export const AuthProvider = ({ children }) => {
 
       const result = await authService.resetPassword(token, novaSenha);
       
-      // ✅ VERIFICAÇÃO CORRIGIDA - USA result.success EM VEZ DE result.status
       if (result.success || result.status === 200) {
         console.log('✅ Senha redefinida com sucesso');
         return { success: true, data: result };
@@ -261,17 +393,12 @@ export const AuthProvider = ({ children }) => {
     console.log('✅ Logout realizado com sucesso');
   }, []);
 
-  // ✅ ATUALIZAR DADOS DO USUÁRIO
-  const updateUser = useCallback((newUserData) => {
-    setUser(prev => ({ ...prev, ...newUserData }));
-  }, []);
-
   // ✅ RECARREGAR ESTADO DE AUTENTICAÇÃO
   const reloadAuth = useCallback(() => {
     loadAuthState();
   }, [loadAuthState]);
 
-  // ✅ VALUE DO CONTEXTO COMPLETO
+  // ✅ VALUE DO CONTEXTO COMPLETO - AGORA COM FOTO
   const value = {
     // Estado
     user,
@@ -283,6 +410,11 @@ export const AuthProvider = ({ children }) => {
     userType: user?.tipo, // 'usuario' ou 'asilo'
     userRole: user?.role,
     userId: user?.id,
+    userPhoto: getUserPhoto(), // ✅ NOVO: URL da foto
+    
+    // Utilitários para avatar
+    getUserInitials,
+    getAvatarColor,
     
     // Ações de Autenticação
     login,
@@ -295,7 +427,8 @@ export const AuthProvider = ({ children }) => {
     validateResetToken,
     resetPassword,
     
-    // Ações de Gerenciamento de Estado
+    // ✅ NOVAS AÇÕES PARA FOTO
+    updateUserPhoto,
     updateUser,
     reloadAuth
   };

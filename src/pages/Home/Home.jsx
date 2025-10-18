@@ -157,9 +157,7 @@ function Home() {
             <div className="row g-4">
               <div className="col-md-4" data-aos="zoom-in" data-aos-delay="100">
                 <div className="step-card">
-                  <div className="step-number" aria-hidden="true">
-                    1
-                  </div>
+
                   <div className="step-icon" aria-hidden="true">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -184,9 +182,6 @@ function Home() {
               </div>
               <div className="col-md-4" data-aos="zoom-in" data-aos-delay="200">
                 <div className="step-card">
-                  <div className="step-number" aria-hidden="true">
-                    2
-                  </div>
                   <div className="step-icon" aria-hidden="true">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -213,9 +208,6 @@ function Home() {
               </div>
               <div className="col-md-4" data-aos="zoom-in" data-aos-delay="300">
                 <div className="step-card">
-                  <div className="step-number" aria-hidden="true">
-                    3
-                  </div>
                   <div className="step-icon" aria-hidden="true">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

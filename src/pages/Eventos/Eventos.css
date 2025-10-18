@@ -29,8 +29,6 @@
   cursor: pointer;
 }
 
-/* Removido estilos do btn-secondary do carousel */
-
 .carousel-caption .btn-outline-light {
   background: transparent;
   border: 2px solid white;
@@ -101,13 +99,21 @@
   font-size: 1.2rem;
 }
 
-/* Card de filtros redesenhado */
+/* Card de filtros redesenhado - SISTEMA DE PESQUISA SEPARADO */
 .eventos-filtros-card {
   background: white;
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid #f0f0f0;
+  margin-bottom: 2rem;
+}
+
+.eventos-filtros-card .form-label {
+  font-weight: 600;
+  color: #244a96;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
 }
 
 .search-box {
@@ -121,12 +127,14 @@
   transition: all 0.3s ease;
   font-size: 1rem;
   padding: 14px 20px 14px 45px;
+  background: #f8f9fa;
 }
 
 .search-box input:focus {
   border-color: #244a96;
   box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15);
   outline: none;
+  background: white;
 }
 
 .search-icon {
@@ -144,12 +152,14 @@
   transition: all 0.3s ease;
   padding: 14px 20px;
   font-size: 1rem;
+  background: #f8f9fa;
 }
 
 .form-select:focus {
   border-color: #244a96;
   box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15);
   outline: none;
+  background: white;
 }
 
 /* Cards de Eventos */
@@ -285,7 +295,7 @@
 
 .modal-header {
   background: linear-gradient(135deg, #244a96, #1a3a7a);
-  color: #244a96;
+  color: white;
   border-radius: 20px 20px 0 0;
   border-bottom: none;
   padding: 1.5rem 2rem;
@@ -294,6 +304,7 @@
 .modal-header .modal-title {
   font-weight: 700;
   font-size: 1.5rem;
+  color: white;
 }
 
 .modal-header .btn-close {
@@ -365,7 +376,7 @@
 
 /* MODAIS DE CONFIRMAÇÃO - NOVOS ESTILOS */
 .modal-confirm {
-  max-width: 400px;
+  max-width: 500px;
 }
 
 .modal-confirm .modal-content {
@@ -452,6 +463,11 @@
 .modal-confirm .btn-error:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+}
+
+/* Modal de Inscrição Especial */
+.modal-confirm .icon-box.success .fa-check-circle {
+  font-size: 3rem;
 }
 
 /* Animações para os modais */
@@ -543,6 +559,12 @@
 
   .modal-confirm p {
     font-size: 1rem;
+  }
+
+  .modal-confirm .btn {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    min-width: 120px;
   }
 }
 
@@ -658,4 +680,81 @@
 /* Overlay para modais */
 .modal-backdrop.show {
   opacity: 0.5;
+}
+
+/* Contadores e informações de filtro */
+.filter-info {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.filter-info .text-muted {
+  font-size: 0.9rem;
+}
+
+/* Botão limpar filtros */
+.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background: #6c757d;
+  color: white;
+}
+
+/* Adicione estas regras ao seu Eventos.css existente */
+
+/* Estado de botão quando usuário já está inscrito */
+.btn-inscricao.inscrito {
+  background: linear-gradient(135deg, #28a745, #20c997) !important;
+  cursor: default;
+}
+
+.btn-inscricao.inscrito:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Badge para indicar que o usuário está inscrito */
+.badge.bg-success {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Melhorias no card de eventos */
+.event-details li {
+  position: relative;
+}
+
+/* Loading states melhorados */
+.spinner-border.text-primary {
+  border-width: 0.15em;
+}
+
+/* Estados desabilitados mais claros */
+.btn-inscricao:disabled {
+  background: #6c757d !important;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Feedback visual para inscrição bem sucedida */
+@keyframes pulseSuccess {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+.btn-inscricao.inscrito {
+  animation: pulseSuccess 2s infinite;
 }

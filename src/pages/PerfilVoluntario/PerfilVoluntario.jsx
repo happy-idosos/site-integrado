@@ -1,6 +1,5 @@
 "use client"
 
-// src/pages/PerfilVoluntario/PerfilVoluntario.jsx
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { usePerfilVoluntario } from "../../hooks/usePerfilVoluntario"
@@ -113,6 +112,12 @@ const PerfilVoluntario = () => {
   }
 
   const handleFileChange = async (event) => {
+    if (!editando) {
+      setErroMensagem("Ative o modo de edição para alterar a foto.")
+      setMostrarModalErro(true)
+      return
+    }
+
     const file = event.target.files[0]
     console.log("📁 Arquivo selecionado:", file)
 
@@ -239,6 +244,27 @@ const PerfilVoluntario = () => {
     setEditando(true)
   }
 
+  const cancelarEdicao = () => {
+    if (perfil) {
+      setDadosForm({
+        nome: perfil.nome || "",
+        email: perfil.email || "",
+        telefone: perfil.telefone || "",
+        cpf: perfil.cpf || "",
+        data_nascimento: perfil.data_nascimento || "",
+        endereco: perfil.endereco || "",
+        cidade: perfil.cidade || "",
+        estado: perfil.estado || "",
+        cep: perfil.cep || "",
+        habilidades: perfil.habilidades || "",
+        disponibilidade: perfil.disponibilidade || "",
+        sobre_voce: perfil.sobre_voce || "",
+      })
+      setFotoPerfil(perfil.foto_url || null)
+    }
+    setEditando(false)
+  }
+
   const voltarParaHome = () => {
     navigate("/")
   }
@@ -249,10 +275,20 @@ const PerfilVoluntario = () => {
 
     const usado = valor.length
     const restante = limite - usado
+    const porcentagem = (usado / limite) * 100
 
     return (
       <div className="pv-contador-caracteres">
-        <small className={restante < 20 ? "pv-texto-alerta" : ""}>{restante} caracteres restantes</small>
+        <div className="pv-contador-barra">
+          <div
+            className="pv-contador-progresso"
+            style={{
+              width: `${porcentagem}%`,
+              backgroundColor: porcentagem > 90 ? "#f44336" : porcentagem > 70 ? "#ff9800" : "#4CAF50",
+            }}
+          ></div>
+        </div>
+        <small className={restante < 20 ? "pv-texto-alerta" : "pv-texto-normal"}>{restante} caracteres restantes</small>
       </div>
     )
   }
@@ -261,7 +297,7 @@ const PerfilVoluntario = () => {
     return (
       <div className="pv-container">
         <div className="pv-loading">
-          <span className="pv-icon">⏳</span>
+          <div className="pv-loading-spinner"></div>
           <p>Carregando perfil...</p>
         </div>
       </div>
@@ -287,7 +323,7 @@ const PerfilVoluntario = () => {
           <div className="pv-sidebar">
             <div className="pv-photo-section">
               <div className="pv-photo-container">
-                <div className="pv-photo">
+                <div className={`pv-photo ${editando ? "pv-photo-editable" : ""}`}>
                   {fotoPerfil ? (
                     <>
                       <img
@@ -308,19 +344,21 @@ const PerfilVoluntario = () => {
                       <span>{dadosForm.nome ? dadosForm.nome.substring(0, 2).toUpperCase() : "PV"}</span>
                     </div>
                   )}
-                  <div className="pv-photo-overlay">
-                    <label htmlFor="pv-photo-upload" className="pv-upload-label">
-                      <span className="pv-icon">📷</span>
-                      Alterar
-                    </label>
-                    <input
-                      type="file"
-                      id="pv-photo-upload"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="pv-upload-input"
-                    />
-                  </div>
+                  {editando && (
+                    <div className="pv-photo-overlay">
+                      <label htmlFor="pv-photo-upload" className="pv-upload-label">
+                        <span className="pv-icon">📷</span>
+                        Alterar Foto
+                      </label>
+                      <input
+                        type="file"
+                        id="pv-photo-upload"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="pv-upload-input"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="pv-status">
@@ -342,7 +380,10 @@ const PerfilVoluntario = () => {
                     </button>
                   ) : (
                     <div className="pv-edit-indicator">
-                      <span className="pv-editing-badge">Modo Edição</span>
+                      <span className="pv-editing-badge">
+                        <span className="pv-badge-icon">✏️</span>
+                        Modo Edição
+                      </span>
                     </div>
                   )}
                 </div>
@@ -352,7 +393,9 @@ const PerfilVoluntario = () => {
                 <div className="pv-form">
                   <div className="pv-form-grid">
                     <div className="pv-form-group">
-                      <label className="pv-label">Nome Completo *</label>
+                      <label className="pv-label">
+                        Nome Completo <span className="pv-required">*</span>
+                      </label>
                       <div className="pv-input-wrapper">
                         <input
                           type="text"
@@ -366,11 +409,13 @@ const PerfilVoluntario = () => {
                         />
                         <span className="pv-input-icon">👤</span>
                       </div>
-                      {renderContadorCaracteres("nome", dadosForm.nome)}
+                      {editando && renderContadorCaracteres("nome", dadosForm.nome)}
                     </div>
 
                     <div className="pv-form-group">
-                      <label className="pv-label">E-mail *</label>
+                      <label className="pv-label">
+                        E-mail <span className="pv-required">*</span>
+                      </label>
                       <div className="pv-input-wrapper">
                         <input
                           type="email"
@@ -386,7 +431,9 @@ const PerfilVoluntario = () => {
                     </div>
 
                     <div className="pv-form-group">
-                      <label className="pv-label">Telefone *</label>
+                      <label className="pv-label">
+                        Telefone <span className="pv-required">*</span>
+                      </label>
                       <div className="pv-input-wrapper">
                         <input
                           type="tel"
@@ -418,7 +465,9 @@ const PerfilVoluntario = () => {
                     </div>
 
                     <div className="pv-form-group">
-                      <label className="pv-label">CPF *</label>
+                      <label className="pv-label">
+                        CPF <span className="pv-required">*</span>
+                      </label>
                       <div className="pv-input-wrapper">
                         <input
                           type="text"
@@ -449,7 +498,7 @@ const PerfilVoluntario = () => {
                         />
                         <span className="pv-input-icon">📍</span>
                       </div>
-                      {renderContadorCaracteres("endereco", dadosForm.endereco)}
+                      {editando && renderContadorCaracteres("endereco", dadosForm.endereco)}
                     </div>
 
                     <div className="pv-form-group">
@@ -541,9 +590,9 @@ const PerfilVoluntario = () => {
                           disabled={!editando}
                           maxLength={LIMITES.habilidades}
                         />
-                        <span className="pv-input-icon">💡</span>
+                        <span className="pv-input-icon pv-textarea-icon">💡</span>
                       </div>
-                      {renderContadorCaracteres("habilidades", dadosForm.habilidades)}
+                      {editando && renderContadorCaracteres("habilidades", dadosForm.habilidades)}
                     </div>
 
                     <div className="pv-form-group">
@@ -579,9 +628,9 @@ const PerfilVoluntario = () => {
                           disabled={!editando}
                           maxLength={LIMITES.sobre_voce}
                         />
-                        <span className="pv-input-icon">📝</span>
+                        <span className="pv-input-icon pv-textarea-icon">📝</span>
                       </div>
-                      {renderContadorCaracteres("sobre_voce", dadosForm.sobre_voce)}
+                      {editando && renderContadorCaracteres("sobre_voce", dadosForm.sobre_voce)}
                     </div>
                   </div>
 
@@ -597,7 +646,7 @@ const PerfilVoluntario = () => {
                       </button>
                       <button
                         className="pv-btn pv-btn-outline pv-btn-cancel"
-                        onClick={() => setEditando(false)}
+                        onClick={cancelarEdicao}
                         disabled={salvando}
                       >
                         <span className="pv-icon">❌</span>

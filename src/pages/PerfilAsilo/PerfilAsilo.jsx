@@ -66,6 +66,12 @@ const PerfilAsilo = () => {
   }
 
   const handleFileChange = async (e) => {
+    if (!editando) {
+      setErroMensagem("Ative o modo de edição para alterar a foto.")
+      setMostrarModalErro(true)
+      return
+    }
+
     const file = e.target.files[0]
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -147,6 +153,30 @@ const PerfilAsilo = () => {
     setEditando(true)
   }
 
+  const cancelarEdicao = () => {
+    if (perfil) {
+      setDadosForm({
+        nome: perfil.nome || "",
+        email: perfil.email || "",
+        telefone: perfil.telefone || "",
+        cnpj: perfil.cnpj || "",
+        responsavel_legal: perfil.responsavel_legal || "",
+        endereco: perfil.endereco || "",
+        cidade: perfil.cidade || "",
+        estado: perfil.estado || "",
+        cep: perfil.cep || "",
+        capacidade: perfil.capacidade || "",
+        tipo_instituicao: perfil.tipo_instituicao || "",
+        descricao: perfil.descricao || "",
+        necessidades_voluntariado: perfil.necessidades_voluntariado || "",
+        site: perfil.site || "",
+        redes_sociais: perfil.redes_sociais || "",
+      })
+      setLogo(perfil.logo_url || null)
+    }
+    setEditando(false)
+  }
+
   const voltarParaHome = () => {
     navigate("/")
   }
@@ -155,7 +185,7 @@ const PerfilAsilo = () => {
     return (
       <div className="pa-container">
         <div className="pa-loading">
-          <span className="pa-icon">⏳</span>
+          <div className="pa-loading-spinner"></div>
           <p>Carregando perfil...</p>
         </div>
       </div>
@@ -182,7 +212,7 @@ const PerfilAsilo = () => {
           <div className="pa-sidebar">
             <div className="pa-photo-section">
               <div className="pa-photo-container">
-                <div className="pa-photo">
+                <div className={`pa-photo ${editando ? "pa-photo-editable" : ""}`}>
                   {logo ? (
                     <img
                       src={logo || "/placeholder.svg"}
@@ -199,19 +229,21 @@ const PerfilAsilo = () => {
                       <span>{dadosForm.nome ? dadosForm.nome.substring(0, 2).toUpperCase() : "AE"}</span>
                     </div>
                   )}
-                  <div className="pa-photo-overlay">
-                    <label htmlFor="pa-photo-upload" className="pa-upload-label">
-                      <span className="pa-icon">📷</span>
-                      Alterar
-                    </label>
-                    <input
-                      type="file"
-                      id="pa-photo-upload"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="pa-upload-input"
-                    />
-                  </div>
+                  {editando && (
+                    <div className="pa-photo-overlay">
+                      <label htmlFor="pa-photo-upload" className="pa-upload-label">
+                        <span className="pa-icon">📷</span>
+                        Alterar Foto
+                      </label>
+                      <input
+                        type="file"
+                        id="pa-photo-upload"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="pa-upload-input"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="pa-status">
@@ -263,7 +295,10 @@ const PerfilAsilo = () => {
                     </button>
                   ) : (
                     <div className="pa-edit-indicator">
-                      <span className="pa-editing-badge">Modo Edição</span>
+                      <span className="pa-editing-badge">
+                        <span className="pa-badge-icon">✏️</span>
+                        Modo Edição
+                      </span>
                     </div>
                   )}
                 </div>
@@ -273,7 +308,9 @@ const PerfilAsilo = () => {
                 <div className="pa-form">
                   <div className="pa-form-grid">
                     <div className="pa-form-group">
-                      <label className="pa-label">Nome do Asilo *</label>
+                      <label className="pa-label">
+                        Nome do Asilo <span className="pa-required">*</span>
+                      </label>
                       <div className="pa-input-wrapper">
                         <input
                           type="text"
@@ -289,7 +326,9 @@ const PerfilAsilo = () => {
                     </div>
 
                     <div className="pa-form-group">
-                      <label className="pa-label">E-mail *</label>
+                      <label className="pa-label">
+                        E-mail <span className="pa-required">*</span>
+                      </label>
                       <div className="pa-input-wrapper">
                         <input
                           type="email"
@@ -492,7 +531,7 @@ const PerfilAsilo = () => {
                           placeholder="Conte sobre a história, missão e valores do seu asilo..."
                           disabled={!editando}
                         />
-                        <span className="pa-input-icon">📝</span>
+                        <span className="pa-input-icon pa-textarea-icon">📝</span>
                       </div>
                     </div>
 
@@ -508,7 +547,7 @@ const PerfilAsilo = () => {
                           placeholder="Descreva as atividades onde precisa de voluntários..."
                           disabled={!editando}
                         />
-                        <span className="pa-input-icon">💡</span>
+                        <span className="pa-input-icon pa-textarea-icon">💡</span>
                       </div>
                     </div>
 
@@ -557,7 +596,7 @@ const PerfilAsilo = () => {
                       </button>
                       <button
                         className="pa-btn pa-btn-outline pa-btn-cancel"
-                        onClick={() => setEditando(false)}
+                        onClick={cancelarEdicao}
                         disabled={carregando}
                       >
                         <span className="pa-icon">❌</span>

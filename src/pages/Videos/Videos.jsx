@@ -18,26 +18,27 @@ function Videos() {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [currentSearch, setCurrentSearch] = useState("")
+  const [sortBy, setSortBy] = useState("newest")
+  const [categoryFilter, setCategoryFilter] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
   const [videos, setVideos] = useState([])
   const [hasMore, setHasMore] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedVideo, setSelectedVideo] = useState(null)
-  const [notification, setNotification] = useState({ show: false, type: '', message: '' })
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [notification, setNotification] = useState({ show: false, type: "", message: "" })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [videoToDelete, setVideoToDelete] = useState(null)
 
-  const videoPlayerModalRef = useRef(null)
-  const uploadModalRef = useRef(null)
-  const notificationModalRef = useRef(null)
+  const fileInputRef = useRef(null)
 
-  // Verificar autenticação
   useEffect(() => {
     const checkAuth = () => {
       try {
-        const userDataStr = localStorage.getItem('user_data')
-        const token = localStorage.getItem('auth_token')
-        
+        const userDataStr = localStorage.getItem("user_data")
+        const token = localStorage.getItem("auth_token")
+
         if (userDataStr && token) {
           const user = JSON.parse(userDataStr)
           setCurrentUser(user)
@@ -55,7 +56,6 @@ function Videos() {
     checkAuth()
   }, [])
 
-  // Inicialização
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -63,40 +63,48 @@ function Videos() {
       once: true,
       offset: 100,
     })
-    
-    if (window.bootstrap) {
-      videoPlayerModalRef.current = new window.bootstrap.Modal(document.getElementById("videoPlayerModal"))
-      uploadModalRef.current = new window.bootstrap.Modal(document.getElementById("uploadModal"))
-      notificationModalRef.current = new window.bootstrap.Modal(document.getElementById("notificationModal"))
-    }
-    
+
     if (isAuthenticated) {
       loadVideos(true)
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, sortBy, categoryFilter])
 
-  // 🔹 Mostrar notificação
+  const showModal = (modalId) => {
+    const modalElement = document.getElementById(modalId)
+    if (modalElement && window.bootstrap) {
+      const modal = new window.bootstrap.Modal(modalElement)
+      modal.show()
+    }
+  }
+
+  const hideModal = (modalId) => {
+    const modalElement = document.getElementById(modalId)
+    if (modalElement && window.bootstrap) {
+      const modal = window.bootstrap.Modal.getInstance(modalElement)
+      if (modal) {
+        modal.hide()
+      }
+    }
+  }
+
   const showNotification = (type, message) => {
     setNotification({ show: true, type, message })
-    notificationModalRef.current?.show()
-    
-    // Auto close para sucesso após 3 segundos
-    if (type === 'success') {
+    showModal("notificationModal")
+
+    if (type === "success") {
       setTimeout(() => {
         hideNotification()
       }, 3000)
     }
   }
 
-  // 🔹 Esconder notificação
   const hideNotification = () => {
-    notificationModalRef.current?.hide()
+    hideModal("notificationModal")
     setTimeout(() => {
-      setNotification({ show: false, type: '', message: '' })
+      setNotification({ show: false, type: "", message: "" })
     }, 300)
   }
 
-  // 🔹 Buscar vídeos
   const loadVideos = async (reset = true) => {
     if (isLoading || !isAuthenticated) return
     setIsLoading(true)
@@ -106,12 +114,24 @@ function Videos() {
 
       let fetchedVideos = data.data
 
-      // Filtro de busca
       if (currentSearch) {
-        fetchedVideos = fetchedVideos.filter(v =>
-          v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
-          (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase()))
+        fetchedVideos = fetchedVideos.filter(
+          (v) =>
+            v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
+            (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase())),
         )
+      }
+
+      if (categoryFilter !== "all") {
+        fetchedVideos = fetchedVideos.filter((v) => v.categoria === categoryFilter)
+      }
+
+      if (sortBy === "newest") {
+        fetchedVideos.sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em))
+      } else if (sortBy === "oldest") {
+        fetchedVideos.sort((a, b) => new Date(a.criado_em) - new Date(b.criado_em))
+      } else if (sortBy === "title") {
+        fetchedVideos.sort((a, b) => a.nome_midia.localeCompare(b.nome_midia))
       }
 
       const paginated = fetchedVideos.slice(0, currentPage * 6)
@@ -119,7 +139,7 @@ function Videos() {
       setHasMore(fetchedVideos.length > paginated.length)
     } catch (error) {
       console.error(error)
-      showNotification('error', error.message)
+      showNotification("error", error.message)
     } finally {
       setIsLoading(false)
     }
@@ -127,7 +147,7 @@ function Videos() {
 
   const loadMoreVideos = () => {
     if (!isAuthenticated) return
-    setCurrentPage(prev => prev + 1)
+    setCurrentPage((prev) => prev + 1)
     loadVideos(false)
   }
 
@@ -138,29 +158,67 @@ function Videos() {
     loadVideos(true)
   }
 
+  const clearFilters = () => {
+    setCurrentSearch("")
+    setSortBy("newest")
+    setCategoryFilter("all")
+    setCurrentPage(1)
+  }
+
   const openVideoPlayer = (video) => {
     if (!isAuthenticated) return
     setSelectedVideo(video)
-    videoPlayerModalRef.current?.show()
+    showModal("videoPlayerModal")
   }
 
-  // 📤 Upload de vídeo
+  const openUploadModal = () => {
+    if (!isAuthenticated) {
+      showNotification("error", "Você precisa estar logado para enviar vídeos.")
+      setTimeout(() => navigate("/login"), 2000)
+      return
+    }
+    setSelectedFile(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+    const form = document.querySelector("#uploadModal form")
+    if (form) {
+      form.reset()
+    }
+    showModal("uploadModal")
+  }
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0]
+    if (file && validateVideoFile(file)) {
+      setSelectedFile({
+        file,
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2),
+        type: file.type,
+        preview: URL.createObjectURL(file),
+      })
+    }
+  }
+
   const handleVideoUpload = async (e) => {
     e.preventDefault()
-    
+
     if (!isAuthenticated) {
-      showNotification('error', "Você precisa estar logado para enviar vídeos.")
-      setTimeout(() => navigate('/login'), 2000)
+      showNotification("error", "Você precisa estar logado para enviar vídeos.")
+      setTimeout(() => navigate("/login"), 2000)
       return
     }
 
     const form = e.target
-    const fileInput = form.querySelector("#videoFile")
-    const file = fileInput.files[0]
+    const file = selectedFile?.file
     const titulo = form.querySelector("#videoTitle").value
     const descricao = form.querySelector("#videoDescription").value
 
-    if (!validateVideoFile(file)) return
+    if (!file) {
+      showNotification("error", "Por favor, selecione um arquivo de vídeo.")
+      return
+    }
 
     const formData = new FormData()
     formData.append("video", file)
@@ -169,16 +227,16 @@ function Videos() {
 
     try {
       setUploadProgress(15)
-      
-      const token = localStorage.getItem('auth_token')
-      
+
+      const token = localStorage.getItem("auth_token")
+
       const response = await fetch(`${API_BASE_URL}/api/videos`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
-        body: formData
+        credentials: "include",
+        body: formData,
       })
 
       const responseText = await response.text()
@@ -188,19 +246,23 @@ function Videos() {
       } catch (parseError) {
         throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
       }
-      
+
       if (!response.ok) {
         throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
       }
 
       setUploadProgress(100)
-      showNotification('success', "Vídeo enviado com sucesso!")
-      uploadModalRef.current?.hide()
+      showNotification("success", "Vídeo enviado com sucesso!")
+      hideModal("uploadModal")
       form.reset()
+      setSelectedFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
       loadVideos(true)
     } catch (err) {
-      console.error("❌ Erro completo no upload:", err)
-      showNotification('error', err.message || "Erro desconhecido no upload.")
+      console.error("Erro no upload:", err)
+      showNotification("error", err.message || "Erro desconhecido no upload.")
     } finally {
       setTimeout(() => setUploadProgress(0), 1000)
     }
@@ -208,17 +270,17 @@ function Videos() {
 
   const validateVideoFile = (file) => {
     if (!file) {
-      showNotification('error', "Por favor, selecione um arquivo de vídeo.")
+      showNotification("error", "Por favor, selecione um arquivo de vídeo.")
       return false
     }
     const maxSize = 100 * 1024 * 1024
     if (file.size > maxSize) {
-      showNotification('error', "O arquivo é muito grande (máximo 100MB).")
+      showNotification("error", "O arquivo é muito grande (máximo 100MB).")
       return false
     }
     const allowed = ["video/mp4", "video/avi", "video/mov", "video/quicktime", "video/webm"]
     if (!allowed.includes(file.type)) {
-      showNotification('error', "Formato inválido. Use MP4, AVI, MOV ou WEBM.")
+      showNotification("error", "Formato inválido. Use MP4, AVI, MOV ou WEBM.")
       return false
     }
     return true
@@ -226,41 +288,95 @@ function Videos() {
 
   const formatDate = (date) => new Date(date).toLocaleDateString("pt-BR")
 
-  // Modal de Notificação Component
   const NotificationModal = () => (
-    <div 
-      className={`modal fade ${notification.show ? 'show' : ''}`} 
-      style={{ 
-        display: notification.show ? 'block' : 'none',
-        backgroundColor: 'rgba(0,0,0,0.5)'
-      }} 
+    <div
+      className="modal fade"
+      id="notificationModal"
       tabIndex="-1"
+      aria-labelledby="notificationModalLabel"
+      aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered modal-sm">
         <div className="modal-content">
           <div className={`notification-body ${notification.type}`}>
             <div className="notification-icon">
-              {notification.type === 'success' ? (
+              {notification.type === "success" ? (
                 <i className="fas fa-check-circle"></i>
               ) : (
                 <i className="fas fa-exclamation-circle"></i>
               )}
             </div>
             <div className="notification-content">
-              <h4 className="notification-title">
-                {notification.type === 'success' ? 'Sucesso!' : 'Erro!'}
-              </h4>
+              <h4 className="notification-title">{notification.type === "success" ? "Sucesso!" : "Erro!"}</h4>
               <p className="notification-message">{notification.message}</p>
             </div>
-            {notification.type === 'error' && (
-              <button 
-                type="button" 
-                className="btn btn-close-notification"
-                onClick={hideNotification}
-              >
+            {notification.type === "error" && (
+              <button type="button" className="btn btn-close-notification" onClick={hideNotification}>
                 Fechar
               </button>
             )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const handleDeleteVideo = async (videoId) => {
+    if (!isAuthenticated) return
+
+    try {
+      await api.delete(`/api/videos/${videoId}`)
+      showNotification("success", "Vídeo excluído com sucesso!")
+      hideModal("deleteConfirmModal")
+      setVideoToDelete(null)
+      loadVideos(true)
+    } catch (error) {
+      console.error("Erro ao deletar vídeo:", error)
+      showNotification("error", error.message || "Erro ao excluir vídeo.")
+    }
+  }
+
+  const openDeleteConfirmModal = (video) => {
+    setVideoToDelete(video)
+    showModal("deleteConfirmModal")
+  }
+
+  const isVideoOwner = (video) => {
+    return currentUser && video.id_usuario === currentUser.id_usuario
+  }
+
+  const DeleteConfirmModal = () => (
+    <div
+      className="modal fade"
+      id="deleteConfirmModal"
+      tabIndex="-1"
+      aria-labelledby="deleteConfirmModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              <i className="fas fa-exclamation-triangle me-2"></i>
+              Confirmar Exclusão
+            </h5>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div className="modal-body">
+            <p>
+              Tem certeza que deseja excluir o vídeo <strong>"{videoToDelete?.nome_midia}"</strong>?
+            </p>
+            <p className="text-muted mb-0">Esta ação não pode ser desfeita.</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <i className="fas fa-times me-2"></i>
+              Cancelar
+            </button>
+            <button type="button" className="btn btn-danger" onClick={() => handleDeleteVideo(videoToDelete?.id_midia)}>
+              <i className="fas fa-trash me-2"></i>
+              Excluir Vídeo
+            </button>
           </div>
         </div>
       </div>
@@ -271,7 +387,6 @@ function Videos() {
     <div className="videos-page">
       <Header />
 
-      {/* Hero Section - Carousel */}
       <div
         id="carouselExampleCaptions"
         className="carousel slide hero-carousel"
@@ -296,10 +411,7 @@ function Videos() {
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
               {!isAuthenticated && (
-                <button 
-                  className="btn btn-outline-light btn-lg"
-                  onClick={() => navigate('/login')}
-                >
+                <button className="btn btn-outline-light btn-lg" onClick={() => navigate("/login")}>
                   Fazer Login para Acessar
                 </button>
               )}
@@ -311,81 +423,162 @@ function Videos() {
       <hr className="divisor" />
 
       <main>
-        <section
-          className="videos-lista py-5"
-          data-aos="fade-up"
-          data-aos-duration="800"
-        >
+        <section className="videos-lista py-5" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <h2 className="text-center mb-4 videos-main-title">Nossa Galeria de Vídeos</h2>
 
-            {/* Botão de upload - só mostra se estiver logado */}
             {isAuthenticated && (
               <div className="text-center mb-5">
-                <button 
-                  className="btn-criar-video" 
-                  onClick={() => uploadModalRef.current?.show()}
-                >
-                  <i className="fas fa-plus-circle me-2"></i>
+                <button className="btn-criar-video" onClick={openUploadModal}>
+                  <i className="fas fa-plus-circle"></i>
                   Enviar Novo Vídeo
                 </button>
               </div>
             )}
 
-            {/* Mensagem quando usuário não está logado */}
             {!isAuthenticated && (
-              <div className="text-center py-5">
-                <i className="fas fa-sign-in-alt fa-3x text-muted mb-3"></i>
-                <h4 className="text-muted">Efetue login para acessar os vídeos</h4>
-                <p className="text-muted mb-4">Faça login ou cadastre-se para visualizar e enviar vídeos.</p>
-                <button 
-                  className="btn btn-primary btn-lg"
-                  onClick={() => navigate('/login')}
-                >
-                  <i className="fas fa-sign-in-alt me-2"></i>
-                  Fazer Login
-                </button>
+              <div className="login-prompt-container" data-aos="fade-up">
+                <div className="login-prompt-card">
+                  <div className="login-prompt-icon">
+                    <i className="fas fa-lock"></i>
+                  </div>
+                  <h3 className="login-prompt-title">Acesso Restrito</h3>
+                  <p className="login-prompt-text">
+                    Faça login para acessar nossa galeria completa de vídeos e compartilhar seus próprios conteúdos.
+                  </p>
+                  <div className="login-prompt-features">
+                    <div className="feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Assista vídeos exclusivos</span>
+                    </div>
+                    <div className="feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Envie seus próprios vídeos</span>
+                    </div>
+                    <div className="feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Interaja com a comunidade</span>
+                    </div>
+                  </div>
+                  <div className="login-prompt-actions">
+                    <button className="btn btn-login-primary" onClick={() => navigate("/login")}>
+                      <i className="fas fa-sign-in-alt"></i>
+                      Fazer Login
+                    </button>
+                    <button className="btn btn-login-secondary" onClick={() => navigate("/cadastro")}>
+                      <i className="fas fa-user-plus"></i>
+                      Criar Conta
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* Filtros e Busca - só mostra se estiver logado */}
             {isAuthenticated && (
               <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
-                <div className="row g-3">
-                  <div className="col-md-12 mb-3">
+                <div className="row g-3 align-items-end">
+                  <div className="col-md-5">
+                    <label className="filter-label">
+                      <i className="fas fa-search"></i>
+                      Buscar Vídeos
+                    </label>
                     <div className="search-box">
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Buscar vídeos por título ou descrição..."
+                        placeholder="Buscar por título ou descrição..."
                         value={currentSearch}
                         onChange={(e) => searchVideos(e.target.value)}
                       />
                       <i className="fas fa-search search-icon"></i>
                     </div>
                   </div>
+                  <div className="col-md-3">
+                    <label className="filter-label">
+                      <i className="fas fa-sort"></i>
+                      Ordenar Por
+                    </label>
+                    <select className="form-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                      <option value="newest">Mais Recentes</option>
+                      <option value="oldest">Mais Antigos</option>
+                      <option value="title">Título (A-Z)</option>
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <label className="filter-label">
+                      <i className="fas fa-filter"></i>
+                      Categoria
+                    </label>
+                    <select
+                      className="form-select"
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                    >
+                      <option value="all">Todas</option>
+                      <option value="eventos">Eventos</option>
+                      <option value="depoimentos">Depoimentos</option>
+                      <option value="tutoriais">Tutoriais</option>
+                      <option value="outros">Outros</option>
+                    </select>
+                  </div>
+                  <div className="col-md-1">
+                    <button className="btn btn-clear-filters" onClick={clearFilters} title="Limpar filtros">
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
                 </div>
+
+                {(currentSearch || sortBy !== "newest" || categoryFilter !== "all") && (
+                  <div className="active-filters">
+                    <span className="filter-badge-label">Filtros ativos:</span>
+                    {currentSearch && (
+                      <span className="filter-badge">
+                        Busca: "{currentSearch}"<i className="fas fa-times" onClick={() => searchVideos("")}></i>
+                      </span>
+                    )}
+                    {sortBy !== "newest" && (
+                      <span className="filter-badge">
+                        Ordem: {sortBy === "oldest" ? "Mais Antigos" : "Título"}
+                        <i className="fas fa-times" onClick={() => setSortBy("newest")}></i>
+                      </span>
+                    )}
+                    {categoryFilter !== "all" && (
+                      <span className="filter-badge">
+                        Categoria: {categoryFilter}
+                        <i className="fas fa-times" onClick={() => setCategoryFilter("all")}></i>
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Loading spinner */}
             {isLoading && isAuthenticated && (
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Carregando...</span>
-                </div>
+              <div className="row">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="col-lg-4 col-md-6 mb-4">
+                    <div className="video-card skeleton-card">
+                      <div className="skeleton-thumbnail"></div>
+                      <div className="card-body">
+                        <div className="skeleton-icon"></div>
+                        <div className="skeleton-title"></div>
+                        <div className="skeleton-text"></div>
+                        <div className="skeleton-text short"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
-            {/* Grid de Vídeos - só mostra se estiver logado */}
             {!isLoading && isAuthenticated && videos.length > 0 && (
               <div className="row">
                 {videos.map((video, index) => (
                   <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
-                    <div className="card video-card" data-aos="fade-up" data-aos-delay={index % 3 * 100}>
+                    <div className="card video-card" data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
                       <div className="video-thumbnail-container" onClick={() => openVideoPlayer(video)}>
                         <video
-                          src={`${API_BASE_URL}/${video.url}`}
+                          src={`${API_BASE_URL}/${video.url}#t=0.1`}
                           className="video-thumbnail"
                           muted
                           preload="metadata"
@@ -398,15 +591,25 @@ function Videos() {
                         <div className="video-duration">2:30</div>
                       </div>
                       <div className="card-body text-center">
+                        {isVideoOwner(video) && (
+                          <button
+                            className="btn-delete-video"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              openDeleteConfirmModal(video)
+                            }}
+                            title="Excluir vídeo"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        )}
                         <div className="video-icon">
                           <i className="fas fa-play-circle"></i>
                         </div>
                         <h3 className="video-title">{video.nome_midia}</h3>
                         {video.descricao && (
                           <p className="video-description">
-                            {video.descricao.length > 120 
-                              ? `${video.descricao.substring(0, 120)}...` 
-                              : video.descricao}
+                            {video.descricao.length > 120 ? `${video.descricao.substring(0, 120)}...` : video.descricao}
                           </p>
                         )}
                         <ul className="video-details">
@@ -424,30 +627,30 @@ function Videos() {
               </div>
             )}
 
-            {/* Mensagem quando não há vídeos - só mostra se estiver logado */}
             {!isLoading && isAuthenticated && videos.length === 0 && (
-              <div className="text-center py-5">
-                <i className="fas fa-video-slash fa-3x text-muted mb-3"></i>
-                <h4 className="text-muted">Nenhum vídeo encontrado</h4>
-                <p className="text-muted">
-                  {currentSearch 
-                    ? `Nenhum resultado para "${currentSearch}"` 
+              <div className="empty-state" data-aos="fade-up">
+                <div className="empty-state-icon">
+                  <i className="fas fa-video-slash"></i>
+                </div>
+                <h4 className="empty-state-title">Nenhum vídeo encontrado</h4>
+                <p className="empty-state-text">
+                  {currentSearch
+                    ? `Nenhum resultado para "${currentSearch}". Tente outros termos de busca.`
                     : "Ainda não há vídeos publicados. Seja o primeiro a compartilhar!"}
                 </p>
-                <button 
-                  className="btn-criar-video"
-                  onClick={() => uploadModalRef.current?.show()}
-                >
-                  <i className="fas fa-plus-circle me-2"></i>
-                  Enviar Primeiro Vídeo
-                </button>
+                {!currentSearch && (
+                  <button className="btn-criar-video" onClick={openUploadModal}>
+                    <i className="fas fa-plus-circle"></i>
+                    Enviar Primeiro Vídeo
+                  </button>
+                )}
               </div>
             )}
 
-            {/* Botão carregar mais - só mostra se estiver logado */}
             {hasMore && !isLoading && isAuthenticated && (
-              <div className="text-center mt-4">
-                <button className="btn btn-outline-primary btn-lg" onClick={loadMoreVideos}>
+              <div className="text-center mt-5">
+                <button className="btn btn-load-more" onClick={loadMoreVideos}>
+                  <i className="fas fa-chevron-down"></i>
                   Carregar Mais Vídeos
                 </button>
               </div>
@@ -456,23 +659,17 @@ function Videos() {
         </section>
       </main>
 
-      {/* Modal Player de Vídeo */}
-      <div className="modal fade video-player-modal" id="videoPlayerModal" tabIndex="-1">
+      <div className="modal fade video-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-xl modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">{selectedVideo?.nome_midia}</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div className="modal-body">
+            <div className="modal-body p-0">
               {selectedVideo && (
                 <div className="video-player-container">
-                  <video
-                    src={`${API_BASE_URL}/${selectedVideo.url}`}
-                    controls
-                    autoPlay
-                    className="video-player"
-                  />
+                  <video src={`${API_BASE_URL}/${selectedVideo.url}`} controls autoPlay className="video-player" />
                 </div>
               )}
             </div>
@@ -487,19 +684,22 @@ function Videos() {
         </div>
       </div>
 
-      {/* Modal de Upload */}
-      <div className="modal fade upload-modal" id="uploadModal" tabIndex="-1">
-        <div className="modal-dialog modal-dialog-centered">
+      <div className="modal fade upload-modal" id="uploadModal" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Enviar Novo Vídeo</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+              <h5 className="modal-title">
+                <i className="fas fa-cloud-upload-alt"></i>
+                Enviar Novo Vídeo
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <form onSubmit={handleVideoUpload}>
                 <div className="row">
                   <div className="col-12 mb-3">
                     <label htmlFor="videoTitle" className="form-label">
+                      <i className="fas fa-heading"></i>
                       Título do Vídeo *
                     </label>
                     <input
@@ -512,6 +712,7 @@ function Videos() {
                   </div>
                   <div className="col-12 mb-3">
                     <label htmlFor="videoDescription" className="form-label">
+                      <i className="fas fa-align-left"></i>
                       Descrição
                     </label>
                     <textarea
@@ -523,32 +724,68 @@ function Videos() {
                   </div>
                   <div className="col-12 mb-3">
                     <label htmlFor="videoFile" className="form-label">
+                      <i className="fas fa-file-video"></i>
                       Arquivo de Vídeo *
                     </label>
-                    <div className="file-upload-area">
+                    <div className="file-upload-area" onClick={() => fileInputRef.current?.click()}>
                       <input
+                        ref={fileInputRef}
                         type="file"
-                        className="form-control"
+                        className="form-control file-input"
                         id="videoFile"
                         accept="video/*"
+                        onChange={handleFileSelect}
                         required
                       />
-                      <div className="upload-placeholder">
-                        <i className="fas fa-cloud-upload-alt"></i>
-                        <p>Clique para selecionar ou arraste um arquivo</p>
-                        <span>Formatos: MP4, AVI, MOV, WEBM (Max: 100MB)</span>
-                      </div>
+                      {!selectedFile ? (
+                        <div className="upload-placeholder">
+                          <i className="fas fa-cloud-upload-alt"></i>
+                          <p>Clique para selecionar ou arraste um arquivo</p>
+                          <span>Formatos: MP4, AVI, MOV, WEBM (Max: 100MB)</span>
+                        </div>
+                      ) : (
+                        <div className="file-preview">
+                          <div className="file-preview-video">
+                            <video src={selectedFile.preview} muted />
+                            <div className="file-preview-overlay">
+                              <i className="fas fa-play-circle"></i>
+                            </div>
+                          </div>
+                          <div className="file-preview-info">
+                            <div className="file-preview-name">
+                              <i className="fas fa-file-video"></i>
+                              {selectedFile.name}
+                            </div>
+                            <div className="file-preview-details">
+                              <span className="file-size">{selectedFile.size} MB</span>
+                              <span className="file-type">{selectedFile.type.split("/")[1].toUpperCase()}</span>
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-remove-file"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSelectedFile(null)
+                                if (fileInputRef.current) fileInputRef.current.value = ""
+                              }}
+                            >
+                              <i className="fas fa-times"></i>
+                              Remover
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
                 {uploadProgress > 0 && (
                   <div className="upload-progress-container">
-                    <label className="progress-label">Progresso do Upload</label>
+                    <label className="progress-label">
+                      <i className="fas fa-spinner fa-spin"></i>
+                      Enviando vídeo...
+                    </label>
                     <div className="progress-bar-container">
-                      <div 
-                        className="progress-bar-fill" 
-                        style={{ width: `${uploadProgress}%` }}
-                      >
+                      <div className="progress-bar-fill" style={{ width: `${uploadProgress}%` }}>
                         <span className="progress-text">{uploadProgress}%</span>
                       </div>
                     </div>
@@ -556,17 +793,18 @@ function Videos() {
                 )}
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                    <i className="fas fa-times"></i>
                     Cancelar
                   </button>
-                  <button type="submit" className="btn btn-primary" disabled={uploadProgress > 0}>
+                  <button type="submit" className="btn btn-primary" disabled={uploadProgress > 0 || !selectedFile}>
                     {uploadProgress > 0 ? (
                       <>
-                        <i className="fas fa-spinner fa-spin me-2"></i>
+                        <i className="fas fa-spinner fa-spin"></i>
                         Enviando...
                       </>
                     ) : (
                       <>
-                        <i className="fas fa-upload me-2"></i>
+                        <i className="fas fa-upload"></i>
                         Enviar Vídeo
                       </>
                     )}
@@ -578,8 +816,8 @@ function Videos() {
         </div>
       </div>
 
-      {/* Modal de Notificação */}
       <NotificationModal />
+      <DeleteConfirmModal />
 
       <Footer />
     </div>

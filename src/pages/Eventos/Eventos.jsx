@@ -9,7 +9,8 @@ import Footer from "../../components/layout/Footer"
 import "aos/dist/aos.css"
 import AOS from "aos"
 import "./Eventos.css"
-import { api } from "../../services/api"
+import { eventosService } from "../../services/eventos/eventos.service"
+import { participacoesService } from "../../services/eventos/participacoes.service"
 
 // Importações de bibliotecas
 import carouselum from "../../assets/img/carousels/carousel-12.jpg"
@@ -33,6 +34,7 @@ const Eventos = () => {
   const [isLoadingAction, setIsLoadingAction] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userInscricoes, setUserInscricoes] = useState([]) // ✅ NOVO: Controla inscrições do usuário
   const [eventForm, setEventForm] = useState({
     title: "",
     category: "",
@@ -84,6 +86,21 @@ const Eventos = () => {
     loadUserData()
   }, [])
 
+  // ✅ NOVO: Carregar inscrições do usuário se for voluntário
+  const loadUserInscricoes = async () => {
+    if (!isAuthenticated || currentUser?.tipo !== 'usuario') return
+    
+    try {
+      const response = await participacoesService.listarMinhasParticipacoes()
+      if (response.status === 200 && response.eventos) {
+        const inscricoesIds = response.eventos.map(event => event.id_evento)
+        setUserInscricoes(inscricoesIds)
+      }
+    } catch (error) {
+      console.error("Erro ao carregar inscrições do usuário:", error)
+    }
+  }
+
   // Função para mapear categorias
   const mapCategory = (description) => {
     if (!description) return 'conversa'
@@ -97,7 +114,7 @@ const Eventos = () => {
     return 'conversa'
   }
 
-  // Função para determinar status do evento
+  // ✅ FUNÇÃO ATUALIZADA: Determinar status do evento considerando capacidade REAL
   const getEventStatus = (event, registeredCount) => {
     try {
       const eventDate = new Date(event.data_evento)
@@ -105,6 +122,7 @@ const Eventos = () => {
       
       if (eventDate < today) return 'cancelado'
       
+      // ✅ CAPACIDADE REAL: Usa o valor definido pelo asilo
       const capacity = event.capacidade || 50
       if (registeredCount >= capacity) return 'lotado'
       
@@ -114,14 +132,18 @@ const Eventos = () => {
     }
   }
 
+  // ✅ FUNÇÃO CARREGAR EVENTOS CORRETA
   const loadEvents = async () => {
     setIsLoading(true)
     try {
-      const data = await api.get('/api/eventos')
+      const data = await eventosService.listarEventos()
       
       if (data.status === 200) {
         const formattedEvents = data.eventos.map(event => {
           const category = mapCategory(event.descricao || event.titulo)
+          
+          // ✅ CAPACIDADE REAL: Usa o valor do banco definido pelo asilo
+          const capacity = event.capacidade || 50
           const registeredCount = event.total_inscritos || event.inscritos_count || 0
           const status = getEventStatus(event, registeredCount)
           
@@ -134,13 +156,18 @@ const Eventos = () => {
             time: event.horario || "14:00",
             location: event.nome_asilo || event.localizacao || "Local a definir",
             contact: event.telefone_contato || event.email_asilo || "",
-            capacity: event.capacidade || 50,
-            registered: registeredCount,
+            capacity: capacity, // ✅ CAPACIDADE REAL
+            registered: registeredCount, // ✅ INSCRITOS REAIS
             status: status,
           }
         })
         
         setEvents(formattedEvents)
+        
+        // ✅ Carrega inscrições do usuário após carregar eventos
+        if (isAuthenticated && currentUser?.tipo === 'usuario') {
+          await loadUserInscricoes()
+        }
       } else {
         setEvents([])
       }
@@ -152,7 +179,7 @@ const Eventos = () => {
     }
   }
 
-  // ✅ FUNÇÃO DE INSCRIÇÃO CORRETA
+  // ✅ FUNÇÃO DE INSCRIÇÃO CORRETA - ATUALIZADA
   const inscreverEvento = async (eventId) => {
     setIsLoadingAction(true)
     
@@ -169,20 +196,22 @@ const Eventos = () => {
       const userData = JSON.parse(userDataStr)
       const userType = userData.tipo || userData.tipo_usuario || userData.type
       
-      // ✅ VERIFICAÇÃO CORRETA
-      if (userType !== 'voluntario') {
+      // ✅ VERIFICAÇÃO CORRETA (backend usa 'usuario' para voluntários)
+      if (userType !== 'usuario') {
         showModalError("Somente voluntários podem se inscrever em eventos.")
         return
       }
 
-      // Fazer a inscrição
-      const response = await api.post('/api/eventos/participar', {
-        id_evento: eventId,
-        id_voluntario: userData.id_voluntario || userData.id
-      })
+      // ✅ USAR O SERVIÇO DE PARTICIPAÇÕES CORRETAMENTE
+      const response = await participacoesService.participarEvento(eventId)
 
       if (response.status === 200 || response.status === 201) {
         showInscricaoSuccess("Inscrição realizada com sucesso! Você agora está participando deste evento.")
+        
+        // ✅ ATUALIZA A LISTA DE INSCRIÇÕES DO USUÁRIO
+        setUserInscricoes(prev => [...prev, eventId])
+        
+        // ✅ RECARREGA EVENTOS PARA ATUALIZAR CONTADORES
         setTimeout(() => {
           loadEvents()
         }, 1500)
@@ -193,18 +222,13 @@ const Eventos = () => {
     } catch (error) {
       console.error("Erro na inscrição:", error)
       
-      if (error.response) {
-        const errorMessage = error.response.data?.message || error.response.data?.error || "Erro do servidor"
-        
-        if (errorMessage.includes("já está inscrito") || errorMessage.includes("duplicada")) {
-          showModalError("Você já está inscrito neste evento.")
-        } else {
-          showModalError(errorMessage)
-        }
+      // ✅ TRATAMENTO DE ERROS MELHORADO
+      if (error.message.includes("já está inscrito") || error.message.includes("duplicada")) {
+        showModalError("Você já está inscrito neste evento.")
       } else if (error.message && error.message.includes("Network Error")) {
         showModalError("Erro de conexão. Verifique sua internet e tente novamente.")
       } else {
-        showModalError("Erro ao se inscrever no evento. Tente novamente.")
+        showModalError(error.message || "Erro ao se inscrever no evento. Tente novamente.")
       }
     } finally {
       setIsLoadingAction(false)
@@ -284,6 +308,7 @@ const Eventos = () => {
     }))
   }
 
+  // ✅ FUNÇÃO CRIAR EVENTO CORRETA
   const createEvent = async () => {
     setIsLoadingAction(true)
     try {
@@ -330,7 +355,8 @@ const Eventos = () => {
         categoria: eventForm.category || 'conversa'
       }
 
-      const response = await api.post('/api/eventos/criar', eventData)
+      // ✅ USAR O SERVIÇO DE EVENTOS CORRETAMENTE
+      const response = await eventosService.criarEvento(eventData)
       
       if (response.status === 201) {
         showModalSuccess("Evento criado com sucesso!", "Evento Criado!")
@@ -345,11 +371,12 @@ const Eventos = () => {
           contact: currentUser?.telefone ? formatPhoneNumber(currentUser.telefone) : "",
           capacity: 1,
         })
-        loadEvents()
+        loadEvents() // Recarrega a lista para mostrar o novo evento
       } else {
         showModalError(response.message || "Erro ao criar o evento.")
       }
     } catch (error) {
+      console.error("Erro ao criar evento:", error)
       showModalError("Erro ao criar o evento. Verifique se você está logado como asilo.")
     } finally {
       setIsLoadingAction(false)
@@ -451,7 +478,7 @@ const Eventos = () => {
                   scrollToEvents()
                 }}
               >
-                Ver Meus Eventos
+                Continuar Navegando
               </button>
             </div>
           </div>
@@ -516,7 +543,7 @@ const Eventos = () => {
     </div>
   )
 
-  // ✅ COMPONENTE EventCard CORRETO
+  // ✅ COMPONENTE EventCard ATUALIZADO
   const EventCard = ({ event }) => {
     const categoryIcons = {
       musica: "fas fa-music",
@@ -559,7 +586,10 @@ const Eventos = () => {
       return phone
     }
 
-    // ✅ LÓGICA CORRETA do botão
+    // ✅ VERIFICA SE USUÁRIO JÁ ESTÁ INSCRITO
+    const isUserInscrito = userInscricoes.includes(event.id)
+
+    // ✅ LÓGICA CORRETA do botão - ATUALIZADA
     const getButtonText = () => {
       if (isLoadingAction) {
         return (
@@ -574,15 +604,20 @@ const Eventos = () => {
       if (event.status === "cancelado") return "Evento Cancelado"
       if (!isAuthenticated) return "Efetue Login para Inscrever-se"
       
-      // ✅ VERIFICAÇÃO CORRETA
-      if (currentUser?.tipo === 'voluntario') {
+      // ✅ VERIFICAÇÃO SE JÁ ESTÁ INSCRITO
+      if (isUserInscrito) {
+        return "✅ Você já está inscrito"
+      }
+      
+      // ✅ VERIFICAÇÃO CORRETA (backend usa 'usuario' para voluntários)
+      if (currentUser?.tipo === 'usuario') {
         return "Inscrever-se"
       } else {
         return "Somente para Voluntários"
       }
     }
 
-    // ✅ LÓGICA CORRETA de desabilitação
+    // ✅ LÓGICA CORRETA de desabilitação - ATUALIZADA
     const isButtonDisabled = () => {
       const userDataStr = localStorage.getItem('user_data')
       let userType = null
@@ -596,17 +631,19 @@ const Eventos = () => {
         }
       }
       
-      const isVoluntario = userType === 'voluntario'
+      const isVoluntario = userType === 'usuario' // ✅ CORREÇÃO: backend usa 'usuario'
       const isEventAvailable = event.status === "disponivel"
+      const isAlreadyInscrito = isUserInscrito // ✅ NOVO: Verifica se já está inscrito
       
-      return !isVoluntario || !isAuthenticated || !isEventAvailable || isLoadingAction
+      return !isVoluntario || !isAuthenticated || !isEventAvailable || isLoadingAction || isAlreadyInscrito
     }
 
     const getButtonTitle = () => {
       if (!isAuthenticated) return "Efetue login para se inscrever"
-      if (currentUser?.tipo !== 'voluntario') return "Somente voluntários podem se inscrever"
+      if (currentUser?.tipo !== 'usuario') return "Somente voluntários podem se inscrever"
       if (event.status === "lotado") return "Evento lotado"
       if (event.status === "cancelado") return "Evento cancelado"
+      if (isUserInscrito) return "Você já está inscrito neste evento" // ✅ NOVO
       return "Clique para se inscrever"
     }
 
@@ -635,11 +672,12 @@ const Eventos = () => {
                 <i className="fas fa-phone"></i> {formatPhone(event.contact)}
               </li>
               <li>
+                {/* ✅ CAPACIDADE REAL: Mostra inscritos/capacidade definida pelo asilo */}
                 <i className="fas fa-users"></i> {event.registered}/{event.capacity} inscritos
               </li>
             </ul>
             <button
-              className="btn-inscricao"
+              className={`btn-inscricao ${isUserInscrito ? 'inscrito' : ''}`}
               onClick={() => inscreverEvento(event.id)}
               disabled={isButtonDisabled()}
               title={getButtonTitle()}
@@ -1046,4 +1084,4 @@ const Eventos = () => {
   )
 }
 
-export default Eventos
+export default Eventosa

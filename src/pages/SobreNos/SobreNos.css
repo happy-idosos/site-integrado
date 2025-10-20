@@ -228,11 +228,7 @@
 }
 
 /* ============================================
-   UNIFIED TEAM SECTION - ULTRA MODERN GALLERY
-   ============================================ */
-
-/* ============================================
-   UNIFIED TEAM SECTION - ULTRA MODERN GALLERY WITH CIRCULAR IMAGES
+   UNIFIED TEAM SECTION - PREMIUM CIRCULAR GALLERY
    ============================================ */
 
 .sobre-nos-page .team-unified {
@@ -252,21 +248,21 @@
   background: linear-gradient(90deg, transparent, rgba(36, 74, 150, 0.2), transparent);
 }
 
-/* Ultra modern responsive grid */
+/* Premium circular grid layout */
 .sobre-nos-page .team-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 32px;
-  max-width: 1600px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px 30px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Stunning team member card with premium design and circular images */
+/* Perfect circular team member card */
 .sobre-nos-page .team-member-card {
   background: white;
   border-radius: 24px;
-  overflow: hidden;
+  padding: 40px 30px 30px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -276,6 +272,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  overflow: hidden;
 }
 
 .sobre-nos-page .team-member-card::before {
@@ -284,22 +281,12 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6px;
+  height: 4px;
   background: linear-gradient(90deg, #244a96 0%, #1a3a7a 50%, #244a96 100%);
   background-size: 200% 100%;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
 }
 
 .sobre-nos-page .team-member-card:hover::before {
@@ -307,45 +294,45 @@
 }
 
 .sobre-nos-page .team-member-card:hover {
-  transform: translateY(-16px) scale(1.02);
-  box-shadow: 0 24px 80px rgba(36, 74, 150, 0.25);
-  border-color: rgba(36, 74, 150, 0.2);
-}
-
-/* Premium circular image wrapper with sophisticated overlay */
-.sobre-nos-page .member-image-wrapper {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 40px auto 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f8f9fb 0%, #e8eaf0 100%);
-  box-shadow: 0 12px 40px rgba(36, 74, 150, 0.15);
-  border: 6px solid white;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sobre-nos-page .team-member-card:hover .member-image-wrapper {
-  transform: scale(1.1);
-  box-shadow: 0 20px 60px rgba(36, 74, 150, 0.3);
+  transform: translateY(-12px);
+  box-shadow: 0 20px 60px rgba(36, 74, 150, 0.2);
   border-color: rgba(36, 74, 150, 0.1);
 }
 
+/* Perfect circular image container */
+.sobre-nos-page .member-image-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 25px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fb 0%, #e8eaf0 100%);
+  box-shadow: 0 12px 35px rgba(36, 74, 150, 0.15);
+  border: 6px solid white;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sobre-nos-page .team-member-card:hover .member-image-container {
+  transform: scale(1.08);
+  box-shadow: 0 18px 45px rgba(36, 74, 150, 0.25);
+}
+
+/* Perfect circular image */
 .sobre-nos-page .member-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: grayscale(0%) brightness(1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: grayscale(0%);
 }
 
 .sobre-nos-page .team-member-card:hover .member-image {
-  transform: scale(1.15);
-  filter: grayscale(0%) brightness(1.1);
+  transform: scale(1.1);
+  filter: grayscale(0%) brightness(1.05);
 }
 
-/* Sophisticated gradient overlay with social link */
+/* Elegant overlay for social links */
 .sobre-nos-page .member-overlay {
   position: absolute;
   top: 0;
@@ -355,16 +342,15 @@
   background: linear-gradient(
     135deg,
     rgba(36, 74, 150, 0.9) 0%,
-    rgba(26, 58, 122, 0.8) 50%,
-    rgba(36, 74, 150, 0.9) 100%
+    rgba(26, 58, 122, 0.85) 100%
   );
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   opacity: 0;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: scale(0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(0.9);
 }
 
 .sobre-nos-page .team-member-card:hover .member-overlay {
@@ -372,106 +358,209 @@
   transform: scale(1);
 }
 
-/* Premium social link button */
+/* Beautiful social link button */
 .sobre-nos-page .member-social-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: white;
+  width: 55px;
+  height: 55px;
+  background: rgba(255, 255, 255, 0.95);
   color: #244a96;
   border-radius: 50%;
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transform: translateY(20px) scale(0.8);
-  position: relative;
-  overflow: hidden;
-}
-
-.sobre-nos-page .member-social-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 50%;
-}
-
-.sobre-nos-page .member-social-link svg {
-  position: relative;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-.sobre-nos-page .team-member-card:hover .member-social-link {
-  transform: translateY(0) scale(1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(15px);
+  backdrop-filter: blur(10px);
 }
 
 .sobre-nos-page .member-social-link:hover {
-  transform: translateY(-6px) scale(1.15) rotate(5deg);
-  box-shadow: 0 12px 48px rgba(36, 74, 150, 0.5);
-}
-
-.sobre-nos-page .member-social-link:hover::before {
-  opacity: 1;
-}
-
-.sobre-nos-page .member-social-link:hover svg {
-  color: white;
-  transform: scale(1.1);
-}
-
-/* Premium member info section */
-.sobre-nos-page .member-info {
-  padding: 0 24px 32px;
-  text-align: center;
   background: white;
-  position: relative;
+  color: #1a3a7a;
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.4);
+}
+
+.sobre-nos-page .team-member-card:hover .member-social-link {
+  transform: translateY(0);
+}
+
+/* Member info styling */
+.sobre-nos-page .member-info {
+  text-align: center;
   width: 100%;
 }
 
 .sobre-nos-page .member-name {
   color: #1a1a1a;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 10px;
-  line-height: 1.3;
+  margin-bottom: 12px;
+  line-height: 1.4;
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
-  min-height: 48px;
+  min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 10px;
 }
 
 .sobre-nos-page .team-member-card:hover .member-name {
   color: #244a96;
-  transform: translateY(-2px);
 }
 
 .sobre-nos-page .member-role {
   color: #6c757d;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   margin: 0;
-  transition: color 0.3s ease;
-  padding: 8px 16px;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
   background: linear-gradient(135deg, rgba(36, 74, 150, 0.05), rgba(26, 58, 122, 0.08));
-  border-radius: 20px;
+  border-radius: 25px;
   display: inline-block;
+  border: 1px solid rgba(36, 74, 150, 0.1);
 }
 
 .sobre-nos-page .team-member-card:hover .member-role {
   color: #244a96;
   background: linear-gradient(135deg, rgba(36, 74, 150, 0.1), rgba(26, 58, 122, 0.15));
+  border-color: rgba(36, 74, 150, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - PERFECT CIRCULAR IMAGES
+   ============================================ */
+
+@media (max-width: 1399.98px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 35px 25px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+  
+  .sobre-nos-page .member-image-container {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 25px;
+  }
+
+  .sobre-nos-page .member-image-container {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 20px;
+  }
+
+  .sobre-nos-page .member-name {
+    font-size: 1.15rem;
+    min-height: 52px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px 20px;
+    padding: 0 15px;
+  }
+
+  .sobre-nos-page .team-member-card {
+    padding: 30px 20px 25px;
+  }
+
+  .sobre-nos-page .member-image-container {
+    width: 150px;
+    height: 150px;
+    border-width: 5px;
+    margin-bottom: 18px;
+  }
+
+  .sobre-nos-page .member-name {
+    font-size: 1.1rem;
+    min-height: 48px;
+    margin-bottom: 10px;
+  }
+
+  .sobre-nos-page .member-role {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .sobre-nos-page .member-social-link {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    max-width: 400px;
+  }
+
+  .sobre-nos-page .team-member-card {
+    padding: 35px 25px 30px;
+  }
+
+  .sobre-nos-page .member-image-container {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 20px;
+  }
+
+  .sobre-nos-page .member-name {
+    font-size: 1.15rem;
+    min-height: auto;
+  }
+
+  .sobre-nos-page .member-role {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .sobre-nos-page .member-image-container {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 18px;
+  }
+  
+  .sobre-nos-page .team-member-card {
+    padding: 30px 20px 25px;
+  }
+}
+
+/* Animation for smooth loading */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sobre-nos-page .team-member-card {
+  animation: fadeInUp 0.6s ease-out;
 }
 
 /* ============================================

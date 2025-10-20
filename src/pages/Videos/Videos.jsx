@@ -30,8 +30,17 @@ function Videos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [videoToDelete, setVideoToDelete] = useState(null)
+  const [showLoginModal, setShowLoginModal] = useState(false) // Adicione este estado
 
   const fileInputRef = useRef(null)
+
+  // Adicione esta função
+  const handleOpenLoginModal = () => {
+    setShowLoginModal(true);
+    // Se você tem um modal de login global, você pode disparar um evento ou usar contexto
+    // Por enquanto, vamos redirecionar para a página de login como fallback
+    navigate("/login");
+  };
 
   useEffect(() => {
     const checkAuth = () => {
@@ -174,7 +183,7 @@ function Videos() {
   const openUploadModal = () => {
     if (!isAuthenticated) {
       showNotification("error", "Você precisa estar logado para enviar vídeos.")
-      setTimeout(() => navigate("/login"), 2000)
+      setTimeout(() => handleOpenLoginModal(), 2000) // Alterado para usar handleOpenLoginModal
       return
     }
     setSelectedFile(null)
@@ -206,7 +215,7 @@ function Videos() {
 
     if (!isAuthenticated) {
       showNotification("error", "Você precisa estar logado para enviar vídeos.")
-      setTimeout(() => navigate("/login"), 2000)
+      setTimeout(() => handleOpenLoginModal(), 2000) // Alterado para usar handleOpenLoginModal
       return
     }
 
@@ -411,7 +420,7 @@ function Videos() {
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
               {!isAuthenticated && (
-                <button className="btn btn-outline-light btn-lg" onClick={() => navigate("/login")}>
+                <button className="btn btn-outline-light btn-lg" onClick={handleOpenLoginModal}>
                   Fazer Login para Acessar
                 </button>
               )}
@@ -429,7 +438,7 @@ function Videos() {
 
             {isAuthenticated && (
               <div className="text-center mb-5">
-                <button className="btn-criar-video" onClick={openUploadModal}>
+                <button className="videos-btn-criar" onClick={openUploadModal}>
                   <i className="fas fa-plus-circle"></i>
                   Enviar Novo Vídeo
                 </button>
@@ -437,37 +446,33 @@ function Videos() {
             )}
 
             {!isAuthenticated && (
-              <div className="login-prompt-container" data-aos="fade-up">
-                <div className="login-prompt-card">
-                  <div className="login-prompt-icon">
+              <div className="videos-login-prompt-container" data-aos="fade-up">
+                <div className="videos-login-prompt-card">
+                  <div className="videos-login-prompt-icon">
                     <i className="fas fa-lock"></i>
                   </div>
-                  <h3 className="login-prompt-title">Acesso Restrito</h3>
-                  <p className="login-prompt-text">
+                  <h3 className="videos-login-prompt-title">Acesso Restrito</h3>
+                  <p className="videos-login-prompt-text">
                     Faça login para acessar nossa galeria completa de vídeos e compartilhar seus próprios conteúdos.
                   </p>
-                  <div className="login-prompt-features">
-                    <div className="feature-item">
+                  <div className="videos-login-prompt-features">
+                    <div className="videos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Assista vídeos exclusivos</span>
                     </div>
-                    <div className="feature-item">
+                    <div className="videos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Envie seus próprios vídeos</span>
                     </div>
-                    <div className="feature-item">
+                    <div className="videos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Interaja com a comunidade</span>
                     </div>
                   </div>
-                  <div className="login-prompt-actions">
-                    <button className="btn btn-login-primary" onClick={() => navigate("/login")}>
+                  <div className="videos-login-prompt-actions">
+                    <button className="videos-btn-login-primary" onClick={handleOpenLoginModal}>
                       <i className="fas fa-sign-in-alt"></i>
                       Fazer Login
-                    </button>
-                    <button className="btn btn-login-secondary" onClick={() => navigate("/cadastro")}>
-                      <i className="fas fa-user-plus"></i>
-                      Criar Conta
                     </button>
                   </div>
                 </div>
@@ -478,11 +483,11 @@ function Videos() {
               <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
                 <div className="row g-3 align-items-end">
                   <div className="col-md-5">
-                    <label className="filter-label">
+                    <label className="videos-filter-label">
                       <i className="fas fa-search"></i>
                       Buscar Vídeos
                     </label>
-                    <div className="search-box">
+                    <div className="videos-search-box">
                       <input
                         type="text"
                         className="form-control"
@@ -490,11 +495,11 @@ function Videos() {
                         value={currentSearch}
                         onChange={(e) => searchVideos(e.target.value)}
                       />
-                      <i className="fas fa-search search-icon"></i>
+                      <i className="fas fa-search videos-search-icon"></i>
                     </div>
                   </div>
                   <div className="col-md-3">
-                    <label className="filter-label">
+                    <label className="videos-filter-label">
                       <i className="fas fa-sort"></i>
                       Ordenar Por
                     </label>
@@ -505,7 +510,7 @@ function Videos() {
                     </select>
                   </div>
                   <div className="col-md-3">
-                    <label className="filter-label">
+                    <label className="videos-filter-label">
                       <i className="fas fa-filter"></i>
                       Categoria
                     </label>
@@ -522,28 +527,28 @@ function Videos() {
                     </select>
                   </div>
                   <div className="col-md-1">
-                    <button className="btn btn-clear-filters" onClick={clearFilters} title="Limpar filtros">
+                    <button className="videos-btn-clear-filters" onClick={clearFilters} title="Limpar filtros">
                       <i className="fas fa-times"></i>
                     </button>
                   </div>
                 </div>
 
                 {(currentSearch || sortBy !== "newest" || categoryFilter !== "all") && (
-                  <div className="active-filters">
-                    <span className="filter-badge-label">Filtros ativos:</span>
+                  <div className="videos-active-filters">
+                    <span className="videos-filter-badge-label">Filtros ativos:</span>
                     {currentSearch && (
-                      <span className="filter-badge">
+                      <span className="videos-filter-badge">
                         Busca: "{currentSearch}"<i className="fas fa-times" onClick={() => searchVideos("")}></i>
                       </span>
                     )}
                     {sortBy !== "newest" && (
-                      <span className="filter-badge">
+                      <span className="videos-filter-badge">
                         Ordem: {sortBy === "oldest" ? "Mais Antigos" : "Título"}
                         <i className="fas fa-times" onClick={() => setSortBy("newest")}></i>
                       </span>
                     )}
                     {categoryFilter !== "all" && (
-                      <span className="filter-badge">
+                      <span className="videos-filter-badge">
                         Categoria: {categoryFilter}
                         <i className="fas fa-times" onClick={() => setCategoryFilter("all")}></i>
                       </span>
@@ -557,13 +562,13 @@ function Videos() {
               <div className="row">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="col-lg-4 col-md-6 mb-4">
-                    <div className="video-card skeleton-card">
-                      <div className="skeleton-thumbnail"></div>
+                    <div className="videos-card videos-skeleton-card">
+                      <div className="videos-skeleton-thumbnail"></div>
                       <div className="card-body">
-                        <div className="skeleton-icon"></div>
-                        <div className="skeleton-title"></div>
-                        <div className="skeleton-text"></div>
-                        <div className="skeleton-text short"></div>
+                        <div className="videos-skeleton-icon"></div>
+                        <div className="videos-skeleton-title"></div>
+                        <div className="videos-skeleton-text"></div>
+                        <div className="videos-skeleton-text short"></div>
                       </div>
                     </div>
                   </div>
@@ -575,25 +580,25 @@ function Videos() {
               <div className="row">
                 {videos.map((video, index) => (
                   <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
-                    <div className="card video-card" data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
-                      <div className="video-thumbnail-container" onClick={() => openVideoPlayer(video)}>
+                    <div className="card videos-card" data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
+                      <div className="videos-thumbnail-container" onClick={() => openVideoPlayer(video)}>
                         <video
                           src={`${API_BASE_URL}/${video.url}#t=0.1`}
-                          className="video-thumbnail"
+                          className="videos-thumbnail"
                           muted
                           preload="metadata"
                         />
-                        <div className="video-overlay">
-                          <div className="play-button">
+                        <div className="videos-overlay">
+                          <div className="videos-play-button">
                             <i className="fas fa-play"></i>
                           </div>
                         </div>
-                        <div className="video-duration">2:30</div>
+                        <div className="videos-duration">2:30</div>
                       </div>
                       <div className="card-body text-center">
                         {isVideoOwner(video) && (
                           <button
-                            className="btn-delete-video"
+                            className="videos-btn-delete"
                             onClick={(e) => {
                               e.stopPropagation()
                               openDeleteConfirmModal(video)
@@ -603,16 +608,16 @@ function Videos() {
                             <i className="fas fa-trash"></i>
                           </button>
                         )}
-                        <div className="video-icon">
+                        <div className="videos-icon">
                           <i className="fas fa-play-circle"></i>
                         </div>
-                        <h3 className="video-title">{video.nome_midia}</h3>
+                        <h3 className="videos-title">{video.nome_midia}</h3>
                         {video.descricao && (
-                          <p className="video-description">
+                          <p className="videos-description">
                             {video.descricao.length > 120 ? `${video.descricao.substring(0, 120)}...` : video.descricao}
                           </p>
                         )}
-                        <ul className="video-details">
+                        <ul className="videos-details">
                           <li>
                             <i className="fas fa-user"></i> {video.autor_nome}
                           </li>
@@ -628,18 +633,18 @@ function Videos() {
             )}
 
             {!isLoading && isAuthenticated && videos.length === 0 && (
-              <div className="empty-state" data-aos="fade-up">
-                <div className="empty-state-icon">
+              <div className="videos-empty-state" data-aos="fade-up">
+                <div className="videos-empty-state-icon">
                   <i className="fas fa-video-slash"></i>
                 </div>
-                <h4 className="empty-state-title">Nenhum vídeo encontrado</h4>
-                <p className="empty-state-text">
+                <h4 className="videos-empty-state-title">Nenhum vídeo encontrado</h4>
+                <p className="videos-empty-state-text">
                   {currentSearch
                     ? `Nenhum resultado para "${currentSearch}". Tente outros termos de busca.`
                     : "Ainda não há vídeos publicados. Seja o primeiro a compartilhar!"}
                 </p>
                 {!currentSearch && (
-                  <button className="btn-criar-video" onClick={openUploadModal}>
+                  <button className="videos-btn-criar" onClick={openUploadModal}>
                     <i className="fas fa-plus-circle"></i>
                     Enviar Primeiro Vídeo
                   </button>
@@ -649,7 +654,7 @@ function Videos() {
 
             {hasMore && !isLoading && isAuthenticated && (
               <div className="text-center mt-5">
-                <button className="btn btn-load-more" onClick={loadMoreVideos}>
+                <button className="videos-btn-load-more" onClick={loadMoreVideos}>
                   <i className="fas fa-chevron-down"></i>
                   Carregar Mais Vídeos
                 </button>
@@ -659,7 +664,7 @@ function Videos() {
         </section>
       </main>
 
-      <div className="modal fade video-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade videos-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-xl modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
@@ -668,14 +673,14 @@ function Videos() {
             </div>
             <div className="modal-body p-0">
               {selectedVideo && (
-                <div className="video-player-container">
-                  <video src={`${API_BASE_URL}/${selectedVideo.url}`} controls autoPlay className="video-player" />
+                <div className="videos-player-container">
+                  <video src={`${API_BASE_URL}/${selectedVideo.url}`} controls autoPlay className="videos-player" />
                 </div>
               )}
             </div>
             {selectedVideo?.descricao && (
               <div className="modal-footer">
-                <div className="video-description-full">
+                <div className="videos-description-full">
                   <p>{selectedVideo.descricao}</p>
                 </div>
               </div>
@@ -684,7 +689,7 @@ function Videos() {
         </div>
       </div>
 
-      <div className="modal fade upload-modal" id="uploadModal" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade videos-upload-modal" id="uploadModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
@@ -727,42 +732,42 @@ function Videos() {
                       <i className="fas fa-file-video"></i>
                       Arquivo de Vídeo *
                     </label>
-                    <div className="file-upload-area" onClick={() => fileInputRef.current?.click()}>
+                    <div className="videos-file-upload-area" onClick={() => fileInputRef.current?.click()}>
                       <input
                         ref={fileInputRef}
                         type="file"
-                        className="form-control file-input"
+                        className="form-control videos-file-input"
                         id="videoFile"
                         accept="video/*"
                         onChange={handleFileSelect}
                         required
                       />
                       {!selectedFile ? (
-                        <div className="upload-placeholder">
+                        <div className="videos-upload-placeholder">
                           <i className="fas fa-cloud-upload-alt"></i>
                           <p>Clique para selecionar ou arraste um arquivo</p>
                           <span>Formatos: MP4, AVI, MOV, WEBM (Max: 100MB)</span>
                         </div>
                       ) : (
-                        <div className="file-preview">
-                          <div className="file-preview-video">
+                        <div className="videos-file-preview">
+                          <div className="videos-file-preview-video">
                             <video src={selectedFile.preview} muted />
-                            <div className="file-preview-overlay">
+                            <div className="videos-file-preview-overlay">
                               <i className="fas fa-play-circle"></i>
                             </div>
                           </div>
-                          <div className="file-preview-info">
-                            <div className="file-preview-name">
+                          <div className="videos-file-preview-info">
+                            <div className="videos-file-preview-name">
                               <i className="fas fa-file-video"></i>
                               {selectedFile.name}
                             </div>
-                            <div className="file-preview-details">
-                              <span className="file-size">{selectedFile.size} MB</span>
-                              <span className="file-type">{selectedFile.type.split("/")[1].toUpperCase()}</span>
+                            <div className="videos-file-preview-details">
+                              <span className="videos-file-size">{selectedFile.size} MB</span>
+                              <span className="videos-file-type">{selectedFile.type.split("/")[1].toUpperCase()}</span>
                             </div>
                             <button
                               type="button"
-                              className="btn-remove-file"
+                              className="videos-btn-remove-file"
                               onClick={(e) => {
                                 e.stopPropagation()
                                 setSelectedFile(null)
@@ -779,14 +784,14 @@ function Videos() {
                   </div>
                 </div>
                 {uploadProgress > 0 && (
-                  <div className="upload-progress-container">
-                    <label className="progress-label">
+                  <div className="videos-upload-progress-container">
+                    <label className="videos-progress-label">
                       <i className="fas fa-spinner fa-spin"></i>
                       Enviando vídeo...
                     </label>
-                    <div className="progress-bar-container">
-                      <div className="progress-bar-fill" style={{ width: `${uploadProgress}%` }}>
-                        <span className="progress-text">{uploadProgress}%</span>
+                    <div className="videos-progress-bar-container">
+                      <div className="videos-progress-bar-fill" style={{ width: `${uploadProgress}%` }}>
+                        <span className="videos-progress-text">{uploadProgress}%</span>
                       </div>
                     </div>
                   </div>

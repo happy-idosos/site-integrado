@@ -270,7 +270,6 @@
   animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cabeçalho do Drawer Modernizado com área clicável completa */
 .drawer-header {
   padding: 24px;
   background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
@@ -293,7 +292,6 @@
   pointer-events: none;
 }
 
-/* Link clicável para toda a área do usuário no drawer */
 .drawer-user-info-link {
   display: flex;
   align-items: center;
@@ -439,7 +437,6 @@
   transform: rotate(90deg) scale(0.95);
 }
 
-/* ========== NAVEGAÇÃO DO DRAWER MODERNIZADA ========== */
 .drawer-nav {
   flex: 1;
   padding: 24px;
@@ -586,7 +583,6 @@
   background: rgba(36, 74, 150, 0.1) !important;
 }
 
-/* ========== RODAPÉ DO DRAWER MODERNIZADO ========== */
 .drawer-footer {
   padding: 24px;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -628,7 +624,6 @@
   font-weight: 500;
 }
 
-/* ========== COR AZUL PADRÃO ========== */
 .logout-btn {
   color: #244a96 !important;
   border-color: #244a96 !important;
@@ -642,7 +637,6 @@
   box-shadow: 0 4px 12px rgba(36, 74, 150, 0.3);
 }
 
-/* ========== BOTÕES NO HEADER VISÍVEIS E MODERNOS ========== */
 .header-buttons-desktop .btn-outline-primary {
   color: #244a96 !important;
   border-color: #244a96 !important;
@@ -676,7 +670,6 @@
   box-shadow: 0 8px 24px rgba(36, 74, 150, 0.35);
 }
 
-/* ========== USER INFO STYLES MODERNIZADOS ========== */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -720,7 +713,69 @@
   box-shadow: 0 4px 12px rgba(36, 74, 150, 0.3);
 }
 
-/* ========== RESPONSIVE DESIGN APRIMORADO ========== */
+/* Added profile button styles */
+.btn-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #2c3e50, #1a252f);
+  border: 2px solid rgba(36, 74, 150, 0.2);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.btn-profile::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-profile:hover {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border-color: #244a96;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.35);
+}
+
+.btn-profile:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-profile:active::before {
+  width: 100px;
+  height: 100px;
+}
+
+.btn-profile svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.btn-profile:hover svg {
+  transform: scale(1.1);
+}
+
+.btn-profile:focus {
+  outline: 3px solid rgba(36, 74, 150, 0.3);
+  outline-offset: 3px;
+}
+
 @media (max-width: 1199.98px) {
   .header-main-links {
     gap: 6px;
@@ -819,7 +874,6 @@
   }
 }
 
-/* ========== GARANTIR QUE ELEMENTOS ESTEJAM SEMPRE VISÍVEIS ========== */
 .mobile-menu-overlay,
 .mobile-menu-drawer {
   display: block !important;
@@ -829,7 +883,6 @@
   display: flex !important;
 }
 
-/* ========== CORREÇÃO PARA CONTEÚDO ABAIXO DO HEADER FIXO ========== */
 .main-with-layout {
   padding-top: 90px;
   min-height: calc(100vh - 90px);
@@ -847,7 +900,6 @@
   }
 }
 
-/* ========== ANIMAÇÕES MODERNAS ========== */
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
@@ -916,7 +968,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Focus states for accessibility */
 .nav-link:focus,
 .nav-item:focus,
 .btn-sm:focus,
@@ -926,7 +977,6 @@ html {
   outline-offset: 2px;
 }
 
-/* Reduced motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

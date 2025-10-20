@@ -1,5 +1,5 @@
 /* Videos.css - Estilos autônomos e isolados para a página de Vídeos */
-/* TODAS as classes são prefixadas com "videos-" para evitar conflitos */
+/* TODAS as classes são prefixadas com "videos-" ou específicas do componente para evitar conflitos */
 
 /* ============================================
    VARIÁVEIS CSS LOCAIS
@@ -25,6 +25,14 @@
   --videos-transition-fast: 0.2s ease;
   --videos-transition-normal: 0.3s ease;
   --videos-transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   WRAPPER DA PÁGINA
+   ============================================ */
+.videos-page {
+  min-height: 100vh;
+  background: #fafbfc;
 }
 
 /* ============================================
@@ -56,7 +64,7 @@
 /* ============================================
    BOTÃO CRIAR VÍDEO
    ============================================ */
-.btn-criar-video {
+.videos-btn-criar {
   background: linear-gradient(135deg, var(--videos-primary-blue), var(--videos-primary-blue-dark));
   color: white;
   border: none;
@@ -72,14 +80,14 @@
   gap: 0.75rem;
 }
 
-.btn-criar-video:hover {
+.videos-btn-criar:hover {
   background: linear-gradient(135deg, var(--videos-primary-blue-dark), var(--videos-primary-blue-darker));
   transform: translateY(-3px);
   box-shadow: var(--videos-shadow-xl);
   color: white;
 }
 
-.btn-criar-video i {
+.videos-btn-criar i {
   font-size: 1.2rem;
 }
 
@@ -147,7 +155,7 @@
 }
 
 /* Select Modernizado */
-.videos-form-select {
+.videos-filtros-card .form-select {
   border: 2px solid var(--videos-medium-gray);
   border-radius: var(--videos-radius-md);
   padding: 14px 20px;
@@ -159,14 +167,14 @@
   color: var(--videos-text-primary);
 }
 
-.videos-form-select:focus {
+.videos-filtros-card .form-select:focus {
   border-color: var(--videos-primary-blue);
   box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
   outline: none;
   background: white;
 }
 
-.videos-form-select:hover {
+.videos-filtros-card .form-select:hover {
   border-color: var(--videos-primary-blue);
   background: white;
 }
@@ -260,7 +268,7 @@
 /* ============================================
    CARDS DE VÍDEO MODERNIZADOS
    ============================================ */
-.video-card {
+.videos-card {
   border: none;
   border-radius: var(--videos-radius-xl);
   overflow: hidden;
@@ -273,13 +281,13 @@
   position: relative;
 }
 
-.video-card:hover {
+.videos-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--videos-shadow-xl);
 }
 
 /* Botão de deletar vídeo */
-.btn-delete-video {
+.videos-btn-delete {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -299,18 +307,18 @@
   backdrop-filter: blur(8px);
 }
 
-.btn-delete-video:hover {
+.videos-btn-delete:hover {
   background: #dc2626;
   transform: scale(1.15) rotate(5deg);
   box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
 }
 
-.btn-delete-video i {
+.videos-btn-delete i {
   font-size: 1rem;
 }
 
 /* Thumbnail Container */
-.video-thumbnail-container {
+.videos-thumbnail-container {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -319,7 +327,7 @@
   background: linear-gradient(135deg, #1e293b, #334155);
 }
 
-.video-thumbnail {
+.videos-thumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -327,12 +335,12 @@
   display: block;
 }
 
-.video-card:hover .video-thumbnail {
+.videos-card:hover .videos-thumbnail {
   transform: scale(1.1);
 }
 
 /* Video Overlay */
-.video-overlay {
+.videos-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -346,12 +354,12 @@
   transition: opacity var(--videos-transition-normal);
 }
 
-.video-card:hover .video-overlay {
+.videos-card:hover .videos-overlay {
   opacity: 1;
 }
 
 /* Play Button */
-.video-play-button {
+.videos-play-button {
   width: 80px;
   height: 80px;
   background: rgba(255, 255, 255, 0.95);
@@ -363,19 +371,19 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.video-play-button i {
+.videos-play-button i {
   font-size: 2rem;
   color: var(--videos-primary-blue);
   margin-left: 4px;
 }
 
-.video-card:hover .video-play-button {
+.videos-card:hover .videos-play-button {
   transform: scale(1.15);
   background: white;
 }
 
 /* Video Duration Badge */
-.video-duration {
+.videos-duration {
   position: absolute;
   bottom: 12px;
   right: 12px;
@@ -389,7 +397,7 @@
 }
 
 /* Card Body */
-.video-card .card-body {
+.videos-card .card-body {
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -398,7 +406,7 @@
 }
 
 /* Video Icon */
-.video-icon {
+.videos-icon {
   width: 60px;
   height: 60px;
   background: linear-gradient(135deg, var(--videos-primary-blue), var(--videos-accent-blue));
@@ -411,17 +419,17 @@
   transition: all var(--videos-transition-normal);
 }
 
-.video-card:hover .video-icon {
+.videos-card:hover .videos-icon {
   transform: scale(1.1) rotate(5deg);
 }
 
-.video-icon i {
+.videos-icon i {
   font-size: 1.5rem;
   color: white;
 }
 
 /* Video Title */
-.video-title {
+.videos-title {
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--videos-primary-blue);
@@ -435,7 +443,7 @@
 }
 
 /* Video Description */
-.video-description {
+.videos-description {
   font-size: 0.95rem;
   color: var(--videos-text-secondary);
   line-height: 1.6;
@@ -447,7 +455,7 @@
 }
 
 /* Video Details */
-.video-details {
+.videos-details {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -457,7 +465,7 @@
   margin-top: auto;
 }
 
-.video-details li {
+.videos-details li {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -467,7 +475,7 @@
   padding: 0.5rem 0;
 }
 
-.video-details li i {
+.videos-details li i {
   color: var(--videos-accent-blue);
   font-size: 1rem;
   min-width: 20px;
@@ -1063,21 +1071,21 @@
 /* ============================================
    MODAL DE NOTIFICAÇÃO
    ============================================ */
-.videos-notification-body {
+.notification-body {
   padding: 2rem;
   border-radius: var(--videos-radius-lg);
   text-align: center;
 }
 
-.videos-notification-body.success {
+.notification-body.success {
   background: linear-gradient(135deg, #10b981, #059669);
 }
 
-.videos-notification-body.error {
+.notification-body.error {
   background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-.videos-notification-icon {
+.notification-icon {
   width: 80px;
   height: 80px;
   background: rgba(255, 255, 255, 0.2);
@@ -1088,26 +1096,26 @@
   margin: 0 auto 1.5rem;
 }
 
-.videos-notification-icon i {
+.notification-icon i {
   font-size: 2.5rem;
   color: white;
 }
 
-.videos-notification-title {
+.notification-title {
   font-size: 1.5rem;
   font-weight: 800;
   color: white;
   margin-bottom: 0.75rem;
 }
 
-.videos-notification-message {
+.notification-message {
   font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.95);
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
-.videos-btn-close-notification {
+.btn-close-notification {
   background: white;
   color: #dc2626;
   border: none;
@@ -1118,94 +1126,15 @@
   transition: all var(--videos-transition-normal);
 }
 
-.videos-btn-close-notification:hover {
+.btn-close-notification:hover {
   transform: scale(1.05);
   box-shadow: var(--videos-shadow-md);
 }
 
 /* ============================================
-   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
-   ============================================ */
-.videos-delete-modal .modal-content {
-  border-radius: var(--videos-radius-xl);
-  border: none;
-  box-shadow: var(--videos-shadow-xl);
-}
-
-.videos-delete-modal .modal-header {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  color: white;
-  border-radius: var(--videos-radius-xl) var(--videos-radius-xl) 0 0;
-  padding: 1.5rem 2rem;
-  border: none;
-}
-
-.videos-delete-modal .modal-title {
-  font-weight: 800;
-  font-size: 1.35rem;
-}
-
-.videos-delete-modal .btn-close {
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
-.videos-delete-modal .modal-body {
-  padding: 2rem;
-}
-
-.videos-delete-modal .modal-body p {
-  font-size: 1.05rem;
-  color: var(--videos-text-primary);
-  margin-bottom: 1rem;
-}
-
-.videos-delete-modal .modal-body .text-muted {
-  font-size: 0.95rem;
-  color: var(--videos-text-secondary);
-}
-
-.videos-delete-modal .modal-footer {
-  padding: 1.5rem 2rem;
-  border-top: 2px solid var(--videos-medium-gray);
-}
-
-.videos-delete-modal .btn-danger {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--videos-radius-md);
-  font-weight: 700;
-  transition: all var(--videos-transition-normal);
-  box-shadow: var(--videos-shadow-sm);
-}
-
-.videos-delete-modal .btn-danger:hover {
-  background: linear-gradient(135deg, #b91c1c, #991b1b);
-  transform: translateY(-2px);
-  box-shadow: var(--videos-shadow-md);
-}
-
-.videos-delete-modal .btn-secondary {
-  background: var(--videos-light-gray);
-  border: 2px solid var(--videos-medium-gray);
-  color: var(--videos-text-primary);
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--videos-radius-md);
-  font-weight: 700;
-  transition: all var(--videos-transition-normal);
-}
-
-.videos-delete-modal .btn-secondary:hover {
-  background: var(--videos-medium-gray);
-  border-color: var(--videos-text-secondary);
-  color: var(--videos-text-primary);
-}
-
-/* ============================================
    DIVISOR
    ============================================ */
-.videos-divisor {
+.divisor {
   margin: 3rem 0;
   border: none;
   height: 2px;
@@ -1259,16 +1188,16 @@
     align-items: flex-start;
   }
 
-  .video-card .card-body {
+  .videos-card .card-body {
     padding: 1.5rem;
   }
 
-  .video-play-button {
+  .videos-play-button {
     width: 60px;
     height: 60px;
   }
 
-  .video-play-button i {
+  .videos-play-button i {
     font-size: 1.5rem;
   }
 }
@@ -1299,7 +1228,7 @@
     font-size: 1rem;
   }
 
-  .btn-criar-video {
+  .videos-btn-criar {
     padding: 14px 32px;
     font-size: 1rem;
   }

@@ -31,10 +31,68 @@ import giovanna from "../../assets/img/sobrenos_integrantes/Giovanna Queiroz.jpe
 import heloisa from "../../assets/img/sobrenos_integrantes/Heloisa Emanuele.jpeg"
 import heloysa from "../../assets/img/sobrenos_integrantes/Heloysa Beatriz.png"
 
-//Import das ODS
-import ods3 from "../../assets/img/ods3.png"
-import ods16 from "../../assets/img/ods16.png"
-
+const teamMembers = [
+  {
+    name: "Ana Caroline da Silva Santos",
+    role: "Gestão de Voluntários",
+    image: ana,
+    instagram: "https://www.instagram.com/anacarolinessz_",
+  },
+  {
+    name: "Evellyn Soares Ferreira",
+    role: "Treinamento e Capacitação",
+    image: evellyn,
+    instagram: "https://www.instagram.com/s.evellyn._",
+  },
+  {
+    name: "Giovanna Queiroz Carvalho",
+    role: "Comunicação e Marketing",
+    image: giovanna,
+    instagram: "https://www.instagram.com/giovannaqueirooz_",
+  },
+  {
+    name: "Heloisa Emanuele Gonçalves Godinho",
+    role: "Relacionamento Institucional",
+    image: heloisa,
+    instagram: "https://www.instagram.com/heloisaemanuele_",
+  },
+  {
+    name: "Heloysa Beatriz Santos",
+    role: "Gestão de Projetos",
+    image: heloysa,
+    instagram: "https://www.instagram.com/heloysabeatriz_",
+  },
+  {
+    name: "Lucas Martins Pereira",
+    role: "Desenvolvedor Frontend",
+    image: lucas,
+    instagram: "https://www.instagram.com/__martins_lucass",
+  },
+  {
+    name: "Pedro Henrique Assunção Medeiros",
+    role: "Desenvolvedor Backend",
+    image: pedro,
+    instagram: "https://www.instagram.com/pedrohenrique",
+  },
+  {
+    name: "Tiago de Carvalho Estrada",
+    role: "Desenvolvedor Full Stack",
+    image: tiago,
+    instagram: "https://www.instagram.com/tiagoestrada",
+  },
+  {
+    name: "Vinícius Araujo Ramos",
+    role: "Analista de Sistemas",
+    image: vinicius,
+    instagram: "https://www.instagram.com/viniciusramos",
+  },
+  {
+    name: "Wesley Mendes de Sousa",
+    role: "DevOps e Infraestrutura",
+    image: wesley,
+    instagram: "https://www.instagram.com/wesleymendes",
+  },
+]
 
 const SobreNos = () => {
   useEffect(() => {
@@ -53,76 +111,6 @@ const SobreNos = () => {
         interval: 6000,
         pause: "hover",
       })
-    }
-
-    // Carousel functionality for team carousels
-    class TeamCarousel {
-      constructor(carouselId, trackId, prevBtnId, nextBtnId) {
-        this.carousel = document.getElementById(carouselId)
-        this.track = document.getElementById(trackId)
-        this.prevBtn = document.getElementById(prevBtnId)
-        this.nextBtn = document.getElementById(nextBtnId)
-        this.cards = this.track.querySelectorAll(".perfil-card")
-        this.currentIndex = 0
-        this.cardsPerView = this.getCardsPerView()
-
-        this.init()
-        this.updateButtons()
-
-        window.addEventListener("resize", () => {
-          this.cardsPerView = this.getCardsPerView()
-          this.currentIndex = Math.min(this.currentIndex, this.cards.length - this.cardsPerView)
-          this.updateCarousel()
-          this.updateButtons()
-        })
-      }
-
-      getCardsPerView() {
-        if (window.innerWidth <= 768) return 1
-        if (window.innerWidth <= 991) return 2
-        return 3
-      }
-
-      init() {
-        this.prevBtn.addEventListener("click", () => this.prev())
-        this.nextBtn.addEventListener("click", () => this.next())
-      }
-
-      prev() {
-        if (this.currentIndex > 0) {
-          this.currentIndex--
-          this.updateCarousel()
-          this.updateButtons()
-        }
-      }
-
-      next() {
-        if (this.currentIndex < this.cards.length - this.cardsPerView) {
-          this.currentIndex++
-          this.updateCarousel()
-          this.updateButtons()
-        }
-      }
-
-      updateCarousel() {
-        const cardWidth = this.cards[0].offsetWidth
-        const gap = 20
-        const translateX = -(this.currentIndex * (cardWidth + gap))
-        this.track.style.transform = `translateX(${translateX}px)`
-      }
-
-      updateButtons() {
-        this.prevBtn.disabled = this.currentIndex === 0
-        this.nextBtn.disabled = this.currentIndex >= this.cards.length - this.cardsPerView
-      }
-    }
-
-    // Initialize carousels
-    const rhCarousel = new TeamCarousel("rhCarousel", "rhTrack", "rhPrev", "rhNext")
-    const itCarousel = new TeamCarousel("itCarousel", "itTrack", "itPrev", "itNext")
-
-    return () => {
-      window.removeEventListener("resize", () => {})
     }
   }, [])
 
@@ -153,11 +141,11 @@ const SobreNos = () => {
           <div className="carousel-item active">
             <div className="carousel-image-container">
               <img
-                             src={carouselum || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
+                src={carouselum || "/placeholder.svg"}
+                className="d-block w-100"
+                alt="Voluntárias trabalhando juntas"
+                loading="eager"
+              />
             </div>
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel text-balance">Nossa História</h2>
@@ -175,11 +163,11 @@ const SobreNos = () => {
           <div className="carousel-item">
             <div className="carousel-image-container">
               <img
-                         src={carouseldois || "/placeholder.svg"}
-                         className="d-block w-100"
-                         alt="Enfermeira cuidando de idosa"
-                         loading="lazy"
-                       />
+                src={carouseldois || "/placeholder.svg"}
+                className="d-block w-100"
+                alt="Enfermeira cuidando de idosa"
+                loading="lazy"
+              />
             </div>
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel text-balance">Nossa Missão</h2>
@@ -198,12 +186,12 @@ const SobreNos = () => {
           </div>
           <div className="carousel-item">
             <div className="carousel-image-container">
-                 <img
-                           src={carouseltres || "/placeholder.svg"}
-                           className="d-block w-100"
-                           alt="Trabalho em equipe no asilo"
-                           loading="lazy"
-                         />
+              <img
+                src={carouseltres || "/placeholder.svg"}
+                className="d-block w-100"
+                alt="Trabalho em equipe no asilo"
+                loading="lazy"
+              />
             </div>
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel text-balance">Nosso Impacto</h2>
@@ -278,345 +266,49 @@ const SobreNos = () => {
           </div>
         </section>
 
-        <section className="perfis-individuais" id="perfis" data-aos="fade-up" data-aos-duration="800">
+        <section className="team-unified" id="perfis" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <h2 className="section-title text-balance">Conheça Nossa Equipe</h2>
             <p className="section-subtitle text-balance">
-              Cada membro traz sua expertise única para tornar o Happy Idosos uma realidade
+              Profissionais dedicados trabalhando juntos para transformar vidas através da conexão entre gerações
             </p>
 
-            {/* Carousel para Equipe de Recursos Humanos */}
-            <div className="mb-5" data-aos="fade-up" data-aos-delay="100">
-              <h3 className="team-section-title text-balance">Equipe de Recursos Humanos</h3>
-              <div className="team-carousel-container">
-                <div className="team-carousel" id="rhCarousel">
-                  <div className="carousel-track" id="rhTrack">
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={ana || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Ana Caroline da Silva Santos</h4>
-                        <p className="perfil-role">Gestão de Voluntários</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em coordenação de equipes e desenvolvimento de programas de voluntariado.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/anacarolinessz_"
-                            className="social-link"
-                            aria-label="Instagram de Ana Caroline"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={evellyn || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Evellyn Soares Ferreira</h4>
-                        <p className="perfil-role">Treinamento e Capacitação</p>
-                        <p className="perfil-description text-pretty">
-                          Responsável pelo desenvolvimento de programas de treinamento para voluntários.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/s.evellyn._"
-                            className="social-link"
-                            aria-label="Instagram de Evellyn"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={giovanna || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Giovanna Queiroz Carvalho</h4>
-                        <p className="perfil-role">Comunicação e Marketing</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em estratégias de comunicação e engajamento com voluntários.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/giovannaqueirooz_"
-                            className="social-link"
-                            aria-label="Instagram de Giovanna"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={heloisa || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Heloisa Emanuele Gonçalves Godinho</h4>
-                        <p className="perfil-role">Relacionamento Institucional</p>
-                        <p className="perfil-description text-pretty">
-                          Responsável pelo relacionamento com asilos e instituições parceiras.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/heloisaemanuele_"
-                            className="social-link"
-                            aria-label="Instagram de Heloisa"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={heloysa || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Heloysa Beatriz Santos</h4>
-                        <p className="perfil-role">Gestão de Projetos</p>
-                        <p className="perfil-description text-pretty">
-                          Coordena projetos e iniciativas de impacto social com os idosos.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/heloysabeatriz_"
-                            className="social-link"
-                            aria-label="Instagram de Heloysa"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
+            <div className="team-grid">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="team-member-card"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 50}
+                  data-aos-duration="600"
+                >
+                  <div className="member-image-wrapper">
+                    <img
+                      src={member.image || "/placeholder.svg"}
+                      alt={member.name}
+                      className="member-image"
+                      loading="lazy"
+                    />
+                    <div className="member-overlay">
+                      <a
+                        href={member.instagram}
+                        className="member-social-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Instagram de ${member.name}`}
+                      >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                      </a>
                     </div>
                   </div>
-                </div>
-                <div className="carousel-controls">
-                  <button className="carousel-btn" id="rhPrev" aria-label="Anterior">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="15,18 9,12 15,6"></polyline>
-                    </svg>
-                  </button>
-                  <button className="carousel-btn" id="rhNext" aria-label="Próximo">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="9,18 15,12 9,6"></polyline>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Carousel para Equipe de Informática */}
-            <div className="mb-5" data-aos="fade-up" data-aos-delay="200">
-              <h3 className="team-section-title text-balance">Equipe de Informática</h3>
-              <div className="team-carousel-container">
-                <div className="team-carousel" id="itCarousel">
-                  <div className="carousel-track" id="itTrack">
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={lucas || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Lucas Martins Pereira</h4>
-                        <p className="perfil-role">Desenvolvedor Frontend</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em interfaces de usuário e experiência do usuário.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/__martins_lucass"
-                            className="social-link"
-                            aria-label="Instagram de Lucas"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={pedro || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Pedro Henrique Assunção Medeiros</h4>
-                        <p className="perfil-role">Desenvolvedor Backend</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em arquitetura de sistemas e banco de dados.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/pedrohenrique"
-                            className="social-link"
-                            aria-label="Instagram de Pedro"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={tiago || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Tiago de Carvalho Estrada</h4>
-                        <p className="perfil-role">Desenvolvedor Full Stack</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em desenvolvimento completo de aplicações web.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/tiagoestrada"
-                            className="social-link"
-                            aria-label="Instagram de Tiago"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={vinicius || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Vinícius Araujo Ramos</h4>
-                        <p className="perfil-role">Analista de Sistemas</p>
-                        <p className="perfil-description text-pretty">
-                          Responsável pela análise e documentação de requisitos do sistema.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/viniciusramos"
-                            className="social-link"
-                            aria-label="Instagram de Vinícius"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="perfil-card">
-                      <div className="perfil-image">
-                         <img
-                             src={wesley || "/placeholder.svg"}
-                             className="d-block w-100"
-                             alt="Voluntárias trabalhando juntas"
-                             loading="eager"
-                           />
-                      </div>
-                      <div className="perfil-content">
-                        <h4 className="text-balance">Wesley Mendes de Sousa</h4>
-                        <p className="perfil-role">DevOps e Infraestrutura</p>
-                        <p className="perfil-description text-pretty">
-                          Especialista em deploy, monitoramento e infraestrutura de sistemas.
-                        </p>
-                        <div className="perfil-social">
-                          <a
-                            href="https://www.instagram.com/wesleymendes"
-                            className="social-link"
-                            aria-label="Instagram de Wesley"
-                          >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                            </svg>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="member-info">
+                    <h4 className="member-name text-balance">{member.name}</h4>
+                    <p className="member-role">{member.role}</p>
                   </div>
                 </div>
-                <div className="carousel-controls">
-                  <button className="carousel-btn" id="itPrev" aria-label="Anterior">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="15,18 9,12 15,6"></polyline>
-                    </svg>
-                  </button>
-                  <button className="carousel-btn" id="itNext" aria-label="Próximo">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="9,18 15,12 9,6"></polyline>
-                    </svg>
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
@@ -724,8 +416,6 @@ const SobreNos = () => {
             </div>
           </div>
         </section>
-
-
       </main>
 
       <Footer />

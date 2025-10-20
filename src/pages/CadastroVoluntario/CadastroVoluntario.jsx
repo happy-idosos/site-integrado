@@ -71,6 +71,8 @@ export default function CadastroVoluntario() {
   const [isMobile, setIsMobile] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  
+  // Estado inicial vazio - será preenchido pelo useEffect
   const [formData, setFormData] = useState({
     nome: "",
     cpf: "",
@@ -81,6 +83,7 @@ export default function CadastroVoluntario() {
     confirmarSenha: "",
     termos: false,
   })
+  
   const [errors, setErrors] = useState({})
   const [modal, setModal] = useState({ 
     show: false, 
@@ -89,6 +92,7 @@ export default function CadastroVoluntario() {
     type: "success" 
   })
 
+  // ===== EFEITO PARA CARREGAR DADOS SALVOS =====
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -103,14 +107,39 @@ export default function CadastroVoluntario() {
     checkMobile()
     window.addEventListener('resize', checkMobile)
 
+    // CARREGAR DADOS DO LOCALSTORAGE AO INICIAR
+    const savedData = localStorage.getItem('cadastroVoluntarioData')
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+        setFormData(parsedData)
+        console.log('Dados do voluntário restaurados:', parsedData)
+      } catch (error) {
+        console.error('Erro ao carregar dados salvos:', error)
+      }
+    }
+
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // ===== FUNÇÃO PARA SALVAR DADOS ANTES DE NAVEGAR =====
+  const saveDataAndNavigate = (path) => {
+    // Salva os dados atuais no localStorage
+    localStorage.setItem('cadastroVoluntarioData', JSON.stringify(formData))
+    console.log('Dados do voluntário salvos antes de navegar:', formData)
+    // Navega para a página
+    navigate(path)
+  }
+
   const handleBack = () => {
+    // Limpa os dados salvos ao voltar para home
+    localStorage.removeItem('cadastroVoluntarioData')
     navigate("/")
   }
 
   const handleHome = () => {
+    // Limpa os dados salvos ao voltar para home
+    localStorage.removeItem('cadastroVoluntarioData')
     navigate("/")
   }
 
@@ -182,10 +211,15 @@ export default function CadastroVoluntario() {
       processedValue = applyPhoneMask(value)
     }
 
-    setFormData((prev) => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       [name]: type === "checkbox" ? checked : processedValue,
-    }))
+    }
+
+    setFormData(newFormData)
+
+    // Salva automaticamente a cada alteração (opcional)
+    // localStorage.setItem('cadastroVoluntarioData', JSON.stringify(newFormData))
 
     // Validação em tempo real para senhas
     if (name === "senha" || name === "confirmarSenha") {
@@ -197,7 +231,7 @@ export default function CadastroVoluntario() {
         }))
       }
       
-      // Validação de confirmação de senha em tempo real - CORREÇÃO APLICADA
+      // Validação de confirmação de senha em tempo real
       if (name === "confirmarSenha" || (name === "senha" && formData.confirmarSenha)) {
         const confirmPassword = name === "confirmarSenha" ? processedValue : formData.confirmarSenha
         const currentPassword = name === "senha" ? processedValue : formData.senha
@@ -208,7 +242,6 @@ export default function CadastroVoluntario() {
             confirmarSenha: "As senhas não coincidem."
           }))
         } else {
-          // Remove o erro se as senhas coincidem
           setErrors((prev) => ({
             ...prev,
             confirmarSenha: ""
@@ -400,7 +433,7 @@ export default function CadastroVoluntario() {
           "success"
         )
 
-        // Limpar formulário após sucesso
+        // Limpar formulário após sucesso e remover dados salvos
         setFormData({
           nome: "",
           cpf: "",
@@ -411,6 +444,8 @@ export default function CadastroVoluntario() {
           confirmarSenha: "",
           termos: false,
         })
+        
+        localStorage.removeItem('cadastroVoluntarioData')
 
         // Redirecionar para login após 3 segundos
         setTimeout(() => {
@@ -685,7 +720,6 @@ export default function CadastroVoluntario() {
                         )}
                       </button>
                     </div>
-                    {/* CORREÇÃO: Exibe apenas uma mensagem por vez */}
                     {errors.confirmarSenha && <div className="cadastro-voluntario-error-message">{errors.confirmarSenha}</div>}
                     {formData.senha && formData.confirmarSenha && !errors.confirmarSenha && formData.senha === formData.confirmarSenha && (
                       <div className="cadastro-voluntario-success-message">
@@ -722,13 +756,21 @@ export default function CadastroVoluntario() {
                   />
                   <span>
                     Li e aceito os{" "}
-                    <Link to="/termosdeuso" className="cadastro-voluntario-link">
+                    <button 
+                      type="button"
+                      className="cadastro-voluntario-link-button"
+                      onClick={() => saveDataAndNavigate('/termosdeuso')}
+                    >
                       Termos de Uso
-                    </Link>{" "}
+                    </button>{" "}
                     e a{" "}
-                    <Link to="/politicadeprivacidade" className="cadastro-voluntario-link">
+                    <button 
+                      type="button"
+                      className="cadastro-voluntario-link-button"
+                      onClick={() => saveDataAndNavigate('/politicadeprivacidade')}
+                    >
                       Política de Privacidade
-                    </Link>{" "}
+                    </button>{" "}
                     da plataforma Happy Idosos *
                   </span>
                 </label>

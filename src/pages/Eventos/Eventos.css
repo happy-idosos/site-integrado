@@ -758,3 +758,15 @@
 .btn-inscricao.inscrito {
   animation: pulseSuccess 2s infinite;
 }
+
+/* DEBUG TEMPORÁRIO */
+.videos-login-prompt-actions .btn {
+  position: relative;
+  z-index: 1000;
+  cursor: pointer !important;
+}
+
+.videos-login-prompt-actions .btn:hover {
+  background-color: #007bff !important;
+  color: white !important;
+}

@@ -1127,3 +1127,29 @@
     font-size: 0.95rem;
   }
 }
+
+/* CadastroVoluntario.css e CadastroAsilo.css - Adicione estas classes */
+
+.cadastro-voluntario-link-button,
+.cadastro-asilo-link-button {
+  background: none;
+  border: none;
+  color: #244a96;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.cadastro-voluntario-link-button:hover,
+.cadastro-asilo-link-button:hover {
+  color: #1a3570;
+  text-decoration: none;
+}
+
+.cadastro-voluntario-link-button:focus,
+.cadastro-asilo-link-button:focus {
+  outline: 2px solid #244a96;
+  outline-offset: 2px;
+}

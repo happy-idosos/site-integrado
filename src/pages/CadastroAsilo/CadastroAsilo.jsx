@@ -70,6 +70,8 @@ export default function CadastroAsilo() {
   const [loading, setLoading] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  
+  // Estado inicial vazio - será preenchido pelo useEffect
   const [formData, setFormData] = useState({
     nome: "",
     cnpj: "",
@@ -81,6 +83,7 @@ export default function CadastroAsilo() {
     senha: "",
     termos: false,
   })
+  
   const [errors, setErrors] = useState({})
   const [modal, setModal] = useState({ 
     show: false, 
@@ -89,6 +92,7 @@ export default function CadastroAsilo() {
     type: "success" 
   })
 
+  // ===== EFEITO PARA CARREGAR DADOS SALVOS =====
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -103,14 +107,39 @@ export default function CadastroAsilo() {
     checkMobile()
     window.addEventListener('resize', checkMobile)
 
+    // CARREGAR DADOS DO LOCALSTORAGE AO INICIAR
+    const savedData = localStorage.getItem('cadastroAsiloData')
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData)
+        setFormData(parsedData)
+        console.log('Dados do asilo restaurados:', parsedData)
+      } catch (error) {
+        console.error('Erro ao carregar dados salvos:', error)
+      }
+    }
+
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // ===== FUNÇÃO PARA SALVAR DADOS ANTES DE NAVEGAR =====
+  const saveDataAndNavigate = (path) => {
+    // Salva os dados atuais no localStorage
+    localStorage.setItem('cadastroAsiloData', JSON.stringify(formData))
+    console.log('Dados do asilo salvos antes de navegar:', formData)
+    // Navega para a página
+    navigate(path)
+  }
+
   const handleBack = () => {
+    // Limpa os dados salvos ao voltar para home
+    localStorage.removeItem('cadastroAsiloData')
     navigate("/")
   }
 
   const handleHome = () => {
+    // Limpa os dados salvos ao voltar para home
+    localStorage.removeItem('cadastroAsiloData')
     navigate("/")
   }
 
@@ -271,10 +300,15 @@ export default function CadastroAsilo() {
       processedValue = applyPhoneMask(value)
     }
 
-    setFormData((prev) => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       [name]: type === "checkbox" ? checked : processedValue,
-    }))
+    }
+
+    setFormData(newFormData)
+
+    // Salva automaticamente a cada alteração (opcional)
+    // localStorage.setItem('cadastroAsiloData', JSON.stringify(newFormData))
 
     if (name === "senha") {
       const passwordError = validatePassword(processedValue)
@@ -368,6 +402,7 @@ export default function CadastroAsilo() {
           "success"
         )
 
+        // Limpar formulário após sucesso e remover dados salvos
         setFormData({
           nome: "",
           cnpj: "",
@@ -379,6 +414,8 @@ export default function CadastroAsilo() {
           senha: "",
           termos: false,
         })
+
+        localStorage.removeItem('cadastroAsiloData')
 
         setTimeout(() => {
           navigate("/loginasilo")
@@ -791,13 +828,21 @@ export default function CadastroAsilo() {
                   />
                   <span>
                     Li e aceito os{" "}
-                    <Link to="/termosdeuso" className="cadastro-asilo-link">
+                    <button 
+                      type="button"
+                      className="cadastro-asilo-link-button"
+                      onClick={() => saveDataAndNavigate('/termosdeuso')}
+                    >
                       Termos de Uso
-                    </Link>{" "}
+                    </button>{" "}
                     e a{" "}
-                    <Link to="/politicadeprivacidade" className="cadastro-asilo-link">
+                    <button 
+                      type="button"
+                      className="cadastro-asilo-link-button"
+                      onClick={() => saveDataAndNavigate('/politicadeprivacidade')}
+                    >
                       Política de Privacidade
-                    </Link>{" "}
+                    </button>{" "}
                     da plataforma Happy Idosos *
                   </span>
                 </label>

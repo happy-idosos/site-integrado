@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
+import LoginModal from "../../components/layout/LoginModal"
 import "aos/dist/aos.css"
 import AOS from "aos"
 import "./Eventos.css"
@@ -29,12 +30,13 @@ const Eventos = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [showInscricaoModal, setShowInscricaoModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const [modalMessage, setModalMessage] = useState("")
   const [modalTitle, setModalTitle] = useState("")
   const [isLoadingAction, setIsLoadingAction] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userInscricoes, setUserInscricoes] = useState([]) // ✅ NOVO: Controla inscrições do usuário
+  const [userInscricoes, setUserInscricoes] = useState([])
   const [eventForm, setEventForm] = useState({
     title: "",
     category: "",
@@ -47,44 +49,57 @@ const Eventos = () => {
   })
   const eventosSectionRef = useRef(null)
 
-  // ✅ CARREGAMENTO CORRETO do usuário
-  useEffect(() => {
-    const loadUserData = () => {
-      try {
-        const userDataStr = localStorage.getItem('user_data')
-        const token = localStorage.getItem('auth_token')
+  // ✅ FUNÇÃO PARA ABRIR MODAL DE LOGIN
+  const handleOpenLoginModal = () => {
+    setShowLoginModal(true)
+  }
+
+  // ✅ FUNÇÃO PARA FECHAR MODAL DE LOGIN
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false)
+  }
+
+  // ✅ FUNÇÃO CALLBACK PARA SUCESSO NO LOGIN
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false)
+    // Recarregar os dados do usuário e eventos
+    loadUserData()
+    loadEvents()
+  }
+
+  // ✅ FUNÇÃO CARREGAR DADOS DO USUÁRIO
+  const loadUserData = () => {
+    try {
+      const userDataStr = localStorage.getItem('user_data')
+      const token = localStorage.getItem('auth_token')
+      
+      if (userDataStr && token) {
+        const user = JSON.parse(userDataStr)
         
-        if (userDataStr && token) {
-          const user = JSON.parse(userDataStr)
-          
-          // ✅ VERIFICAÇÃO ROBUSTA do tipo de usuário
-          const userType = user.tipo || user.tipo_usuario || user.type || 'desconhecido'
-          
-          setCurrentUser({
-            ...user,
-            tipo: userType
-          })
-          setIsAuthenticated(true)
-          
-          if (userType === 'asilo' && user.telefone) {
-            setEventForm(prev => ({
-              ...prev,
-              contact: formatPhoneNumber(user.telefone)
-            }))
-          }
-        } else {
-          setIsAuthenticated(false)
-          setCurrentUser(null)
+        const userType = user.tipo || user.tipo_usuario || user.type || 'desconhecido'
+        
+        setCurrentUser({
+          ...user,
+          tipo: userType
+        })
+        setIsAuthenticated(true)
+        
+        if (userType === 'asilo' && user.telefone) {
+          setEventForm(prev => ({
+            ...prev,
+            contact: formatPhoneNumber(user.telefone)
+          }))
         }
-      } catch (error) {
-        console.error("Erro ao carregar dados do usuário:", error)
+      } else {
         setIsAuthenticated(false)
         setCurrentUser(null)
       }
+    } catch (error) {
+      console.error("Erro ao carregar dados do usuário:", error)
+      setIsAuthenticated(false)
+      setCurrentUser(null)
     }
-
-    loadUserData()
-  }, [])
+  }
 
   // ✅ NOVO: Carregar inscrições do usuário se for voluntário
   const loadUserInscricoes = async () => {
@@ -156,8 +171,8 @@ const Eventos = () => {
             time: event.horario || "14:00",
             location: event.nome_asilo || event.localizacao || "Local a definir",
             contact: event.telefone_contato || event.email_asilo || "",
-            capacity: capacity, // ✅ CAPACIDADE REAL
-            registered: registeredCount, // ✅ INSCRITOS REAIS
+            capacity: capacity,
+            registered: registeredCount,
             status: status,
           }
         })
@@ -189,7 +204,7 @@ const Eventos = () => {
       
       if (!token || !userDataStr) {
         showModalError("Você precisa estar logado para se inscrever em eventos.")
-        setTimeout(() => navigate('/login'), 2000)
+        setTimeout(() => handleOpenLoginModal(), 2000)
         return
       }
 
@@ -247,7 +262,7 @@ const Eventos = () => {
     
     if (!token || !userDataStr) {
       showModalError("Você precisa estar logado para criar um evento.")
-      setTimeout(() => navigate('/login'), 2000)
+      setTimeout(() => handleOpenLoginModal(), 2000)
       return
     }
   
@@ -371,7 +386,7 @@ const Eventos = () => {
           contact: currentUser?.telefone ? formatPhoneNumber(currentUser.telefone) : "",
           capacity: 1,
         })
-        loadEvents() // Recarrega a lista para mostrar o novo evento
+        loadEvents()
       } else {
         showModalError(response.message || "Erro ao criar o evento.")
       }
@@ -391,6 +406,7 @@ const Eventos = () => {
       offset: 100,
     })
 
+    loadUserData()
     loadEvents()
   }, [])
 
@@ -631,9 +647,9 @@ const Eventos = () => {
         }
       }
       
-      const isVoluntario = userType === 'usuario' // ✅ CORREÇÃO: backend usa 'usuario'
+      const isVoluntario = userType === 'usuario'
       const isEventAvailable = event.status === "disponivel"
-      const isAlreadyInscrito = isUserInscrito // ✅ NOVO: Verifica se já está inscrito
+      const isAlreadyInscrito = isUserInscrito
       
       return !isVoluntario || !isAuthenticated || !isEventAvailable || isLoadingAction || isAlreadyInscrito
     }
@@ -643,7 +659,7 @@ const Eventos = () => {
       if (currentUser?.tipo !== 'usuario') return "Somente voluntários podem se inscrever"
       if (event.status === "lotado") return "Evento lotado"
       if (event.status === "cancelado") return "Evento cancelado"
-      if (isUserInscrito) return "Você já está inscrito neste evento" // ✅ NOVO
+      if (isUserInscrito) return "Você já está inscrito neste evento"
       return "Clique para se inscrever"
     }
 
@@ -672,7 +688,6 @@ const Eventos = () => {
                 <i className="fas fa-phone"></i> {formatPhone(event.contact)}
               </li>
               <li>
-                {/* ✅ CAPACIDADE REAL: Mostra inscritos/capacidade definida pelo asilo */}
                 <i className="fas fa-users"></i> {event.registered}/{event.capacity} inscritos
               </li>
             </ul>
@@ -693,6 +708,15 @@ const Eventos = () => {
   return (
     <div className="eventos-page">
       <Header />
+      
+      {/* ✅ MODAL DE LOGIN */}
+      {showLoginModal && (
+        <LoginModal 
+          show={showLoginModal}
+          onHide={handleCloseLoginModal}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
 
       <div
         id="carouselExampleCaptions"
@@ -757,83 +781,85 @@ const Eventos = () => {
               </div>
             )}
 
-            <div className="eventos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
-              <div className="row g-3 align-items-end">
-                <div className="col-12 mb-4">
-                  <label htmlFor="searchInput" className="form-label fw-semibold text-primary mb-3">
-                    <i className="fas fa-search me-2"></i>Buscar Eventos
-                  </label>
-                  <div className="search-box">
-                    <input
-                      type="text"
-                      id="searchInput"
-                      className="form-control form-control-lg"
-                      placeholder="Digite título, descrição, local ou categoria..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <i className="fas fa-search search-icon"></i>
+            {isAuthenticated && (
+              <div className="eventos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
+                <div className="row g-3 align-items-end">
+                  <div className="col-12 mb-4">
+                    <label htmlFor="searchInput" className="form-label fw-semibold text-primary mb-3">
+                      <i className="fas fa-search me-2"></i>Buscar Eventos
+                    </label>
+                    <div className="search-box">
+                      <input
+                        type="text"
+                        id="searchInput"
+                        className="form-control form-control-lg"
+                        placeholder="Digite título, descrição, local ou categoria..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <i className="fas fa-search search-icon"></i>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-md-6">
-                  <label htmlFor="categoryFilter" className="form-label fw-semibold text-primary mb-3">
-                    <i className="fas fa-tags me-2"></i>Filtrar por Categoria
-                  </label>
-                  <select
-                    id="categoryFilter"
-                    className="form-select"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                  >
-                    <option value="">Todas as categorias</option>
-                    <option value="musica">🎵 Música</option>
-                    <option value="arte">🎨 Arte</option>
-                    <option value="conversa">💬 Conversa</option>
-                    <option value="exercicio">💪 Exercício</option>
-                    <option value="culinaria">🍳 Culinária</option>
-                  </select>
-                </div>
-                
-                <div className="col-md-6">
-                  <label htmlFor="dateFilter" className="form-label fw-semibold text-primary mb-3">
-                    <i className="fas fa-calendar me-2"></i>Filtrar por Data
-                  </label>
-                  <select
-                    id="dateFilter"
-                    className="form-select"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                  >
-                    <option value="">Todas as datas</option>
-                    <option value="hoje">📅 Hoje</option>
-                    <option value="semana">🗓️ Esta semana</option>
-                    <option value="mes">📆 Este mês</option>
-                  </select>
-                </div>
+                  <div className="col-md-6">
+                    <label htmlFor="categoryFilter" className="form-label fw-semibold text-primary mb-3">
+                      <i className="fas fa-tags me-2"></i>Filtrar por Categoria
+                    </label>
+                    <select
+                      id="categoryFilter"
+                      className="form-select"
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                    >
+                      <option value="">Todas as categorias</option>
+                      <option value="musica">🎵 Música</option>
+                      <option value="arte">🎨 Arte</option>
+                      <option value="conversa">💬 Conversa</option>
+                      <option value="exercicio">💪 Exercício</option>
+                      <option value="culinaria">🍳 Culinária</option>
+                    </select>
+                  </div>
+                  
+                  <div className="col-md-6">
+                    <label htmlFor="dateFilter" className="form-label fw-semibold text-primary mb-3">
+                      <i className="fas fa-calendar me-2"></i>Filtrar por Data
+                    </label>
+                    <select
+                      id="dateFilter"
+                      className="form-select"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                    >
+                      <option value="">Todas as datas</option>
+                      <option value="hoje">📅 Hoje</option>
+                      <option value="semana">🗓️ Esta semana</option>
+                      <option value="mes">📆 Este mês</option>
+                    </select>
+                  </div>
 
-                <div className="col-12 mt-3">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span className="text-muted">
-                      {filteredEvents.length} evento(s) encontrado(s)
-                    </span>
-                    {(searchTerm || selectedCategory || selectedDate) && (
-                      <button 
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={() => {
-                          setSearchTerm("")
-                          setSelectedCategory("")
-                          setSelectedDate("")
-                        }}
-                      >
-                        <i className="fas fa-times me-1"></i>
-                        Limpar Filtros
-                      </button>
-                    )}
+                  <div className="col-12 mt-3">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span className="text-muted">
+                        {filteredEvents.length} evento(s) encontrado(s)
+                      </span>
+                      {(searchTerm || selectedCategory || selectedDate) && (
+                        <button 
+                          className="btn btn-outline-secondary btn-sm"
+                          onClick={() => {
+                            setSearchTerm("")
+                            setSelectedCategory("")
+                            setSelectedDate("")
+                          }}
+                        >
+                          <i className="fas fa-times me-1"></i>
+                          Limpar Filtros
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {isLoading && (
               <div className="text-center py-5">
@@ -869,7 +895,10 @@ const Eventos = () => {
                     </div>
                   </div>
                   <div className="videos-login-prompt-actions">
-                    <button className="videos-btn-login-primary">
+                    <button 
+                      className="videos-btn-login-primary"
+                      onClick={handleOpenLoginModal}
+                    >
                       <i className="fas fa-sign-in-alt"></i>
                       Fazer Login
                     </button>

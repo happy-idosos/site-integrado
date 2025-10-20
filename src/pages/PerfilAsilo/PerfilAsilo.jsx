@@ -194,7 +194,15 @@ const PerfilAsilo = () => {
 
   return (
     <div className="pa-container">
-      {/* Botão Voltar */}
+      <div className="pa-mobile-header">
+        <button className="pa-mobile-back-btn" onClick={voltarParaHome}>
+          <span className="pa-icon">←</span>
+          Voltar
+        </button>
+        <h1 className="pa-mobile-header-title">Meu Perfil</h1>
+      </div>
+
+      {/* Botão Voltar Desktop */}
       <button className="pa-back-btn" onClick={voltarParaHome}>
         <span className="pa-icon">←</span>
         Voltar
@@ -249,36 +257,6 @@ const PerfilAsilo = () => {
               <div className="pa-status">
                 <div className="pa-status-indicator"></div>
                 <span>Aceitando voluntários</span>
-              </div>
-            </div>
-
-            <div className="pa-stats">
-              <div className="pa-stat-card">
-                <div className="pa-stat-icon">
-                  <span className="pa-icon">👥</span>
-                </div>
-                <div className="pa-stat-content">
-                  <div className="pa-stat-number">24</div>
-                  <div className="pa-stat-label">Voluntários Ativos</div>
-                </div>
-              </div>
-              <div className="pa-stat-card">
-                <div className="pa-stat-icon">
-                  <span className="pa-icon">🎪</span>
-                </div>
-                <div className="pa-stat-content">
-                  <div className="pa-stat-number">8</div>
-                  <div className="pa-stat-label">Eventos/Mês</div>
-                </div>
-              </div>
-              <div className="pa-stat-card">
-                <div className="pa-stat-icon">
-                  <span className="pa-icon">⭐</span>
-                </div>
-                <div className="pa-stat-content">
-                  <div className="pa-stat-number">4.8</div>
-                  <div className="pa-stat-label">Avaliação</div>
-                </div>
               </div>
             </div>
           </div>
@@ -630,7 +608,7 @@ const PerfilAsilo = () => {
               </div>
               <div className="pa-modal-footer">
                 <button className="pa-btn pa-btn-primary pa-modal-btn" onClick={fecharModal}>
-                  <span className="pa-icon">👍</span>
+                  <span className="pa-icon"></span>
                   Entendi
                 </button>
               </div>

@@ -306,7 +306,16 @@ const PerfilVoluntario = () => {
 
   return (
     <div className="pv-container">
-      <button className="pv-back-btn" onClick={() => navigate("/")}>
+      <div className="pv-mobile-header">
+        <button className="pv-mobile-back-btn" onClick={voltarParaHome}>
+          <span className="pv-icon">←</span>
+          Voltar
+        </button>
+        <h1 className="pv-mobile-header-title">Meu Perfil</h1>
+      </div>
+
+      {/* Botão Voltar Desktop */}
+      <button className="pv-back-btn" onClick={voltarParaHome}>
         <span className="pv-icon">←</span>
         Voltar
       </button>
@@ -679,7 +688,7 @@ const PerfilVoluntario = () => {
               </div>
               <div className="pv-modal-footer">
                 <button className="pv-btn pv-btn-primary pv-modal-btn" onClick={fecharModal}>
-                  <span className="pv-icon">👌</span>
+                  <span className="pv-icon"></span>
                   Continuar
                 </button>
               </div>

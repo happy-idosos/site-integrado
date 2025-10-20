@@ -12,6 +12,7 @@
   --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 20px 60px rgba(36, 74, 150, 0.2);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
 }
 
 /* ============================================
@@ -236,7 +237,7 @@
 }
 
 /* ============================================
-   SEÇÃO ODS
+   SEÇÃO ODS - Updated for 4 cards in 2x2 grid
    ============================================ */
 .sobre-projeto-page .ods-section {
   padding: 120px 0;
@@ -245,7 +246,7 @@
 
 .sobre-projeto-page .ods-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 40px;
   margin-top: 50px;
 }
@@ -258,6 +259,24 @@
   transition: var(--transition);
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.sobre-projeto-page .ods-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.sobre-projeto-page .ods-card:hover::before {
+  transform: scaleX(1);
 }
 
 .sobre-projeto-page .ods-card:hover {
@@ -274,12 +293,27 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  position: relative;
+}
+
+.sobre-projeto-page .ods-image-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 40%, rgba(36, 74, 150, 0.05) 100%);
 }
 
 .sobre-projeto-page .ods-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+
+.sobre-projeto-page .ods-card:hover .ods-image {
+  transform: scale(1.05);
 }
 
 .sobre-projeto-page .ods-content {
@@ -316,6 +350,12 @@
   color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.6;
+  transition: var(--transition);
+}
+
+.sobre-projeto-page .ods-list li:hover {
+  color: var(--text-dark);
+  padding-left: 35px;
 }
 
 .sobre-projeto-page .ods-list li::before {
@@ -325,6 +365,11 @@
   color: var(--primary-color);
   font-weight: 700;
   font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.sobre-projeto-page .ods-list li:hover::before {
+  transform: scale(1.2);
 }
 
 /* ============================================
@@ -398,6 +443,7 @@
 .sobre-projeto-page .principio-item:hover {
   transform: translateX(8px);
   background: rgba(36, 74, 150, 0.08);
+  box-shadow: var(--shadow-sm);
 }
 
 .sobre-projeto-page .principio-icon {
@@ -419,31 +465,11 @@
   line-height: 1.6;
 }
 
-.sobre-projeto-page .impacto-stats {
-  background: linear-gradient(135deg, rgba(36, 74, 150, 0.05), rgba(36, 74, 150, 0.1));
-  padding: 30px;
-  border-radius: 16px;
-  margin-top: 30px;
-}
-
-.sobre-projeto-page .stat-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--primary-color);
-  margin-bottom: 8px;
-}
-
-.sobre-projeto-page .stat-label {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
 /* ============================================
-   SEÇÃO DE DOAÇÕES
+   SEÇÃO DE DOAÇÕES - Completely redesigned for better organization
    ============================================ */
 .sobre-projeto-page .doacoes-section {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: var(--gradient-primary);
   padding: 50px 40px;
   border-radius: 20px;
   color: var(--white);
@@ -464,7 +490,7 @@
 
 .sobre-projeto-page .doacoes-header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 40px;
   position: relative;
   z-index: 2;
 }
@@ -479,6 +505,8 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
+  font-size: 2rem;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .sobre-projeto-page .doacoes-title {
@@ -496,35 +524,44 @@
   margin: 0 auto;
 }
 
-.sobre-projeto-page .doacao-info-box {
+.sobre-projeto-page .doacao-methods {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
 }
 
-.sobre-projeto-page .info-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
+.sobre-projeto-page .methods-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--white);
+}
+
+.sobre-projeto-page .method-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  border-left: 4px solid rgba(255, 255, 255, 0.3);
+  padding: 25px;
+  margin-bottom: 20px;
   transition: var(--transition);
 }
 
-.sobre-projeto-page .info-item:hover {
+.sobre-projeto-page .method-card:hover {
   background: rgba(255, 255, 255, 0.15);
-  border-left-color: var(--white);
-  transform: translateX(5px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.sobre-projeto-page .info-icon {
+.sobre-projeto-page .method-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.sobre-projeto-page .method-icon {
   font-size: 2rem;
-  flex-shrink: 0;
   width: 50px;
   height: 50px;
   display: flex;
@@ -532,29 +569,114 @@
   justify-content: center;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 12px;
+  flex-shrink: 0;
 }
 
-.sobre-projeto-page .info-content h4 {
+.sobre-projeto-page .method-header h5 {
   font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin: 0;
   color: var(--white);
 }
 
-.sobre-projeto-page .info-content p {
+.sobre-projeto-page .method-description {
   font-size: 1rem;
-  line-height: 1.7;
-  margin-bottom: 0;
+  line-height: 1.6;
+  margin-bottom: 20px;
   opacity: 0.9;
 }
 
-.sobre-projeto-page .cnpj-box {
+.sobre-projeto-page .method-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.sobre-projeto-page .detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sobre-projeto-page .detail-item:last-child {
+  border-bottom: none;
+}
+
+.sobre-projeto-page .detail-label {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.sobre-projeto-page .detail-value {
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+}
+
+.sobre-projeto-page .pix-key-box {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sobre-projeto-page .pix-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sobre-projeto-page .pix-key {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+
+.sobre-projeto-page .copy-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.sobre-projeto-page .copy-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.sobre-projeto-page .cnpj-highlight {
   background: rgba(255, 255, 255, 0.95);
   padding: 30px;
   border-radius: 16px;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  margin: 10px 0;
+  margin: 25px 0;
+}
+
+.sobre-projeto-page .cnpj-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .sobre-projeto-page .cnpj-label {
@@ -563,7 +685,6 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 12px;
 }
 
 .sobre-projeto-page .cnpj-number {
@@ -572,7 +693,6 @@
   color: var(--primary-color);
   font-family: "Courier New", monospace;
   letter-spacing: 2px;
-  margin-bottom: 10px;
 }
 
 .sobre-projeto-page .cnpj-subtitle {
@@ -581,24 +701,57 @@
   font-weight: 600;
 }
 
+.sobre-projeto-page .benefits-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.sobre-projeto-page .benefits-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--white);
+}
+
+.sobre-projeto-page .benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.sobre-projeto-page .benefit-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
 .sobre-projeto-page .doacao-footer {
   text-align: center;
-  margin-top: 25px;
+  margin-top: 30px;
   position: relative;
   z-index: 2;
   padding-top: 25px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.sobre-projeto-page .doacao-footer p {
-  opacity: 0.9;
-  font-size: 0.95rem;
-  margin-bottom: 8px;
+.sobre-projeto-page .impact-message {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  opacity: 0.95;
 }
 
-.sobre-projeto-page .doacao-footer small {
+.sobre-projeto-page .transparency-note {
   opacity: 0.8;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  display: block;
+  line-height: 1.6;
 }
 
 /* ============================================
@@ -632,6 +785,7 @@
   margin: 0 auto 30px;
   color: var(--white);
   opacity: 0.9;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .sobre-projeto-page .cta-title {
@@ -702,6 +856,7 @@
     gap: 25px;
   }
 
+  /* ODS grid responsive - stack to single column on tablets */
   .sobre-projeto-page .ods-grid {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -765,14 +920,26 @@
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
   }
 
-  .sobre-projeto-page .info-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
+  .sobre-projeto-page .ods-grid {
+    grid-template-columns: 1fr;
   }
 
-  .sobre-projeto-page .info-icon {
-    margin: 0 auto;
+  .sobre-projeto-page .method-card {
+    padding: 20px;
+  }
+
+  .sobre-projeto-page .method-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .sobre-projeto-page .method-details {
+    font-size: 0.9rem;
+  }
+
+  .sobre-projeto-page .pix-key {
+    font-size: 1.2rem;
   }
 
   .sobre-projeto-page .cta-title {
@@ -837,7 +1004,15 @@
   }
 
   .sobre-projeto-page .cta-subtitle {
-    font-size: 1rem;
+    font-size: 1.0rem;
+  }
+
+  .sobre-projeto-page .method-card {
+    padding: 18px;
+  }
+
+  .sobre-projeto-page .benefits-box {
+    padding: 20px;
   }
 }
 
@@ -856,6 +1031,10 @@
 
   .sobre-projeto-page .cnpj-number {
     font-size: 1.4rem;
+  }
+
+  .sobre-projeto-page .pix-key {
+    font-size: 1rem;
   }
 }
 

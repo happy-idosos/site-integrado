@@ -15,7 +15,9 @@ import carouseltres from "../../assets/img/carousels/carousel-7.jpg"
 
 // Import das ODS
 import ods3 from "../../assets/img/ods3.png"
-import ods16 from "../../assets/img/ods16.png"
+import ods4 from "../../assets/img/ods4.png"
+import ods9 from "../../assets/img/ods9.png"
+import ods10 from "../../assets/img/ods10.png"
 
 // Import das imagens dos idosos
 import idosos1 from "../../assets/img/sobreprojeto/idosos1.jpeg"
@@ -42,14 +44,14 @@ const SobreProjeto = () => {
     const initializeBootstrap = async () => {
       try {
         const bootstrap = await import("bootstrap/dist/js/bootstrap.bundle.min.js")
-        
+
         // Inicializa o carousel se existir
         if (carouselRef.current) {
           new bootstrap.Carousel(carouselRef.current, {
             interval: 6000,
             ride: "carousel",
             pause: "hover",
-            wrap: true
+            wrap: true,
           })
         }
       } catch (error) {
@@ -105,7 +107,10 @@ const SobreProjeto = () => {
             />
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel">Conectando Voluntários e Idosos</h2>
-              <p>O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo bem-estar e alegria.</p>
+              <p>
+                O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
+                bem-estar e alegria.
+              </p>
               <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
@@ -125,12 +130,15 @@ const SobreProjeto = () => {
             />
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel">Cuidado e Companheirismo</h2>
-              <p>Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa permanência.</p>
+              <p>
+                Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa
+                permanência.
+              </p>
               <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
                 </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btnn">
+                <Link to="/eventos" className="btn btn-outline-primary btn">
                   Ver Eventos
                 </Link>
               </div>
@@ -145,7 +153,10 @@ const SobreProjeto = () => {
             />
             <div className="carousel-caption d-none d-md-block">
               <h2 className="carrossel">Faça a Diferença</h2>
-              <p>Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa permanência.</p>
+              <p>
+                Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa
+                permanência.
+              </p>
               <div className="carousel-buttons">
                 <Link to="/asilos" className="btn btn-outline-primary btn">
                   Encontrar Asilos
@@ -269,27 +280,71 @@ const SobreProjeto = () => {
                   Assegurar uma vida saudável e promover o bem-estar para todos, em todas as idades.
                 </p>
                 <ul className="ods-list">
-                  <li>Promoção da saúde mental e emocional dos idosos</li>
-                  <li>Atividades físicas adaptadas para a terceira idade</li>
-                  <li>Acompanhamento psicológico e emocional</li>
-                  <li>Prevenção de doenças através de hábitos saudáveis</li>
+                  <li>Promoção da saúde física, mental e emocional dos idosos</li>
+                  <li>Incentivo a interações sociais e atividades culturais</li>
+                  <li>Combate à solidão e depressão através da troca geracional</li>
+                  <li>Estímulo a hábitos saudáveis e fortalecimento da autoestima</li>
                 </ul>
               </div>
             </div>
+
             <div className="ods-card" data-aos="fade-up" data-aos-delay="400">
               <div className="ods-image-container">
-                <img src={ods16 || "/placeholder.svg"} alt="ODS 16 - Paz, Justiça e Instituições Eficazes" className="ods-image" />
+                <img src={ods4 || "/placeholder.svg"} alt="ODS 4 - Educação de Qualidade" className="ods-image" />
               </div>
               <div className="ods-content">
-                <h3 className="ods-title">ODS 16 - Paz, Justiça e Instituições Eficazes</h3>
+                <h3 className="ods-title">ODS 4 - Educação de Qualidade</h3>
                 <p className="ods-description">
-                  Promover sociedades pacíficas e inclusivas para o desenvolvimento sustentável.
+                  Assegurar a educação inclusiva e equitativa de qualidade, e promover oportunidades de aprendizagem ao
+                  longo da vida.
                 </p>
                 <ul className="ods-list">
-                  <li>Inclusão social da população idosa</li>
-                  <li>Fortalecimento de instituições que cuidam de idosos</li>
-                  <li>Promoção da igualdade e direitos dos idosos</li>
-                  <li>Transparência e prestação de contas</li>
+                  <li>Compartilhamento de saberes entre jovens e idosos</li>
+                  <li>Valorização do conhecimento tradicional e tecnológico</li>
+                  <li>Aprendizagem ao longo da vida através de oficinas</li>
+                  <li>Inclusão digital e cultural para a terceira idade</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="ods-card" data-aos="fade-up" data-aos-delay="500">
+              <div className="ods-image-container">
+                <img
+                  src={ods9 || "/placeholder.svg"}
+                  alt="ODS 9 - Indústria, Inovação e Infraestrutura"
+                  className="ods-image"
+                />
+              </div>
+              <div className="ods-content">
+                <h3 className="ods-title">ODS 9 - Indústria, Inovação e Infraestrutura</h3>
+                <p className="ods-description">
+                  Construir infraestruturas resilientes, promover a industrialização inclusiva e sustentável e fomentar
+                  a inovação.
+                </p>
+                <ul className="ods-list">
+                  <li>Tecnologias web modernas e acessíveis</li>
+                  <li>Ambiente digital inovador e sustentável</li>
+                  <li>Recursos como mapas interativos e áreas de comunidade</li>
+                  <li>Fortalecimento da infraestrutura digital do projeto</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="ods-card" data-aos="fade-up" data-aos-delay="600">
+              <div className="ods-image-container">
+                <img src={ods10 || "/placeholder.svg"} alt="ODS 10 - Redução das Desigualdades" className="ods-image" />
+              </div>
+              <div className="ods-content">
+                <h3 className="ods-title">ODS 10 - Redução das Desigualdades</h3>
+                <p className="ods-description">
+                  Reduzir a desigualdade dentro dos países e entre eles, promovendo a inclusão social, econômica e
+                  política.
+                </p>
+                <ul className="ods-list">
+                  <li>Redução de barreiras sociais e geracionais</li>
+                  <li>Aproximação entre jovens e idosos em espaço de respeito</li>
+                  <li>Visibilidade e voz para grupos marginalizados</li>
+                  <li>Promoção da equidade e reconhecimento da diversidade</li>
                 </ul>
               </div>
             </div>
@@ -313,8 +368,8 @@ const SobreProjeto = () => {
                 </h3>
                 <p className="modelo-text" data-aos="fade-up" data-aos-delay="500">
                   Nosso modelo de sustentabilidade é baseado em três pilares fundamentais: impacto social positivo,
-                  viabilidade econômica e responsabilidade ambiental. Através de parcerias estratégicas e do
-                  engajamento da comunidade, garantimos a continuidade e o crescimento do projeto.
+                  viabilidade econômica e responsabilidade ambiental. Através de parcerias estratégicas e do engajamento
+                  da comunidade, garantimos a continuidade e o crescimento do projeto.
                 </p>
                 <div className="principios-grid">
                   <div className="principio-item" data-aos="fade-up" data-aos-delay="600">
@@ -349,6 +404,7 @@ const SobreProjeto = () => {
                   </div>
                 </div>
               </div>
+
               <div className="doacoes-section" data-aos="fade-up" data-aos-delay="400">
                 <div className="doacoes-header">
                   <div className="doacoes-icon">💝</div>
@@ -359,55 +415,124 @@ const SobreProjeto = () => {
                   </p>
                 </div>
 
-                <div className="doacao-info-box">
-                  <div className="info-item" data-aos="fade-up" data-aos-delay="500">
-                    <div className="info-icon">🏦</div>
-                    <div className="info-content">
-                      <h4>Transferência Bancária</h4>
-                      <p>
-                        Realize sua doação via transferência bancária para nossa conta corrente. Dados bancários
-                        disponíveis abaixo.
-                      </p>
+                <div className="doacao-methods">
+                  <h4 className="methods-title">Como Doar</h4>
+
+                  <div className="method-card" data-aos="fade-up" data-aos-delay="500">
+                    <div className="method-header">
+                      <div className="method-icon">🏦</div>
+                      <h5>Transferência Bancária</h5>
+                    </div>
+                    <p className="method-description">
+                      Realize sua doação via transferência bancária diretamente para nossa conta.
+                    </p>
+                    <div className="method-details">
+                      <div className="detail-item">
+                        <span className="detail-label">Banco:</span>
+                        <span className="detail-value">Banco do Brasil</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">Agência:</span>
+                        <span className="detail-value">1234-5</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">Conta:</span>
+                        <span className="detail-value">67890-1</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="info-item" data-aos="fade-up" data-aos-delay="600">
-                    <div className="info-icon">📱</div>
-                    <div className="info-content">
-                      <h4>PIX Instantâneo</h4>
-                      <p>
-                        Utilize nossa chave PIX para doações rápidas e seguras. Escaneie o QR Code ou use a chave PIX
-                        abaixo.
-                      </p>
+                  <div className="method-card" data-aos="fade-up" data-aos-delay="600">
+                    <div className="method-header">
+                      <div className="method-icon">📱</div>
+                      <h5>PIX Instantâneo</h5>
+                    </div>
+                    <p className="method-description">Utilize nossa chave PIX para doações rápidas e seguras.</p>
+                    <div className="pix-key-box">
+                      <span className="pix-label">Chave PIX (CNPJ)</span>
+                      <span className="pix-key">12.345.678/0001-90</span>
+                      <button className="copy-button" onClick={() => navigator.clipboard.writeText("12345678000190")}>
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copiar
+                      </button>
                     </div>
                   </div>
 
-                  <div className="cnpj-box" data-aos="zoom-in" data-aos-delay="700">
-                    <div className="cnpj-label">CNPJ para Doação</div>
-                    <div className="cnpj-number">12.345.678/0001-90</div>
-                    <div className="cnpj-subtitle">Associação Happy Idosos</div>
+                  <div className="cnpj-highlight" data-aos="zoom-in" data-aos-delay="700">
+                    <div className="cnpj-content">
+                      <div className="cnpj-label">CNPJ da Instituição</div>
+                      <div className="cnpj-number">12.345.678/0001-90</div>
+                      <div className="cnpj-subtitle">Associação Happy Idosos</div>
+                    </div>
                   </div>
 
-                  <div className="info-item" data-aos="fade-up" data-aos-delay="800">
-                    <div className="info-icon">📄</div>
-                    <div className="info-content">
-                      <h4>Recibo para Dedução Fiscal</h4>
-                      <p>
-                        Emitimos recibo para todas as doações, permitindo dedução no imposto de renda de pessoas físicas
-                        e jurídicas.
-                      </p>
+                  <div className="benefits-box" data-aos="fade-up" data-aos-delay="800">
+                    <h5 className="benefits-title">Benefícios Fiscais</h5>
+                    <div className="benefit-item">
+                      <svg
+                        className="benefit-icon"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                      <span>Recibo para dedução no Imposto de Renda</span>
+                    </div>
+                    <div className="benefit-item">
+                      <svg
+                        className="benefit-icon"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                      <span>Válido para pessoas físicas e jurídicas</span>
+                    </div>
+                    <div className="benefit-item">
+                      <svg
+                        className="benefit-icon"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                      <span>Transparência total na prestação de contas</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="doacao-footer" data-aos="fade-up" data-aos-delay="900">
-                  <p>
-                    <strong>Transparência Total:</strong> Prestamos contas regularmente de todos os recursos
-                    recebidos e aplicados.
-                  </p>
-                  <small>
-                    Sua doação é 100% destinada aos projetos de cuidado e bem-estar dos idosos. Administração: máximo de
-                    10% para custos operacionais.
+                  <div className="impact-message">
+                    <strong>100% do valor doado</strong> é destinado aos projetos de cuidado e bem-estar dos idosos.
+                  </div>
+                  <small className="transparency-note">
+                    Prestamos contas regularmente de todos os recursos recebidos e aplicados. Máximo de 10% para custos
+                    operacionais.
                   </small>
                 </div>
               </div>
@@ -428,7 +553,8 @@ const SobreProjeto = () => {
               Pronto para Fazer a Diferença?
             </h2>
             <p className="cta-subtitle" data-aos="fade-up" data-aos-delay="400">
-              Tem alguma dúvida? Entre em contato conosco e descubra como você pode ajudar a transformar a vida de idosos em instituições de longa permanência.
+              Tem alguma dúvida? Entre em contato conosco e descubra como você pode ajudar a transformar a vida de
+              idosos em instituições de longa permanência.
             </p>
             <div className="cta-buttons" data-aos="fade-up" data-aos-delay="500">
               <Link to="/contato" className="videos-btn-cta-secondary">

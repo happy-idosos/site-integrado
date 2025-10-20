@@ -419,6 +419,9 @@ function Videos() {
             <div className="carousel-caption d-none d-md-block">
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
+                <button className="btn btn-outline-light btn-lg" >
+                Ver Vídeos
+              </button>
               {!isAuthenticated && (
                 <button className="btn btn-outline-light btn-lg" onClick={handleOpenLoginModal}>
                   Fazer Login para Acessar

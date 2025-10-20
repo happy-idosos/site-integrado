@@ -342,7 +342,7 @@ export default function Contato() {
                     : "Faça login para enviar mensagens e entrar em contato com nossa equipe."
                   }
                 </p>
-                <button onClick={scrollToContato} className="btn btn-outline-primary btn">
+                <button onClick={scrollToContato} className="btn btn-outline-light btn-lg">
                   {authState.isAuthenticated ? "Enviar Mensagem" : "Ver Formulário"}
                 </button>
               </div>

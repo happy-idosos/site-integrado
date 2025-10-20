@@ -234,14 +234,6 @@ function Asilos() {
                 O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
                 bem-estar e alegria.
               </p>
-              <div className="hero-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
             </div>
           </div>
           <div className="carousel-item">
@@ -259,14 +251,6 @@ function Asilos() {
                 O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
                 bem-estar e alegria.
               </p>
-              <div className="hero-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
             </div>
           </div>
           <div className="carousel-item">
@@ -284,14 +268,6 @@ function Asilos() {
                 O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
                 bem-estar e alegria.
               </p>
-              <div className="hero-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
             </div>
           </div>
         </div>

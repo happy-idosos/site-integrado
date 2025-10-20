@@ -845,17 +845,32 @@ const Eventos = () => {
             )}
 
             {!isLoading && !isAuthenticated && (
-              <div className="text-center py-5">
-                <div className="card event-card" style={{ maxWidth: '500px', margin: '0 auto' }}>
-                  <div className="card-body py-5">
-                    <i className="fas fa-sign-in-alt fa-4x text-muted mb-4"></i>
-                    <h4 className="text-muted mb-3">Efetue login para participar dos eventos</h4>
-                    <p className="text-muted mb-4">Faça login ou cadastre-se para visualizar e se inscrever nos eventos.</p>
-                    <button 
-                      className="btn btn-primary btn-lg"
-                      onClick={() => navigate('/login')}
-                    >
-                      <i className="fas fa-sign-in-alt me-2"></i>
+              <div className="videos-login-prompt-container" data-aos="fade-up">
+                <div className="videos-login-prompt-card">
+                  <div className="videos-login-prompt-icon">
+                    <i className="fas fa-lock"></i>
+                  </div>
+                  <h3 className="videos-login-prompt-title">Acesso Restrito</h3>
+                  <p className="videos-login-prompt-text">
+                    Faça login para participar de Eventos ou gerenciá-los e se organizar da melhor forma.
+                  </p>
+                  <div className="videos-login-prompt-features">
+                    <div className="videos-feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Acompanhe eventos em tempo real</span>
+                    </div>
+                    <div className="videos-feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Comunique-se com a outra vertente</span>
+                    </div>
+                    <div className="videos-feature-item">
+                      <i className="fas fa-check-circle"></i>
+                      <span>Interaja com a comunidade</span>
+                    </div>
+                  </div>
+                  <div className="videos-login-prompt-actions">
+                    <button className="videos-btn-login-primary">
+                      <i className="fas fa-sign-in-alt"></i>
                       Fazer Login
                     </button>
                   </div>

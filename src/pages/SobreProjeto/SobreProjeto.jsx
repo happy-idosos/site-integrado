@@ -111,14 +111,7 @@ const SobreProjeto = () => {
                 O projeto Happy Idosos facilita o acesso entre voluntários e entidades que cuidam de idosos, promovendo
                 bem-estar e alegria.
               </p>
-              <div className="carousel-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
+
             </div>
           </div>
           <div className="carousel-item">
@@ -134,14 +127,7 @@ const SobreProjeto = () => {
                 Promovemos momentos de alegria, cuidado e companheirismo para idosos em instituições de longa
                 permanência.
               </p>
-              <div className="carousel-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
+
             </div>
           </div>
           <div className="carousel-item">
@@ -157,14 +143,7 @@ const SobreProjeto = () => {
                 Junte-se a nós e leve alegria, cuidado e companheirismo para idosos em instituições de longa
                 permanência.
               </p>
-              <div className="carousel-buttons">
-                <Link to="/asilos" className="btn btn-outline-primary btn">
-                  Encontrar Asilos
-                </Link>
-                <Link to="/eventos" className="btn btn-outline-primary btn">
-                  Ver Eventos
-                </Link>
-              </div>
+
             </div>
           </div>
         </div>
@@ -230,9 +209,9 @@ const SobreProjeto = () => {
             <div className="galeria-item" data-aos="zoom-in" data-aos-delay="600">
               <img src={idosos4 || "/placeholder.svg"} alt="Atividades físicas" className="galeria-image" />
               <div className="galeria-overlay">
-                <h4 className="galeria-title">Exercícios Físicos</h4>
+                <h4 className="galeria-title">Celebrações Especiais</h4>
                 <p className="galeria-description">
-                  Atividades físicas adaptadas para manter a mobilidade e saúde dos idosos.
+                  Suporte psicológico e emocional para promover saúde mental e bem-estar.
                 </p>
               </div>
               <div className="galeria-badge">Saúde</div>

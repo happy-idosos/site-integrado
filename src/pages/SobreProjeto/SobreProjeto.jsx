@@ -386,7 +386,6 @@ const SobreProjeto = () => {
 
               <div className="doacoes-section" data-aos="fade-up" data-aos-delay="400">
                 <div className="doacoes-header">
-                  <div className="doacoes-icon">💝</div>
                   <h3 className="doacoes-title">Faça Parte Dessa Transformação</h3>
                   <p className="doacoes-subtitle">
                     Sua doação é fundamental para mantermos e expandirmos nosso trabalho. Cada contribuição nos ajuda a
@@ -421,16 +420,12 @@ const SobreProjeto = () => {
                     </div>
                   </div>
 
-                  <div className="method-card" data-aos="fade-up" data-aos-delay="600">
-                    <div className="method-header">
-                      <div className="method-icon">📱</div>
-                      <h5>PIX Instantâneo</h5>
-                    </div>
-                    <p className="method-description">Utilize nossa chave PIX para doações rápidas e seguras.</p>
-                    <div className="pix-key-box">
-                      <span className="pix-label">Chave PIX (CNPJ)</span>
-                      <span className="pix-key">12.345.678/0001-90</span>
-                      <button className="copy-button" onClick={() => navigator.clipboard.writeText("12345678000190")}>
+                  <div className="cnpj-highlight" data-aos="zoom-in" data-aos-delay="700">
+                    <div className="cnpj-content">
+                      <div className="cnpj-label">Chave PIX (CNPJ)</div>
+                      <div className="cnpj-number">12.345.678/0001-90</div>
+                      <div className="cnpj-subtitle">Associação Happy Idosos</div>
+                        <button className="copy-button" onClick={() => navigator.clipboard.writeText("12345678000190")}>
                         <svg
                           width="16"
                           height="16"
@@ -444,63 +439,6 @@ const SobreProjeto = () => {
                         </svg>
                         Copiar
                       </button>
-                    </div>
-                  </div>
-
-                  <div className="cnpj-highlight" data-aos="zoom-in" data-aos-delay="700">
-                    <div className="cnpj-content">
-                      <div className="cnpj-label">CNPJ da Instituição</div>
-                      <div className="cnpj-number">12.345.678/0001-90</div>
-                      <div className="cnpj-subtitle">Associação Happy Idosos</div>
-                    </div>
-                  </div>
-
-                  <div className="benefits-box" data-aos="fade-up" data-aos-delay="800">
-                    <h5 className="benefits-title">Benefícios Fiscais</h5>
-                    <div className="benefit-item">
-                      <svg
-                        className="benefit-icon"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      <span>Recibo para dedução no Imposto de Renda</span>
-                    </div>
-                    <div className="benefit-item">
-                      <svg
-                        className="benefit-icon"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      <span>Válido para pessoas físicas e jurídicas</span>
-                    </div>
-                    <div className="benefit-item">
-                      <svg
-                        className="benefit-icon"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      <span>Transparência total na prestação de contas</span>
                     </div>
                   </div>
                 </div>

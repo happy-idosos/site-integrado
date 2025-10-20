@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
+import LoginModal from "../../components/layout/LoginModal" // Importando o LoginModal
 import "./Videos.css"
 
 import carouselum from "../../assets/img/carousels/carousel-2.jpg"
@@ -30,17 +31,19 @@ function Videos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [videoToDelete, setVideoToDelete] = useState(null)
-  const [showLoginModal, setShowLoginModal] = useState(false) // Adicione este estado
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false) // Estado para controlar o modal de login
 
   const fileInputRef = useRef(null)
 
-  // Adicione esta função
+  // Função para abrir o modal de login
   const handleOpenLoginModal = () => {
-    setShowLoginModal(true);
-    // Se você tem um modal de login global, você pode disparar um evento ou usar contexto
-    // Por enquanto, vamos redirecionar para a página de login como fallback
-    navigate("/login");
-  };
+    setIsLoginModalOpen(true)
+  }
+
+  // Função para fechar o modal de login
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false)
+  }
 
   useEffect(() => {
     const checkAuth = () => {
@@ -183,7 +186,7 @@ function Videos() {
   const openUploadModal = () => {
     if (!isAuthenticated) {
       showNotification("error", "Você precisa estar logado para enviar vídeos.")
-      setTimeout(() => handleOpenLoginModal(), 2000) // Alterado para usar handleOpenLoginModal
+      setTimeout(() => handleOpenLoginModal(), 2000)
       return
     }
     setSelectedFile(null)
@@ -215,7 +218,7 @@ function Videos() {
 
     if (!isAuthenticated) {
       showNotification("error", "Você precisa estar logado para enviar vídeos.")
-      setTimeout(() => handleOpenLoginModal(), 2000) // Alterado para usar handleOpenLoginModal
+      setTimeout(() => handleOpenLoginModal(), 2000)
       return
     }
 
@@ -419,7 +422,7 @@ function Videos() {
             <div className="carousel-caption d-none d-md-block">
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
-                <button className="btn btn-outline-light btn-lg" >
+              <button className="btn btn-outline-light btn-lg" >
                 Ver Vídeos
               </button>
               {!isAuthenticated && (
@@ -823,6 +826,9 @@ function Videos() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Login */}
+      <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
 
       <NotificationModal />
       <DeleteConfirmModal />

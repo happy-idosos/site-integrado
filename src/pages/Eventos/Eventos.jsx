@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
-import LoginModal from "../../components/layout/LoginModal"
+import LoginModal from "../../components/layout/LoginModal" // Importando o LoginModal
 import "aos/dist/aos.css"
 import AOS from "aos"
 import "./Eventos.css"
@@ -30,7 +30,7 @@ const Eventos = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [showInscricaoModal, setShowInscricaoModal] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false) // Estado para controlar o modal de login
   const [modalMessage, setModalMessage] = useState("")
   const [modalTitle, setModalTitle] = useState("")
   const [isLoadingAction, setIsLoadingAction] = useState(false)
@@ -51,20 +51,12 @@ const Eventos = () => {
 
   // ✅ FUNÇÃO PARA ABRIR MODAL DE LOGIN
   const handleOpenLoginModal = () => {
-    setShowLoginModal(true)
+    setIsLoginModalOpen(true)
   }
 
   // ✅ FUNÇÃO PARA FECHAR MODAL DE LOGIN
   const handleCloseLoginModal = () => {
-    setShowLoginModal(false)
-  }
-
-  // ✅ FUNÇÃO CALLBACK PARA SUCESSO NO LOGIN
-  const handleLoginSuccess = () => {
-    setShowLoginModal(false)
-    // Recarregar os dados do usuário e eventos
-    loadUserData()
-    loadEvents()
+    setIsLoginModalOpen(false)
   }
 
   // ✅ FUNÇÃO CARREGAR DADOS DO USUÁRIO
@@ -709,14 +701,11 @@ const Eventos = () => {
     <div className="eventos-page">
       <Header />
       
-      {/* ✅ MODAL DE LOGIN */}
-      {showLoginModal && (
-        <LoginModal 
-          show={showLoginModal}
-          onHide={handleCloseLoginModal}
-          onLoginSuccess={handleLoginSuccess}
-        />
-      )}
+      {/* ✅ MODAL DE LOGIN - USANDO O COMPONENTE CORRETO */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={handleCloseLoginModal} 
+      />
 
       <div
         id="carouselExampleCaptions"
@@ -734,6 +723,11 @@ const Eventos = () => {
               <button className="btn btn-outline-light btn-lg" onClick={scrollToEvents}>
                 Ver Eventos
               </button>
+              {!isAuthenticated && (
+                <button className="btn btn-outline-light btn-lg ms-2" onClick={handleOpenLoginModal}>
+                  Fazer Login para Participar
+                </button>
+              )}
             </div>
           </div>
           <div className="carousel-item">
@@ -744,6 +738,11 @@ const Eventos = () => {
               <button className="btn btn-outline-light btn-lg" onClick={scrollToEvents}>
                 Ver Eventos
               </button>
+              {!isAuthenticated && (
+                <button className="btn btn-outline-light btn-lg ms-2" onClick={handleOpenLoginModal}>
+                  Fazer Login para Participar
+                </button>
+              )}
             </div>
           </div>
           <div className="carousel-item">
@@ -754,6 +753,11 @@ const Eventos = () => {
               <button className="btn btn-outline-light btn-lg" onClick={scrollToEvents}>
                 Ver Eventos
               </button>
+              {!isAuthenticated && (
+                <button className="btn btn-outline-light btn-lg ms-2" onClick={handleOpenLoginModal}>
+                  Fazer Login para Participar
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 /* Escopo completo para evitar conflitos com outras páginas */
-.politica-de-privacidade-page {
+.politica-privacidade-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   font-family: "Nunito", sans-serif;
@@ -13,42 +13,134 @@ html {
   scroll-behavior: smooth;
 }
 
-.politica-de-privacidade-back-btn {
-  position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid white;
-  color: #244a96;
-  padding: 0.75rem 1.25rem;
-  border-radius: 25px;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  z-index: 1000;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+/* ===== BOTÃO VOLTAR APENAS PARA DESKTOP ===== */
+.politica-privacidade-back-btn {
+  position: fixed !important;
+  top: 1.5rem !important;
+  left: 1.5rem !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 2px solid #244a96 !important;
+  color: #244a96 !important;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 25px !important;
+  font-family: "Nunito", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  transition: all 0.3s ease !important;
+  z-index: 1000 !important;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
 }
 
-.politica-de-privacidade-back-btn:hover {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25);
+.politica-privacidade-back-btn:hover {
+  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25) !important;
+  text-decoration: none !important;
 }
 
-.politica-de-privacidade-container {
+.politica-privacidade-back-btn svg {
+  flex-shrink: 0 !important;
+  transition: transform 0.3s ease !important;
+}
+
+.politica-privacidade-back-btn:hover svg {
+  transform: translateX(-3px) !important;
+}
+
+/* ===== HEADER PARA MOBILE/TABLET ===== */
+.politica-privacidade-mobile-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(36, 74, 150, 0.1) !important;
+  padding: 0.75rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  z-index: 9999 !important;
+  height: 60px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.politica-privacidade-mobile-back-btn {
+  background: transparent !important;
+  border: 1.5px solid #244a96 !important;
+  color: #244a96 !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 20px !important;
+  font-family: "Nunito", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.politica-privacidade-mobile-back-btn:hover {
+  background: #244a96 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+.politica-privacidade-mobile-back-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.politica-privacidade-mobile-title {
+  color: #244a96 !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  text-align: center !important;
+  flex: 1 !important;
+  padding: 0 0.5rem !important;
+}
+
+.politica-privacidade-mobile-spacer {
+  width: 80px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ===== AJUSTES DE LAYOUT PARA MOBILE ===== */
+.politica-privacidade-page.mobile-layout {
+  padding-top: 60px !important;
+}
+
+.politica-privacidade-container.mobile-layout {
+  padding-top: 0.5rem !important;
+}
+
+/* Container principal */
+.politica-privacidade-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
-.politica-de-privacidade-header {
+.politica-privacidade-header {
   text-align: center;
   margin-bottom: 3rem;
   background: white;
@@ -58,7 +150,7 @@ html {
   border: 1px solid rgba(36, 74, 150, 0.1);
 }
 
-.politica-de-privacidade-logo {
+.politica-privacidade-logo {
   height: 90px;
   width: auto;
   margin-bottom: 1.5rem;
@@ -66,25 +158,25 @@ html {
   transition: transform 0.3s ease;
 }
 
-.politica-de-privacidade-logo:hover {
+.politica-privacidade-logo:hover {
   transform: scale(1.05);
 }
 
-.politica-de-privacidade-header h1 {
+.politica-privacidade-header h1 {
   color: #244a96;
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
 
-.politica-de-privacidade-header p {
+.politica-privacidade-header p {
   color: #666;
   font-size: 1.2rem;
   font-weight: 400;
   margin-bottom: 1rem;
 }
 
-.politica-de-privacidade-meta {
+.politica-privacidade-meta {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,7 +184,7 @@ html {
   flex-wrap: wrap;
 }
 
-.politica-de-privacidade-update {
+.politica-privacidade-update {
   background: linear-gradient(135deg, #244a96, #1a3a7a);
   color: white;
   padding: 0.5rem 1rem;
@@ -102,7 +194,7 @@ html {
   box-shadow: 0 4px 12px rgba(36, 74, 150, 0.2);
 }
 
-.politica-de-privacidade-content-container {
+.politica-privacidade-content-container {
   background: white;
   border-radius: 20px;
   padding: 2.5rem;
@@ -111,14 +203,14 @@ html {
   position: relative;
 }
 
-.politica-de-privacidade-content {
+.politica-privacidade-content {
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 3rem;
   align-items: start;
 }
 
-.politica-de-privacidade-nav {
+.politica-privacidade-nav {
   position: sticky;
   top: 120px;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
@@ -130,21 +222,21 @@ html {
   overflow-y: auto;
 }
 
-.politica-de-privacidade-nav::-webkit-scrollbar {
+.politica-privacidade-nav::-webkit-scrollbar {
   width: 4px;
 }
 
-.politica-de-privacidade-nav::-webkit-scrollbar-track {
+.politica-privacidade-nav::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
-.politica-de-privacidade-nav::-webkit-scrollbar-thumb {
+.politica-privacidade-nav::-webkit-scrollbar-thumb {
   background: #244a96;
   border-radius: 10px;
 }
 
-.politica-de-privacidade-nav h3 {
+.politica-privacidade-nav h3 {
   color: #244a96;
   font-size: 1.3rem;
   font-weight: 700;
@@ -154,17 +246,17 @@ html {
   gap: 0.75rem;
 }
 
-.politica-de-privacidade-nav ul {
+.politica-privacidade-nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.politica-de-privacidade-nav li {
+.politica-privacidade-nav li {
   margin-bottom: 0.5rem;
 }
 
-.politica-de-privacidade-nav a {
+.politica-privacidade-nav a {
   color: #666;
   text-decoration: none;
   font-weight: 500;
@@ -175,50 +267,50 @@ html {
   border-left: 3px solid transparent;
 }
 
-.politica-de-privacidade-nav a:hover {
+.politica-privacidade-nav a:hover {
   color: #244a96;
   background: rgba(36, 74, 150, 0.05);
   border-left-color: #244a96;
   transform: translateX(5px);
 }
 
-.politica-de-privacidade-article {
+.politica-privacidade-article {
   height: auto;
   min-height: 500px;
   padding-right: 1rem;
 }
 
-.politica-de-privacidade-article::-webkit-scrollbar {
+.politica-privacidade-article::-webkit-scrollbar {
   width: 6px;
 }
 
-.politica-de-privacidade-article::-webkit-scrollbar-track {
+.politica-privacidade-article::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
-.politica-de-privacidade-article::-webkit-scrollbar-thumb {
+.politica-privacidade-article::-webkit-scrollbar-thumb {
   background: #244a96;
   border-radius: 10px;
 }
 
-.politica-de-privacidade-article::-webkit-scrollbar-thumb:hover {
+.politica-privacidade-article::-webkit-scrollbar-thumb:hover {
   background: #1a3a7a;
 }
 
-.politica-de-privacidade-section {
+.politica-privacidade-section {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #e9ecef;
   scroll-margin-top: 2rem;
 }
 
-.politica-de-privacidade-section:last-of-type {
+.politica-privacidade-section:last-of-type {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.politica-de-privacidade-section h2 {
+.politica-privacidade-section h2 {
   color: #244a96;
   font-size: 1.5rem;
   font-weight: 700;
@@ -227,114 +319,79 @@ html {
   border-bottom: 2px solid #244a96;
 }
 
-.politica-de-privacidade-section h3 {
+.politica-privacidade-section h3 {
   color: #244a96;
   font-size: 1.2rem;
   font-weight: 600;
   margin: 1.5rem 0 1rem 0;
 }
 
-.politica-de-privacidade-section p {
+.politica-privacidade-section p {
   margin-bottom: 1rem;
   text-align: justify;
 }
 
-.politica-de-privacidade-section ul {
+.politica-privacidade-section ul {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
 }
 
-.politica-de-privacidade-section li {
+.politica-privacidade-section li {
   margin-bottom: 0.5rem;
   text-align: justify;
 }
 
-.politica-de-privacidade-section strong {
+.politica-privacidade-section strong {
   color: #244a96;
   font-weight: 600;
 }
 
-.politica-de-privacidade-definitions {
+.politica-privacidade-definitions {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
   margin: 1rem 0;
 }
 
-.politica-de-privacidade-definitions dt {
+.politica-privacidade-definitions dt {
   font-weight: 600;
   color: #244a96;
 }
 
-.politica-de-privacidade-definitions dd {
+.politica-privacidade-definitions dd {
   margin: 0;
   text-align: justify;
 }
 
-.politica-de-privacidade-section a {
+.politica-privacidade-section a {
   color: #244a96;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.politica-de-privacidade-section a:hover {
+.politica-privacidade-section a:hover {
   color: #1a3a7a;
   text-decoration: underline;
 }
 
-/* Destaque para informações importantes */
-.politica-de-privacidade-highlight {
+.politica-privacidade-contact-info {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-left: 4px solid #244a96;
-  padding: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #28a745;
   margin: 1.5rem 0;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(36, 74, 150, 0.08);
 }
 
-.politica-de-privacidade-highlight h3 {
-  margin-top: 0;
+.politica-privacidade-contact-info p {
   margin-bottom: 0.75rem;
-  font-size: 1.1rem;
 }
 
-.politica-de-privacidade-highlight p {
-  margin-bottom: 0;
+.politica-privacidade-contact-info strong {
+  color: #244a96;
 }
 
-.politica-de-privacidade-important {
-  background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
-  border-left: 4px solid #ffc107;
-  padding: 1.25rem;
-  margin: 1.5rem 0;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
-}
-
-.politica-de-privacidade-important strong {
-  color: #856404;
-}
-
-.politica-de-privacidade-contact {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
-  border-left: 4px solid #2196f3;
-  padding: 1.25rem;
-  margin: 1rem 0;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
-}
-
-.politica-de-privacidade-contact p {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.politica-de-privacidade-contact p:last-child {
-  margin-bottom: 0;
-}
-
-.politica-de-privacidade-footer {
+.politica-privacidade-footer {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   padding: 1.5rem;
   border-radius: 12px;
@@ -344,7 +401,7 @@ html {
   font-style: italic;
 }
 
-.politica-de-privacidade-actions {
+.politica-privacidade-actions {
   position: sticky;
   bottom: 2rem;
   margin-top: 2rem;
@@ -352,7 +409,7 @@ html {
   transition: all 0.3s ease;
 }
 
-.politica-de-privacidade-actions.scrolled {
+.politica-privacidade-actions.scrolled {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 1rem;
@@ -361,7 +418,7 @@ html {
   margin: 1rem -1rem -1rem -1rem;
 }
 
-.politica-de-privacidade-accept-btn {
+.politica-privacidade-accept-btn {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: white;
   border: none;
@@ -382,191 +439,192 @@ html {
   justify-content: center;
 }
 
-.politica-de-privacidade-accept-btn:hover {
+.politica-privacidade-accept-btn:hover {
   background: linear-gradient(135deg, #20c997, #1e9e8a);
   transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
 }
 
-.politica-de-privacidade-accept-btn:active {
+.politica-privacidade-accept-btn:active {
   transform: translateY(0);
 }
 
-/* Animações */
-@keyframes politica-de-privacidade-fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1024px) {
-  .politica-de-privacidade-content {
+  .politica-privacidade-content {
     grid-template-columns: 250px 1fr;
     gap: 2rem;
   }
 }
 
 @media (max-width: 768px) {
-  .politica-de-privacidade-page {
-    padding: 1rem 0;
+  .politica-privacidade-page {
+    padding: 0 !important;
   }
 
-  .politica-de-privacidade-back-btn {
-    top: 80px;
-    left: 1rem;
-    padding: 0.625rem 1rem;
-    font-size: 0.85rem;
+  .politica-privacidade-back-btn {
+    display: none !important;
   }
 
-  .politica-de-privacidade-container {
+  .politica-privacidade-container {
     padding: 1rem;
+    max-width: 95%;
   }
 
-  .politica-de-privacidade-header {
-    padding: 1.75rem;
-    margin-bottom: 2rem;
+  .politica-privacidade-header {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
-  .politica-de-privacidade-logo {
+  .politica-privacidade-logo {
     height: 70px;
+    margin-bottom: 1rem;
   }
 
-  .politica-de-privacidade-header h1 {
-    font-size: 2rem;
+  .politica-privacidade-header h1 {
+    font-size: 1.8rem;
   }
 
-  .politica-de-privacidade-header p {
+  .politica-privacidade-header p {
     font-size: 1rem;
   }
 
-  .politica-de-privacidade-content-container {
-    padding: 1.75rem;
+  .politica-privacidade-content-container {
+    padding: 1.5rem;
+    border-radius: 15px;
   }
 
-  .politica-de-privacidade-content {
+  .politica-privacidade-content {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
-  .politica-de-privacidade-nav {
+  .politica-privacidade-nav {
     position: static;
-    order: 2;
     max-height: none;
+    order: -1;
   }
 
-  .politica-de-privacidade-article {
-    order: 1;
+  .politica-privacidade-article {
     padding-right: 0;
+    max-height: none;
+    overflow: visible;
   }
 
-  .politica-de-privacidade-section {
+  .politica-privacidade-section {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
   }
 
-  .politica-de-privacidade-section h2 {
+  .politica-privacidade-section h2 {
     font-size: 1.3rem;
   }
 
-  .politica-de-privacidade-section h3 {
+  .politica-privacidade-section h3 {
     font-size: 1.1rem;
   }
 
-  .politica-de-privacidade-accept-btn {
-    font-size: 0.9rem;
-    padding: 1rem 1.5rem;
-    white-space: normal;
-    line-height: 1.4;
+  .politica-privacidade-actions {
+    position: static;
+    margin-top: 1.5rem;
   }
 
-  .politica-de-privacidade-highlight,
-  .politica-de-privacidade-important,
-  .politica-de-privacidade-contact {
-    padding: 1rem;
+  .politica-privacidade-actions.scrolled {
+    position: sticky;
+    bottom: 1rem;
+    margin: 1rem -0.5rem -0.5rem -0.5rem;
+  }
+
+  .politica-privacidade-accept-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
-  .politica-de-privacidade-logo {
-    height: 60px;
+  .politica-privacidade-container {
+    padding: 0.5rem;
+    max-width: 100%;
   }
 
-  .politica-de-privacidade-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .politica-de-privacidade-content-container {
-    padding: 1.25rem;
+  .politica-privacidade-header {
+    padding: 1rem;
     border-radius: 15px;
   }
 
-  .politica-de-privacidade-header {
-    padding: 1.25rem;
+  .politica-privacidade-logo {
+    height: 60px;
   }
 
-  .politica-de-privacidade-nav {
+  .politica-privacidade-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .politica-privacidade-content-container {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .politica-privacidade-nav {
     padding: 1rem;
   }
 
-  .politica-de-privacidade-section {
-    padding-bottom: 1rem;
+  .politica-privacidade-nav h3 {
+    font-size: 1.1rem;
+  }
+
+  .politica-privacidade-section {
     margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
   }
 
-  .politica-de-privacidade-accept-btn {
-    padding: 0.875rem 1.25rem;
-    font-size: 0.85rem;
-    width: 100%;
-    justify-content: center;
+  .politica-privacidade-section h2 {
+    font-size: 1.2rem;
   }
 
-  .politica-de-privacidade-actions.scrolled {
-    margin: 1rem -0.5rem -0.5rem -0.5rem;
+  .politica-privacidade-definitions {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 
-  .politica-de-privacidade-meta {
+  .politica-privacidade-meta {
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .politica-de-privacidade-highlight,
-  .politica-de-privacidade-important,
-  .politica-de-privacidade-contact {
-    padding: 0.875rem;
+  .politica-privacidade-contact-info {
+    padding: 1rem;
   }
 }
 
-/* Melhorias para impressão */
-@media print {
-  .politica-de-privacidade-back-btn,
-  .politica-de-privacidade-nav,
-  .politica-de-privacidade-actions {
-    display: none;
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .politica-privacidade-back-btn,
+  .politica-privacidade-mobile-back-btn,
+  .politica-privacidade-accept-btn,
+  .politica-privacidade-nav a,
+  .politica-privacidade-logo {
+    transition: none !important;
   }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
 
-  .politica-de-privacidade-page {
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .politica-privacidade-page {
     background: white;
-    padding: 0;
   }
-
-  .politica-de-privacidade-container {
-    max-width: none;
-    padding: 0;
+  
+  .politica-privacidade-header,
+  .politica-privacidade-content-container {
+    border: 2px solid #000;
   }
-
-  .politica-de-privacidade-content-container {
-    box-shadow: none;
-    border: none;
-    padding: 0;
-  }
-
-  .politica-de-privacidade-content {
-    display: block;
+  
+  .politica-privacidade-nav {
+    border-left: 4px solid #000;
   }
 }

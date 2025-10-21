@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react"
 import { editarPerfilAsiloService } from "../services/editarperfil/EditarPerfilAsilo.service"
 import { API_BASE_URL } from "../services/auth/auth.constants"
-import { useAuth } from "./useAuth" // ✅ NOVO IMPORT
+import { useAuth } from "./useAuth"
 
 export const usePerfilAsilo = () => {
   const [perfil, setPerfil] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
-  const { updateUserPhoto } = useAuth() // ✅ NOVO: Acesso ao contexto de autenticação
+  const { updateUserPhoto } = useAuth()
 
   const buscarPerfil = useCallback(async () => {
     try {
@@ -95,14 +95,12 @@ export const usePerfilAsilo = () => {
 
         console.log("🖼️ URL ABSOLUTA do logo:", logoUrl)
 
-        // ✅ ATUALIZAR PERFIL LOCALMENTE
         setPerfil((prev) => ({
           ...prev,
           foto_perfil: response.foto,
           logo_url: logoUrl,
         }))
 
-        // ✅ NOVO: ATUALIZAR NO CONTEXTO DE AUTENTICAÇÃO PARA O HEADER
         updateUserPhoto(logoUrl)
         console.log("✅ Logo atualizado no contexto de autenticação")
 
@@ -125,7 +123,7 @@ export const usePerfilAsilo = () => {
     } finally {
       setCarregando(false)
     }
-  }, [updateUserPhoto]) // ✅ NOVO: Adicionar dependência
+  }, [updateUserPhoto])
 
   const limparErro = useCallback(() => setErro(null), [])
 

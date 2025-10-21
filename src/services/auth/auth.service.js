@@ -1,5 +1,5 @@
 import { API_BASE_URL, API_ENDPOINTS } from './auth.constants';
-import { saveAuthData, clearAuthData, getAuthHeader } from './auth.helpers';
+import { saveAuthData, clearAuthData, getAuthHeader, getToken } from './auth.helpers';
 
 // ✅ FUNÇÃO DE REQUISIÇÃO HTTP CORRIGIDA - LIDA COM HTML E JSON
 const fetchAPI = async (endpoint, options = {}) => {
@@ -84,9 +84,41 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
+// ✅ FUNÇÃO PARA BUSCAR PERFIL COMPLETO APÓS LOGIN
+const buscarPerfilCompleto = async () => {
+  try {
+    const token = getToken();
+    if (!token) {
+      throw new Error('Token não disponível');
+    }
+
+    console.log('🔄 Buscando perfil completo após login...');
+    
+    const response = await fetch(`${API_BASE_URL}/api/perfil`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Perfil completo carregado:', data);
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar perfil completo:', error);
+    throw error;
+  }
+};
+
 // ✅ SERVIÇO DE AUTENTICAÇÃO CORRIGIDO
 export const authService = {
-  // ✅ LOGIN
+  // ✅ LOGIN - AGORA BUSCA PERFIL COMPLETO
   async login(email, senha) {
     const data = await fetchAPI(API_ENDPOINTS.LOGIN, {
       method: 'POST',
@@ -94,13 +126,48 @@ export const authService = {
     });
 
     if (data.status === 200 && data.data && data.data.token) {
-      saveAuthData(data.data.token, {
-        id: data.data.id,
-        nome: data.data.nome,
-        email: data.data.email,
-        tipo: data.data.tipo,
-        role: data.data.tipo
-      });
+      console.log('✅ Login bem-sucedido, buscando perfil completo...');
+      
+      try {
+        // ✅ BUSCAR PERFIL COMPLETO APÓS LOGIN
+        const perfilCompleto = await buscarPerfilCompleto();
+        
+        // ✅ MESCLAR DADOS DO LOGIN COM DADOS DO PERFIL COMPLETO
+        const userDataCompleto = {
+          id: data.data.id,
+          nome: data.data.nome,
+          email: data.data.email,
+          tipo: data.data.tipo,
+          role: data.data.tipo,
+          // ✅ USAR FOTO DO PERFIL COMPLETO (SE DISPONÍVEL)
+          foto_url: perfilCompleto.perfil?.foto_url || 
+                   perfilCompleto.perfil?.foto_perfil ? 
+                   `${API_BASE_URL}/uploads/perfis/${perfilCompleto.perfil.foto_perfil}` : 
+                   data.data.foto_url || null,
+          logo_url: perfilCompleto.perfil?.logo_url || 
+                   perfilCompleto.perfil?.foto_perfil ? 
+                   `${API_BASE_URL}/uploads/perfis/${perfilCompleto.perfil.foto_perfil}` : 
+                   data.data.logo_url || null
+        };
+
+        console.log('✅ Dados completos do usuário:', userDataCompleto);
+        
+        // ✅ SALVAR DADOS COMPLETOS NO LOCALSTORAGE
+        saveAuthData(data.data.token, userDataCompleto);
+        
+      } catch (error) {
+        console.warn('⚠️ Não foi possível carregar perfil completo, usando dados básicos:', error);
+        // ✅ FALLBACK: SALVAR APENAS DADOS BÁSICOS SE PERFIL FALHAR
+        saveAuthData(data.data.token, {
+          id: data.data.id,
+          nome: data.data.nome,
+          email: data.data.email,
+          tipo: data.data.tipo,
+          role: data.data.tipo,
+          foto_url: data.data.foto_url || null,
+          logo_url: data.data.logo_url || null
+        });
+      }
     }
 
     return data;
@@ -163,6 +230,11 @@ export const authService = {
       user: userData ? JSON.parse(userData) : null,
       token: token
     };
+  },
+
+  // ✅ NOVO: BUSCAR PERFIL COMPLETO (PARA USO EXTERNO)
+  async buscarPerfilCompleto() {
+    return await buscarPerfilCompleto();
   }
 };
 

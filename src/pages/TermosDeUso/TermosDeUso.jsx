@@ -13,6 +13,7 @@ import logo from "../../assets/img/happyidosos.jpg"
 export default function TermosDeUso() {
   const navigate = useNavigate()
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     AOS.init({
@@ -25,16 +26,29 @@ export default function TermosDeUso() {
       setIsScrolled(window.scrollY > 100)
     }
 
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkMobile()
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('resize', checkMobile)
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener('resize', checkMobile)
+    }
   }, [])
 
   const handleBack = () => {
     navigate(-1)
   }
 
+  const handleHome = () => {
+    navigate("/")
+  }
+
   const handleAcceptTerms = () => {
-    // Fecha a janela/volta para a página anterior
     navigate(-1)
   }
 
@@ -46,15 +60,43 @@ export default function TermosDeUso() {
   return (
     <>
       <main className="termos-de-uso-page">
-        <button className="termos-de-uso-back-btn" onClick={handleBack}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="m12 19-7-7 7-7" />
-            <path d="M19 12H5" />
-          </svg>
-          Voltar
-        </button>
+        {/* HEADER PARA MOBILE/TABLET */}
+        {isMobile && (
+          <header className="termos-de-uso-mobile-header">
+            <button 
+              className="termos-de-uso-mobile-back-btn"
+              onClick={handleHome}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              Home
+            </button>
+            <h1 className="termos-de-uso-mobile-title">Termos de Uso</h1>
+            <div className="termos-de-uso-mobile-spacer"></div>
+          </header>
+        )}
 
-        <div className="termos-de-uso-container">
+        {/* BOTÃO VOLTAR APENAS PARA DESKTOP */}
+        {!isMobile && (
+          <button className="termos-de-uso-back-btn" onClick={handleBack}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="m12 19-7-7 7-7" />
+              <path d="M19 12H5" />
+            </svg>
+            Voltar
+          </button>
+        )}
+
+        <div className={`termos-de-uso-container ${isMobile ? 'mobile-layout' : ''}`}>
           <div className="termos-de-uso-header" data-aos="fade-down">
             <img 
               src={logo} 
@@ -62,8 +104,12 @@ export default function TermosDeUso() {
               className="termos-de-uso-logo"
               onError={handleImageError}
             />
-            <h1 className="text-balance">Termos de Uso</h1>
-            <p className="text-pretty">Plataforma Happy Idosos</p>
+            {!isMobile && (
+              <>
+                <h1 className="text-balance">Termos de Uso</h1>
+                <p className="text-pretty">Plataforma Happy Idosos</p>
+              </>
+            )}
             <div className="termos-de-uso-meta">
               <span className="termos-de-uso-update">Última atualização: 08/09/2025</span>
             </div>

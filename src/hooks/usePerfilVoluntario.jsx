@@ -1,18 +1,16 @@
 "use client"
 
-// hooks/usePerfilVoluntario.jsx
 import { useState, useEffect, useCallback } from "react"
 import { perfilService } from "../services/editarperfil/perfilService"
 import { API_BASE_URL } from "../services/auth/auth.constants"
-import { useAuth } from "./useAuth" // ✅ NOVO IMPORT
+import { useAuth } from "./useAuth"
 
 export const usePerfilVoluntario = () => {
   const [perfil, setPerfil] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
-  const { updateUserPhoto } = useAuth() // ✅ NOVO: Acesso ao contexto de autenticação
+  const { updateUserPhoto } = useAuth()
 
-  // Buscar perfil do backend
   const buscarPerfil = useCallback(async () => {
     try {
       setCarregando(true)
@@ -37,7 +35,6 @@ export const usePerfilVoluntario = () => {
     }
   }, [])
 
-  // Editar perfil básico
   const editarPerfilBasico = useCallback(
     async (dados) => {
       try {
@@ -76,7 +73,6 @@ export const usePerfilVoluntario = () => {
     [perfil],
   )
 
-  // Editar perfil voluntário
   const editarPerfilVoluntario = useCallback(
     async (dados) => {
       try {
@@ -134,21 +130,18 @@ export const usePerfilVoluntario = () => {
       console.log("✅ Resposta upload:", response)
 
       if (response.status === 200 && response.foto) {
-        // ✅ CORREÇÃO: Construir URL ABSOLUTA
         const fotoUrl = response.foto_url
           ? `${API_BASE_URL}${response.foto_url}`
           : `${API_BASE_URL}/uploads/perfis/${response.foto}`
 
         console.log("🖼️ URL ABSOLUTA da foto:", fotoUrl)
 
-        // ✅ ATUALIZAR PERFIL LOCALMENTE
         setPerfil((prev) => ({
           ...prev,
           foto_perfil: response.foto,
           foto_url: fotoUrl,
         }))
 
-        // ✅ NOVO: ATUALIZAR NO CONTEXTO DE AUTENTICAÇÃO PARA O HEADER
         updateUserPhoto(fotoUrl)
         console.log("✅ Foto atualizada no contexto de autenticação")
 
@@ -171,14 +164,12 @@ export const usePerfilVoluntario = () => {
     } finally {
       setCarregando(false)
     }
-  }, [updateUserPhoto]) // ✅ NOVO: Adicionar dependência
+  }, [updateUserPhoto])
 
-  // Limpar erro
   const limparErro = useCallback(() => {
     setErro(null)
   }, [])
 
-  // Carregar perfil na inicialização
   useEffect(() => {
     buscarPerfil()
   }, [buscarPerfil])

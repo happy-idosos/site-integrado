@@ -11,12 +11,23 @@ import LogoutModal from "./LogoutModal"
 function Header() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, userName, userType, userPhoto, getUserInitials, getAvatarColor, logout } = useAuth()
+  const { 
+    isAuthenticated, 
+    user, 
+    userName, 
+    userType, 
+    userPhoto, 
+    getUserInitials, 
+    getAvatarColor, 
+    logout,
+    reloadAuth 
+  } = useAuth()
 
   const [scrolled, setScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [avatarError, setAvatarError] = useState(false)
   const navbarRef = useRef(null)
 
   useEffect(() => {
@@ -46,6 +57,18 @@ function Header() {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
+
+  // ✅ NOVO: Resetar estado de erro quando a foto mudar
+  useEffect(() => {
+    setAvatarError(false)
+  }, [userPhoto])
+
+  // ✅ NOVO: Recarregar auth quando o modal de login fechar
+  useEffect(() => {
+    if (!isLoginModalOpen && isAuthenticated) {
+      reloadAuth()
+    }
+  }, [isLoginModalOpen, isAuthenticated, reloadAuth])
 
   const isActive = (path) => {
     return location.pathname === path ? "active" : ""
@@ -109,6 +132,15 @@ function Header() {
     }
   }
 
+  // ✅ NOVO: Função para lidar com erro no carregamento da foto
+  const handleAvatarError = () => {
+    console.error("❌ Erro ao carregar avatar no Header:", userPhoto)
+    setAvatarError(true)
+  }
+
+  // ✅ NOVO: Função para verificar se a foto é válida
+  const isValidPhoto = userPhoto && !avatarError
+
   return (
     <header ref={navbarRef}>
       <nav className={`navbar transparent-header ${scrolled ? "scrolled" : ""}`} id="mainNavbar">
@@ -140,21 +172,38 @@ function Header() {
                   <div className="user-type badge">{getUserTypeText()}</div>
                 </div>
 
+                {/* ✅ CORREÇÃO: Botão de perfil com avatar */}
                 <Link to={getProfileRoute()} className="btn-profile" title="Gerenciar Perfil">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+                  {isValidPhoto ? (
+                    <img
+                      src={userPhoto}
+                      alt={`Foto de ${userName}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%'
+                      }}
+                      onError={handleAvatarError}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50%',
+                        background: getAvatarColor(),
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '14px'
+                      }}
+                    >
+                      {getUserInitials()}
+                    </div>
+                  )}
                 </Link>
 
                 <button
@@ -206,28 +255,24 @@ function Header() {
             <Link to={getProfileRoute()} className="drawer-user-info-link" onClick={handleNavClick}>
               <div className="drawer-user-info">
                 <div className="drawer-avatar">
-                  {userPhoto ? (
+                  {isValidPhoto ? (
                     <img
-                      src={userPhoto || "/placeholder.svg"}
+                      src={userPhoto}
                       alt={`Foto de ${userName}`}
                       className="avatar-img"
-                      onError={(e) => {
-                        console.error("Erro ao carregar avatar no drawer:", userPhoto)
-                        e.target.style.display = "none"
-                        const fallback = e.target.nextElementSibling
-                        if (fallback) fallback.style.display = "flex"
-                      }}
+                      onError={handleAvatarError}
                     />
-                  ) : null}
-                  <div
-                    className="avatar-fallback"
-                    style={{
-                      background: getAvatarColor(),
-                      display: userPhoto ? "none" : "flex",
-                    }}
-                  >
-                    {getUserInitials()}
-                  </div>
+                  ) : (
+                    <div
+                      className="avatar-fallback"
+                      style={{
+                        background: getAvatarColor(),
+                        display: 'flex'
+                      }}
+                    >
+                      {getUserInitials()}
+                    </div>
+                  )}
                 </div>
                 <div className="drawer-user-details">
                   <div className="drawer-user-name">{userName}</div>
@@ -238,7 +283,15 @@ function Header() {
           ) : (
             <div className="drawer-user-info">
               <div className="drawer-avatar">
-                <span className="avatar-icon"></span>
+                <div 
+                  className="avatar-fallback"
+                  style={{
+                    background: 'linear-gradient(135deg, #6c757d, #495057)',
+                    display: 'flex'
+                  }}
+                >
+                  <span style={{ color: 'white', fontSize: '18px' }}>👤</span>
+                </div>
               </div>
               <div className="drawer-user-details">
                 <div className="drawer-user-name">Visitante</div>
@@ -325,7 +378,10 @@ function Header() {
         </div>
       </div>
 
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
 
       <LogoutModal
         isOpen={isLogoutModalOpen}

@@ -6,14 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
-import LoginModal from "../../components/layout/LoginModal" // Importando o LoginModal
+import LoginModal from "../../components/layout/LoginModal"
 import "aos/dist/aos.css"
 import AOS from "aos"
 import "./Eventos.css"
 import { eventosService } from "../../services/eventos/eventos.service"
 import { participacoesService } from "../../services/eventos/participacoes.service"
 
-// Importações de bibliotecas
 import carouselum from "../../assets/img/carousels/carousel-12.jpg"
 import carouseldois from "../../assets/img/carousels/carousel-11.jpg"
 import carouseltres from "../../assets/img/carousels/carousel-10.jpg"
@@ -30,7 +29,7 @@ const Eventos = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [showInscricaoModal, setShowInscricaoModal] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false) // Estado para controlar o modal de login
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [modalMessage, setModalMessage] = useState("")
   const [modalTitle, setModalTitle] = useState("")
   const [isLoadingAction, setIsLoadingAction] = useState(false)
@@ -389,6 +388,44 @@ const Eventos = () => {
       setIsLoadingAction(false)
     }
   }
+
+  // ✅ SISTEMA DE FILTROS COM BADGES (IGUAL AO VIDEOS.JSX)
+  const clearFilters = () => {
+    setSearchTerm("")
+    setSelectedCategory("")
+    setSelectedDate("")
+  }
+
+  const removeFilter = (filterType) => {
+    switch (filterType) {
+      case 'search':
+        setSearchTerm("")
+        break
+      case 'category':
+        setSelectedCategory("")
+        break
+      case 'date':
+        setSelectedDate("")
+        break
+      default:
+        break
+    }
+  }
+
+  // Calcular filtros ativos para mostrar badges
+  const activeFilters = [
+    searchTerm && { type: 'search', label: `Busca: "${searchTerm}"`, value: searchTerm },
+    selectedCategory && { type: 'category', label: `Categoria: ${selectedCategory}`, value: selectedCategory },
+    selectedDate && { 
+      type: 'date', 
+      label: `Data: ${
+        selectedDate === 'hoje' ? 'Hoje' : 
+        selectedDate === 'semana' ? 'Esta semana' : 
+        selectedDate === 'mes' ? 'Este mês' : selectedDate
+      }`, 
+      value: selectedDate 
+    }
+  ].filter(Boolean)
 
   useEffect(() => {
     AOS.init({
@@ -778,21 +815,22 @@ const Eventos = () => {
 
             {isAuthenticated && currentUser?.tipo === 'asilo' && (
               <div className="text-center mb-5">
-                <button className="videos-btn-criar" onClick={showCreateEventModal}>
-                  <i className="fas fa-cloud-upload-alt"></i>
+                <button className="btn-criar-evento" onClick={showCreateEventModal}>
+                  <i className="fas fa-plus-circle"></i>
                   Criar Novo Evento
                 </button>
               </div>
             )}
 
             {isAuthenticated && (
-              <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
+              <div className="eventos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
                 <div className="row g-3 align-items-end">
+                  {/* ✅ CAMPO DE PESQUISA MODERNIZADO */}
                   <div className="col-12 mb-4">
-                    <label htmlFor="searchInput" className="videos-filter-label">
+                    <label htmlFor="searchInput" className="eventos-filter-label">
                       <i className="fas fa-search"></i>Buscar Eventos
                     </label>
-                    <div className="search-box">
+                    <div className="eventos-search-box">
                       <input
                         type="text"
                         id="searchInput"
@@ -801,12 +839,13 @@ const Eventos = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                       />
-                      <i className="fas fa-search search-icon"></i>
+                      <i className="fas fa-search eventos-search-icon"></i>
                     </div>
                   </div>
 
+                  {/* ✅ FILTRO CATEGORIA MODERNIZADO */}
                   <div className="col-md-6">
-                    <label htmlFor="categoryFilter" className="videos-filter-label">
+                    <label htmlFor="categoryFilter" className="eventos-filter-label">
                       <i className="fas fa-tags me-2"></i>Filtrar por Categoria
                     </label>
                     <select
@@ -824,8 +863,9 @@ const Eventos = () => {
                     </select>
                   </div>
                   
+                  {/* ✅ FILTRO DATA MODERNIZADO */}
                   <div className="col-md-6">
-                    <label htmlFor="dateFilter" className="videos-filter-label">
+                    <label htmlFor="dateFilter" className="eventos-filter-label">
                       <i className="fas fa-calendar me-2"></i>Filtrar por Data
                     </label>
                     <select
@@ -841,26 +881,28 @@ const Eventos = () => {
                     </select>
                   </div>
 
-                  <div className="col-12 mt-3">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span className="text-muted">
-                        {filteredEvents.length} evento(s) encontrado(s)
-                      </span>
-                      {(searchTerm || selectedCategory || selectedDate) && (
-                        <button 
-                          className="btn btn-outline-secondary btn-sm"
-                          onClick={() => {
-                            setSearchTerm("")
-                            setSelectedCategory("")
-                            setSelectedDate("")
-                          }}
-                        >
-                          <i className="fas fa-times me-1"></i>
-                          Limpar Filtros
-                        </button>
-                      )}
+                  {/* ✅ BADGES DE FILTROS ATIVOS (IGUAL AO VIDEOS.JSX) */}
+                  {activeFilters.length > 0 && (
+                    <div className="col-12 mt-3">
+                      <div className="eventos-active-filters">
+                        <span className="eventos-filter-badge-label">
+                          <i className="fas fa-filter me-1"></i>
+                          Filtros ativos:
+                        </span>
+                        {activeFilters.map((filter, index) => (
+                          <div
+                            key={index}
+                            className="eventos-filter-badge"
+                            onClick={() => removeFilter(filter.type)}
+                            title={`Remover filtro: ${filter.label}`}
+                          >
+                            <span>{filter.label}</span>
+                            <i className="fas fa-times"></i>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
@@ -875,32 +917,32 @@ const Eventos = () => {
             )}
 
             {!isLoading && !isAuthenticated && (
-              <div className="videos-login-prompt-container" data-aos="fade-up">
-                <div className="videos-login-prompt-card">
-                  <div className="videos-login-prompt-icon">
+              <div className="eventos-login-prompt-container" data-aos="fade-up">
+                <div className="eventos-login-prompt-card">
+                  <div className="eventos-login-prompt-icon">
                     <i className="fas fa-lock"></i>
                   </div>
-                  <h3 className="videos-login-prompt-title">Acesso Restrito</h3>
-                  <p className="videos-login-prompt-text">
+                  <h3 className="eventos-login-prompt-title">Acesso Restrito</h3>
+                  <p className="eventos-login-prompt-text">
                     Faça login para participar de Eventos ou gerenciá-los e se organizar da melhor forma.
                   </p>
-                  <div className="videos-login-prompt-features">
-                    <div className="videos-feature-item">
+                  <div className="eventos-login-prompt-features">
+                    <div className="eventos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Acompanhe eventos em tempo real</span>
                     </div>
-                    <div className="videos-feature-item">
+                    <div className="eventos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Comunique-se com a outra vertente</span>
                     </div>
-                    <div className="videos-feature-item">
+                    <div className="eventos-feature-item">
                       <i className="fas fa-check-circle"></i>
                       <span>Interaja com a comunidade</span>
                     </div>
                   </div>
-                  <div className="videos-login-prompt-actions">
+                  <div className="eventos-login-prompt-actions">
                     <button 
-                      className="videos-btn-login-primary"
+                      className="eventos-btn-login-primary"
                       onClick={handleOpenLoginModal}
                     >
                       <i className="fas fa-sign-in-alt"></i>
@@ -926,19 +968,7 @@ const Eventos = () => {
                     <i className="fas fa-calendar-times fa-4x text-muted mb-4"></i>
                     <h4 className="text-muted mb-3">Nenhum evento encontrado</h4>
                     <p className="text-muted mb-4">Tente ajustar os filtros ou criar um novo evento.</p>
-                    {(searchTerm || selectedCategory || selectedDate) && (
-                      <button 
-                        className="btn btn-outline-primary me-2"
-                        onClick={() => {
-                          setSearchTerm("")
-                          setSelectedCategory("")
-                          setSelectedDate("")
-                        }}
-                      >
-                        <i className="fas fa-times me-1"></i>
-                        Limpar Filtros
-                      </button>
-                    )}
+ 
                     {currentUser?.tipo === 'asilo' && (
                       <button 
                         className="btn btn-primary"
@@ -956,202 +986,203 @@ const Eventos = () => {
         </section>
       </main>
 
-{showModal && (
-  <div className="modal fade videos-upload-modal show" style={{ display: "block", backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
-    <div className="modal-dialog modal-dialog-centered modal-lg">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title">
-            <i className="fas fa-plus-circle"></i>
-            Criar Novo Evento
-          </h5>
-          <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-        </div>
-        <div className="modal-body">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              createEvent()
-            }}
-          >
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventTitle" className="form-label">
-                  <i className="fas fa-heading me-2"></i>
-                  Título do Evento *
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="eventTitle"
-                  value={eventForm.title}
-                  onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
-                  required
-                  maxLength={100}
-                  placeholder="Digite um título atrativo para seu evento..."
-                />
+      {/* Modal de Criar Evento */}
+      {showModal && (
+        <div className="modal fade videos-upload-modal show" style={{ display: "block", backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
+          <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  <i className="fas fa-plus-circle"></i>
+                  Criar Novo Evento
+                </h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventCategory" className="form-label">
-                  <i className="fas fa-tag me-2"></i>
-                  Categoria
-                </label>
-                <select
-                  className="form-select"
-                  id="eventCategory"
-                  value={eventForm.category}
-                  onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
+              <div className="modal-body">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    createEvent()
+                  }}
                 >
-                  <option value="">Selecione uma categoria</option>
-                  <option value="musica"> Música</option>
-                  <option value="arte"> Arte</option>
-                  <option value="conversa"> Conversa</option>
-                  <option value="exercicio"> Exercício</option>
-                  <option value="culinaria">   Culinária</option>
-                </select>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventTitle" className="form-label">
+                        <i className="fas fa-heading me-2"></i>
+                        Título do Evento *
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="eventTitle"
+                        value={eventForm.title}
+                        onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
+                        required
+                        maxLength={100}
+                        placeholder="Digite um título atrativo para seu evento..."
+                      />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventCategory" className="form-label">
+                        <i className="fas fa-tag me-2"></i>
+                        Categoria
+                      </label>
+                      <select
+                        className="form-select"
+                        id="eventCategory"
+                        value={eventForm.category}
+                        onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
+                      >
+                        <option value="">Selecione uma categoria</option>
+                        <option value="musica"> Música</option>
+                        <option value="arte"> Arte</option>
+                        <option value="conversa"> Conversa</option>
+                        <option value="exercicio"> Exercício</option>
+                        <option value="culinaria">   Culinária</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label htmlFor="eventDescription" className="form-label">
+                      <i className="fas fa-align-left me-2"></i>
+                      Descrição *
+                    </label>
+                    <textarea
+                      className="form-control"
+                      id="eventDescription"
+                      rows="3"
+                      value={eventForm.description}
+                      onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
+                      required
+                      maxLength={500}
+                      placeholder="Descreva detalhadamente o que os participantes podem esperar do evento..."
+                    ></textarea>
+                    <div className="form-text text-end">
+                      <span className={eventForm.description.length > 450 ? "text-warning" : "text-muted"}>
+                        {eventForm.description.length}/500 caracteres
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventDate" className="form-label">
+                        <i className="fas fa-calendar-day me-2"></i>
+                        Data do Evento *
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="eventDate"
+                        value={eventForm.date}
+                        onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
+                        required
+                        min={new Date().toISOString().split("T")[0]}
+                      />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventTime" className="form-label">
+                        <i className="fas fa-clock me-2"></i>
+                        Horário
+                      </label>
+                      <input
+                        type="time"
+                        className="form-control"
+                        id="eventTime"
+                        value={eventForm.time}
+                        onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label htmlFor="eventLocation" className="form-label">
+                      <i className="fas fa-map-marker-alt me-2"></i>
+                      Localização
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="eventLocation"
+                      value={eventForm.location}
+                      onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
+                      placeholder="Digite o endereço completo ou local do evento..."
+                      maxLength={200}
+                    />
+                  </div>
+                  
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventContact" className="form-label">
+                        <i className="fas fa-phone me-2"></i>
+                        Telefone para Contato *
+                      </label>
+                      <input
+                        type="tel"
+                        className="form-control"
+                        id="eventContact"
+                        value={eventForm.contact}
+                        onChange={(e) => handlePhoneChange(e.target.value)}
+                        placeholder="(11) 99999-9999"
+                        required
+                      />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="eventCapacity" className="form-label">
+                        <i className="fas fa-users me-2"></i>
+                        Capacidade (pessoas) *
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="eventCapacity"
+                        value={eventForm.capacity}
+                        onChange={(e) => setEventForm({ ...eventForm, capacity: parseInt(e.target.value) || 1 })}
+                        min="1"
+                        max="1000"
+                        required
+                      />
+                      <div className="form-text">
+                        Número máximo de participantes
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowModal(false)}
+                  disabled={isLoadingAction}
+                >
+                  <i className="fas fa-times me-2"></i>
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={createEvent}
+                  disabled={isLoadingAction}
+                >
+                  {isLoadingAction ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      Criando...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-plus-circle me-2"></i>
+                      Criar Evento
+                    </>
+                  )}
+                </button>
               </div>
             </div>
-            
-            <div className="mb-3">
-              <label htmlFor="eventDescription" className="form-label">
-                <i className="fas fa-align-left me-2"></i>
-                Descrição *
-              </label>
-              <textarea
-                className="form-control"
-                id="eventDescription"
-                rows="3"
-                value={eventForm.description}
-                onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
-                required
-                maxLength={500}
-                placeholder="Descreva detalhadamente o que os participantes podem esperar do evento..."
-              ></textarea>
-              <div className="form-text text-end">
-                <span className={eventForm.description.length > 450 ? "text-warning" : "text-muted"}>
-                  {eventForm.description.length}/500 caracteres
-                </span>
-              </div>
-            </div>
-            
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventDate" className="form-label">
-                  <i className="fas fa-calendar-day me-2"></i>
-                  Data do Evento *
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="eventDate"
-                  value={eventForm.date}
-                  onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
-                  required
-                  min={new Date().toISOString().split("T")[0]}
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventTime" className="form-label">
-                  <i className="fas fa-clock me-2"></i>
-                  Horário
-                </label>
-                <input
-                  type="time"
-                  className="form-control"
-                  id="eventTime"
-                  value={eventForm.time}
-                  onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
-                />
-              </div>
-            </div>
-            
-            <div className="mb-3">
-              <label htmlFor="eventLocation" className="form-label">
-                <i className="fas fa-map-marker-alt me-2"></i>
-                Localização
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="eventLocation"
-                value={eventForm.location}
-                onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
-                placeholder="Digite o endereço completo ou local do evento..."
-                maxLength={200}
-              />
-            </div>
-            
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventContact" className="form-label">
-                  <i className="fas fa-phone me-2"></i>
-                  Telefone para Contato *
-                </label>
-                <input
-                  type="tel"
-                  className="form-control"
-                  id="eventContact"
-                  value={eventForm.contact}
-                  onChange={(e) => handlePhoneChange(e.target.value)}
-                  placeholder="(11) 99999-9999"
-                  required
-                />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label htmlFor="eventCapacity" className="form-label">
-                  <i className="fas fa-users me-2"></i>
-                  Capacidade (pessoas) *
-                </label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="eventCapacity"
-                  value={eventForm.capacity}
-                  onChange={(e) => setEventForm({ ...eventForm, capacity: parseInt(e.target.value) || 1 })}
-                  min="1"
-                  max="1000"
-                  required
-                />
-                <div className="form-text">
-                  Número máximo de participantes
-                </div>
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
-        <div className="modal-footer">
-          <button 
-            type="button" 
-            className="btn btn-secondary" 
-            onClick={() => setShowModal(false)}
-            disabled={isLoadingAction}
-          >
-            <i className="fas fa-times me-2"></i>
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={createEvent}
-            disabled={isLoadingAction}
-          >
-            {isLoadingAction ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                Criando...
-              </>
-            ) : (
-              <>
-                <i className="fas fa-plus-circle me-2"></i>
-                Criar Evento
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       <InscricaoModal />
       <SuccessModal />

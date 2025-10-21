@@ -23,6 +23,7 @@ function Videos() {
   const [categoryFilter, setCategoryFilter] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
   const [videos, setVideos] = useState([])
+  const [allVideos, setAllVideos] = useState([])
   const [hasMore, setHasMore] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedVideo, setSelectedVideo] = useState(null)
@@ -38,10 +39,22 @@ function Videos() {
     { value: "tutoriais", label: "Tutoriais" },
     { value: "atividades", label: "Atividades" },
     { value: "comemoracoes", label: "Comemorações" },
-    { value: "outros", label: "Outros" }
+    { value: "outros", label: "Outros" },
   ])
 
   const fileInputRef = useRef(null)
+
+  // LISTA DE ASILOS CONHECIDOS - ATUALIZE COM OS NOMES REAIS DO SEU SISTEMA
+  const asilosConhecidos = [
+    "casa de gordo",
+    "lar dos idosos",
+    "asilo são francisco",
+    "lar da terceira idade",
+    "abrigo são vicente",
+    "casa de repouso",
+    "asilo municipal",
+    "lar de idosos",
+  ]
 
   const handleOpenLoginModal = () => {
     setIsLoginModalOpen(true)
@@ -83,9 +96,16 @@ function Videos() {
     })
 
     if (isAuthenticated) {
-      loadVideos(true)
+      loadAllVideos()
     }
-  }, [isAuthenticated, sortBy, categoryFilter])
+  }, [isAuthenticated])
+
+  // Efeito para aplicar filtros quando mudam
+  useEffect(() => {
+    if (isAuthenticated && allVideos.length > 0) {
+      applyFilters()
+    }
+  }, [currentSearch, sortBy, categoryFilter, currentPage, allVideos])
 
   const showModal = (modalId) => {
     const modalElement = document.getElementById(modalId)
@@ -107,7 +127,9 @@ function Videos() {
 
   const showNotification = (type, message) => {
     setNotification({ show: true, type, message })
-    showModal("notificationModal")
+    setTimeout(() => {
+      showModal("notificationModal")
+    }, 100)
 
     if (type === "success") {
       setTimeout(() => {
@@ -123,57 +145,76 @@ function Videos() {
     }, 300)
   }
 
-  const loadVideos = async (reset = true) => {
-    if (isLoading || !isAuthenticated) return
+  // Carrega todos os vídeos uma vez
+  const loadAllVideos = async () => {
+    if (!isAuthenticated) return
     setIsLoading(true)
     try {
       const data = await api.get("/api/videos")
       if (!data?.data) throw new Error("Resposta inválida da API")
 
-      let fetchedVideos = data.data
-
-      if (currentSearch) {
-        fetchedVideos = fetchedVideos.filter(
-          (v) =>
-            v.nome_midia.toLowerCase().includes(currentSearch.toLowerCase()) ||
-            (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase())),
-        )
-      }
-
-      if (categoryFilter !== "all") {
-        fetchedVideos = fetchedVideos.filter((v) => v.categoria === categoryFilter)
-      }
-
-      if (sortBy === "newest") {
-        fetchedVideos.sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em))
-      } else if (sortBy === "oldest") {
-        fetchedVideos.sort((a, b) => new Date(a.criado_em) - new Date(b.criado_em))
-      } else if (sortBy === "title") {
-        fetchedVideos.sort((a, b) => a.nome_midia.localeCompare(b.nome_midia))
-      }
-
-      const paginated = fetchedVideos.slice(0, currentPage * 6)
-      setVideos(paginated)
-      setHasMore(fetchedVideos.length > paginated.length)
+      setAllVideos(data.data)
+      console.log("Vídeos carregados:", data.data)
     } catch (error) {
-      console.error(error)
-      showNotification("error", error.message)
+      console.error("Erro ao carregar vídeos:", error)
+      showNotification("error", "Erro ao carregar vídeos. Tente novamente.")
     } finally {
       setIsLoading(false)
     }
   }
 
+  // Aplica filtros nos vídeos
+  const applyFilters = () => {
+    let filteredVideos = [...allVideos]
+
+    // Aplicar busca
+    if (currentSearch) {
+      filteredVideos = filteredVideos.filter(
+        (v) =>
+          v.nome_midia?.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          (v.descricao && v.descricao.toLowerCase().includes(currentSearch.toLowerCase())),
+      )
+    }
+
+    // Aplicar filtro de categoria
+    if (categoryFilter !== "all") {
+      filteredVideos = filteredVideos.filter((v) => v.categoria === categoryFilter)
+    }
+
+    // Aplicar ordenação
+    if (sortBy === "newest") {
+      filteredVideos.sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em))
+    } else if (sortBy === "oldest") {
+      filteredVideos.sort((a, b) => new Date(a.criado_em) - new Date(b.criado_em))
+    } else if (sortBy === "title") {
+      filteredVideos.sort((a, b) => a.nome_midia?.localeCompare(b.nome_midia))
+    }
+
+    // Paginação
+    const paginated = filteredVideos.slice(0, currentPage * 6)
+    setVideos(paginated)
+    setHasMore(filteredVideos.length > paginated.length)
+  }
+
   const loadMoreVideos = () => {
     if (!isAuthenticated) return
     setCurrentPage((prev) => prev + 1)
-    loadVideos(false)
   }
 
   const searchVideos = (q) => {
     if (!isAuthenticated) return
     setCurrentSearch(q)
     setCurrentPage(1)
-    loadVideos(true)
+  }
+
+  const handleSortChange = (value) => {
+    setSortBy(value)
+    setCurrentPage(1)
+  }
+
+  const handleCategoryChange = (value) => {
+    setCategoryFilter(value)
+    setCurrentPage(1)
   }
 
   const clearFilters = () => {
@@ -196,6 +237,7 @@ function Videos() {
       return
     }
     setSelectedFile(null)
+    setUploadProgress(0)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -264,28 +306,26 @@ function Videos() {
         body: formData,
       })
 
-      const responseText = await response.text()
-      let data
-      try {
-        data = JSON.parse(responseText)
-      } catch (parseError) {
-        throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 100)}...`)
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`Erro ${response.status}: ${errorText}`)
       }
 
-      if (!response.ok) {
-        throw new Error(data.message || `Erro ${response.status}: ${response.statusText}`)
-      }
+      const data = await response.json()
 
       setUploadProgress(100)
       showNotification("success", "Vídeo enviado com sucesso! Ele já está disponível em nossa galeria.")
+
       setTimeout(() => {
         hideModal("uploadModal")
         form.reset()
         setSelectedFile(null)
+        setUploadProgress(0)
         if (fileInputRef.current) {
           fileInputRef.current.value = ""
         }
-        loadVideos(true)
+        loadAllVideos()
+        setCurrentPage(1)
       }, 1500)
     } catch (err) {
       console.error("Erro no upload:", err)
@@ -312,7 +352,32 @@ function Videos() {
     return true
   }
 
-  const formatDate = (date) => new Date(date).toLocaleDateString("pt-BR")
+  const formatDate = (date) => {
+    if (!date) return "Data não disponível"
+    return new Date(date).toLocaleDateString("pt-BR")
+  }
+
+  // FUNÇÃO CORRIGIDA PARA IDENTIFICAR ASILOS vs VOLUNTÁRIOS
+  const getUploaderType = (video) => {
+    const autorNome = video.autor_nome?.toLowerCase().trim() || ""
+
+    // Verifica se o nome do autor corresponde a algum asilo conhecido
+    const isAsilo = asilosConhecidos.some((asilo) => autorNome.includes(asilo.toLowerCase()))
+
+    if (isAsilo) {
+      return {
+        type: "Asilo",
+        icon: "fas fa-home",
+        badgeClass: "asilo",
+      }
+    }
+
+    return {
+      type: "Voluntário",
+      icon: "fas fa-hands-helping",
+      badgeClass: "voluntario",
+    }
+  }
 
   const NotificationModal = () => (
     <div
@@ -355,7 +420,7 @@ function Videos() {
       showNotification("success", "Vídeo excluído com sucesso!")
       hideModal("deleteConfirmModal")
       setVideoToDelete(null)
-      loadVideos(true)
+      loadAllVideos()
     } catch (error) {
       console.error("Erro ao deletar vídeo:", error)
       showNotification("error", error.message || "Erro ao excluir vídeo.")
@@ -371,65 +436,57 @@ function Videos() {
     return currentUser && video.id_usuario === currentUser.id_usuario
   }
 
-const DeleteConfirmModal = () => (
-  <div
-    className="modal fade videos-upload-modal"
-    id="deleteConfirmModal"
-    tabIndex="-1"
-    aria-labelledby="deleteConfirmModalLabel"
-    aria-hidden="true"
-  >
-    <div className="modal-dialog modal-dialog-centered modal-lg">
-      <div className="modal-content">
-        <div className="modal-header bg-primary text-white">
-          <h5 className="modal-title">
-            <i className="fas fa-exclamation-triangle me-2"></i>
-            Confirmar Exclusão
-          </h5>
-          <button 
-            type="button" 
-            className="btn-close btn-close-white" 
-            data-bs-dismiss="modal" 
-            aria-label="Close"
-          ></button>
-        </div>
-        <div className="modal-body">
-          <div className="alert alert-warning">
-            <i className="fas fa-exclamation-circle me-2"></i>
-            <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+  const DeleteConfirmModal = () => (
+    <div
+      className="modal fade videos-upload-modal"
+      id="deleteConfirmModal"
+      tabIndex="-1"
+      aria-labelledby="deleteConfirmModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="modal-header bg-primary text-white">
+            <h5 className="modal-title">
+              <i className="fas fa-exclamation-triangle me-2"></i>
+              Confirmar Exclusão
+            </h5>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <p className="mb-3">
-            Tem certeza que deseja excluir o vídeo <strong className="text-danger">"{videoToDelete?.nome_midia}"</strong>?
-          </p>
-          <div className="border rounded p-3 bg-light">
-            <small className="text-muted">
-              <i className="fas fa-info-circle me-1"></i>
-              O vídeo será removido permanentemente do sistema.
-            </small>
+          <div className="modal-body">
+            <div className="alert alert-warning">
+              <i className="fas fa-exclamation-circle me-2"></i>
+              <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+            </div>
+            <p className="mb-3">
+              Tem certeza que deseja excluir o vídeo{" "}
+              <strong className="text-danger">"{videoToDelete?.nome_midia}"</strong>?
+            </p>
+            <div className="border rounded p-3 bg-light">
+              <small className="text-muted">
+                <i className="fas fa-info-circle me-1"></i>O vídeo será removido permanentemente do sistema.
+              </small>
+            </div>
           </div>
-        </div>
-        <div className="modal-footer">
-          <button 
-            type="button" 
-            className="btn btn-outline-secondary" 
-            data-bs-dismiss="modal"
-          >
-            <i className="fas fa-times me-2"></i>
-            Cancelar
-          </button>
-          <button 
-            type="button" 
-            className="btn btn-danger" 
-            onClick={() => handleDeleteVideo(videoToDelete?.id_midia)}
-          >
-            <i className="fas fa-trash me-2"></i>
-            Excluir Vídeo
-          </button>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
+              <i className="fas fa-times me-2"></i>
+              Cancelar
+            </button>
+            <button type="button" className="btn btn-danger" onClick={() => handleDeleteVideo(videoToDelete?.id_midia)}>
+              <i className="fas fa-trash me-2"></i>
+              Excluir Vídeo
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-)
+  )
 
   return (
     <div className="videos-page">
@@ -442,25 +499,12 @@ const DeleteConfirmModal = () => (
         data-aos="fade-up"
         data-aos-duration="1200"
       >
-        <div className="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselExampleCaptions"
-            data-bs-slide-to="0"
-            className="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-        </div>
         <div className="carousel-inner">
           <div className="carousel-item active">
             <img src={carouselum || "/placeholder.svg"} className="d-block w-100" alt="Galeria de Vídeos" />
             <div className="carousel-caption d-none d-md-block">
               <h2>Nossa Galeria de Vídeos</h2>
               <p>Descubra momentos especiais, depoimentos emocionantes e conteúdos inspiradores</p>
-              <button className="btn btn-outline-light btn-lg" >
-                Ver Vídeos
-              </button>
               {!isAuthenticated && (
                 <button className="btn btn-outline-light btn-lg" onClick={handleOpenLoginModal}>
                   Fazer Login para Acessar
@@ -476,7 +520,7 @@ const DeleteConfirmModal = () => (
       <main>
         <section className="videos-lista py-5" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
-            <h2 className="section-title text-balance">Nossa Galeria de Vídeos</h2>
+            <h2 className="videos-main-title">Nossa Galeria de Vídeos</h2>
 
             {isAuthenticated && (
               <div className="text-center mb-5">
@@ -545,7 +589,7 @@ const DeleteConfirmModal = () => (
                       <i className="fas fa-sort"></i>
                       Ordenar Por
                     </label>
-                    <select className="form-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                    <select className="form-select" value={sortBy} onChange={(e) => handleSortChange(e.target.value)}>
                       <option value="newest">Mais Recentes</option>
                       <option value="oldest">Mais Antigos</option>
                       <option value="title">Título (A-Z)</option>
@@ -559,10 +603,10 @@ const DeleteConfirmModal = () => (
                     <select
                       className="form-select"
                       value={categoryFilter}
-                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
                     >
                       <option value="all">Todas as Categorias</option>
-                      {categories.map(category => (
+                      {categories.map((category) => (
                         <option key={category.value} value={category.value}>
                           {category.label}
                         </option>
@@ -586,14 +630,14 @@ const DeleteConfirmModal = () => (
                     )}
                     {sortBy !== "newest" && (
                       <span className="videos-filter-badge">
-                        Ordem: {sortBy === "oldest" ? "Mais Antigos" : "Título"}
-                        <i className="fas fa-times" onClick={() => setSortBy("newest")}></i>
+                        Ordem: {sortBy === "oldest" ? "Mais Antigos" : "Título (A-Z)"}
+                        <i className="fas fa-times" onClick={() => handleSortChange("newest")}></i>
                       </span>
                     )}
                     {categoryFilter !== "all" && (
                       <span className="videos-filter-badge">
-                        Categoria: {categories.find(c => c.value === categoryFilter)?.label || categoryFilter}
-                        <i className="fas fa-times" onClick={() => setCategoryFilter("all")}></i>
+                        Categoria: {categories.find((c) => c.value === categoryFilter)?.label || categoryFilter}
+                        <i className="fas fa-times" onClick={() => handleCategoryChange("all")}></i>
                       </span>
                     )}
                   </div>
@@ -605,7 +649,7 @@ const DeleteConfirmModal = () => (
               <div className="row">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="col-lg-4 col-md-6 mb-4">
-                    <div className="videos-card videos-skeleton-card">
+                    <div className="card videos-card videos-skeleton-card">
                       <div className="videos-skeleton-thumbnail"></div>
                       <div className="card-body">
                         <div className="videos-skeleton-icon"></div>
@@ -620,64 +664,101 @@ const DeleteConfirmModal = () => (
             )}
 
             {!isLoading && isAuthenticated && videos.length > 0 && (
-              <div className="row">
-                {videos.map((video, index) => (
-                  <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
-                    <div className="card videos-card" data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
-                      <div className="videos-thumbnail-container" onClick={() => openVideoPlayer(video)}>
-                        <video
-                          src={`${API_BASE_URL}/${video.url}#t=0.1`}
-                          className="videos-thumbnail"
-                          muted
-                          preload="metadata"
-                        />
-                        <div className="videos-overlay">
-                          <div className="videos-play-button">
-                            <i className="fas fa-play"></i>
+              <>
+                <div className="row">
+                  {videos.map((video, index) => {
+                    const uploaderInfo = getUploaderType(video)
+                    return (
+                      <div key={video.id_midia} className="col-lg-4 col-md-6 mb-4">
+                        <div className="card videos-card" data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
+                          <div className="videos-thumbnail-container" onClick={() => openVideoPlayer(video)}>
+                            <video
+                              src={`${API_BASE_URL}/${video.url}#t=0.1`}
+                              className="videos-thumbnail"
+                              muted
+                              preload="metadata"
+                            />
+                            <div className="videos-overlay">
+                              <div className="videos-play-button">
+                                <i className="fas fa-play"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="card-body">
+                            {isVideoOwner(video) && (
+                              <button
+                                className="videos-btn-delete"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  openDeleteConfirmModal(video)
+                                }}
+                                title="Excluir vídeo"
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            )}
+
+                            <div className="videos-icon">
+                              <i className="fas fa-play-circle"></i>
+                            </div>
+
+                            <h3 className="videos-title">{video.nome_midia}</h3>
+
+                            {/* Informações do Uploader */}
+                            <div className="videos-uploader-info">
+                              <span className={`videos-uploader-badge ${uploaderInfo.badgeClass}`}>
+                                <i className={uploaderInfo.icon}></i>
+                                {uploaderInfo.type}: {video.autor_nome || "Usuário"}
+                              </span>
+                            </div>
+
+                            {/* Categoria */}
+                            {video.categoria && (
+                              <span className="videos-category-badge">
+                                {categories.find((c) => c.value === video.categoria)?.label || video.categoria}
+                              </span>
+                            )}
+
+                            {/* Descrição */}
+                            {video.descricao && (
+                              <p className="videos-description">
+                                {video.descricao.length > 100
+                                  ? `${video.descricao.substring(0, 100)}...`
+                                  : video.descricao}
+                              </p>
+                            )}
+
+                            {/* Detalhes */}
+                            <ul className="videos-details">
+                              <li>
+                                <i className="fas fa-user"></i>
+                                <span>{video.autor_nome || "Autor não informado"}</span>
+                              </li>
+                              <li>
+                                <i className="fas fa-calendar"></i>
+                                <span>{formatDate(video.criado_em)}</span>
+                              </li>
+                              <li>
+                                <i className={uploaderInfo.icon}></i>
+                                <span>{uploaderInfo.type}</span>
+                              </li>
+                            </ul>
                           </div>
                         </div>
-                        <div className="videos-duration">2:30</div>
                       </div>
-                      <div className="card-body text-center">
-                        {isVideoOwner(video) && (
-                          <button
-                            className="videos-btn-delete"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              openDeleteConfirmModal(video)
-                            }}
-                            title="Excluir vídeo"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        )}
-                        <div className="videos-icon">
-                          <i className="fas fa-play-circle"></i>
-                        </div>
-                        <h3 className="videos-title">{video.nome_midia}</h3>
-                        {video.categoria && (
-                          <span className="videos-category-badge">
-                            {categories.find(c => c.value === video.categoria)?.label || video.categoria}
-                          </span>
-                        )}
-                        {video.descricao && (
-                          <p className="videos-description">
-                            {video.descricao.length > 120 ? `${video.descricao.substring(0, 120)}...` : video.descricao}
-                          </p>
-                        )}
-                        <ul className="videos-details">
-                          <li>
-                            <i className="fas fa-user"></i> {video.autor_nome}
-                          </li>
-                          <li>
-                            <i className="fas fa-calendar"></i> {formatDate(video.criado_em)}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                    )
+                  })}
+                </div>
+
+                {hasMore && (
+                  <div className="text-center mt-5">
+                    <button className="videos-btn-load-more" onClick={loadMoreVideos}>
+                      <i className="fas fa-chevron-down"></i>
+                      Carregar Mais Vídeos
+                    </button>
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
 
             {!isLoading && isAuthenticated && videos.length === 0 && (
@@ -685,13 +766,20 @@ const DeleteConfirmModal = () => (
                 <div className="videos-empty-state-icon">
                   <i className="fas fa-video-slash"></i>
                 </div>
-                <h4 className="videos-empty-state-title">Nenhum vídeo encontrado</h4>
+                <h4 className="videos-empty-state-title">
+                  {allVideos.length === 0 ? "Nenhum vídeo encontrado" : "Nenhum vídeo corresponde aos filtros"}
+                </h4>
                 <p className="videos-empty-state-text">
-                  {currentSearch
-                    ? `Nenhum resultado para "${currentSearch}". Tente outros termos de busca.`
+                  {currentSearch || categoryFilter !== "all"
+                    ? `Nenhum resultado para os filtros aplicados. Tente outros termos de busca ou categorias.`
                     : "Ainda não há vídeos publicados. Seja o primeiro a compartilhar!"}
                 </p>
-                {!currentSearch && (
+                {currentSearch || categoryFilter !== "all" ? (
+                  <button className="videos-btn-criar" onClick={clearFilters}>
+                    <i className="fas fa-times"></i>
+                    Limpar Filtros
+                  </button>
+                ) : (
                   <button className="videos-btn-criar" onClick={openUploadModal}>
                     <i className="fas fa-plus-circle"></i>
                     Enviar Primeiro Vídeo
@@ -699,20 +787,11 @@ const DeleteConfirmModal = () => (
                 )}
               </div>
             )}
-
-            {hasMore && !isLoading && isAuthenticated && (
-              <div className="text-center mt-5">
-                <button className="videos-btn-load-more" onClick={loadMoreVideos}>
-                  <i className="fas fa-chevron-down"></i>
-                  Carregar Mais Vídeos
-                </button>
-              </div>
-            )}
           </div>
         </section>
       </main>
 
-      {/* Modal de Upload de Vídeo */}
+      {/* Modais */}
       <div className="modal fade videos-upload-modal" id="uploadModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
@@ -758,7 +837,7 @@ const DeleteConfirmModal = () => (
                     </label>
                     <select className="form-select" id="videoCategory" required>
                       <option value="">Selecione uma categoria</option>
-                      {categories.map(category => (
+                      {categories.map((category) => (
                         <option key={category.value} value={category.value}>
                           {category.label}
                         </option>
@@ -835,7 +914,12 @@ const DeleteConfirmModal = () => (
                   </div>
                 )}
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" disabled={uploadProgress > 0}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    disabled={uploadProgress > 0}
+                  >
                     <i className="fas fa-times"></i>
                     Cancelar
                   </button>
@@ -859,7 +943,6 @@ const DeleteConfirmModal = () => (
         </div>
       </div>
 
-      {/* Modal de Player de Vídeo */}
       <div className="modal fade videos-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-xl modal-dialog-centered">
           <div className="modal-content">
@@ -885,12 +968,9 @@ const DeleteConfirmModal = () => (
         </div>
       </div>
 
-      {/* Modal de Login */}
       <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
-
       <NotificationModal />
       <DeleteConfirmModal />
-
       <Footer />
     </div>
   )

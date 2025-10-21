@@ -99,67 +99,179 @@
   font-size: 1.2rem;
 }
 
-/* Card de filtros redesenhado - SISTEMA DE PESQUISA SEPARADO */
+/* ============================================
+   CARD DE FILTROS MODERNIZADO (ESTILO VIDEOS)
+   ============================================ */
 .eventos-filtros-card {
   background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
+  border-radius: 30px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
   margin-bottom: 2rem;
 }
 
-.eventos-filtros-card .form-label {
-  font-weight: 600;
-  color: #244a96;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+.eventos-filtros-card:hover {
+  box-shadow: 0 8px 32px rgba(36, 74, 150, 0.15);
 }
 
-.search-box {
+/* Labels dos filtros */
+.eventos-filter-label {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+.eventos-filter-label i {
+  color: #3b82f6;
+  margin-right: 0.5rem;
+}
+
+/* Search Box Modernizada */
+.eventos-search-box {
   position: relative;
 }
 
-.search-box input {
-  padding-left: 45px;
-  border-radius: 15px;
+.eventos-search-box .form-control {
   border: 2px solid #e9ecef;
-  transition: all 0.3s ease;
+  border-radius: 16px;
+  padding: 14px 48px 14px 20px;
   font-size: 1rem;
-  padding: 14px 20px 14px 45px;
+  transition: all 0.3s ease;
   background: #f8f9fa;
 }
 
-.search-box input:focus {
+.eventos-search-box .form-control:focus {
   border-color: #244a96;
-  box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15);
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
   outline: none;
   background: white;
 }
 
-.search-icon {
+.eventos-search-icon {
   position: absolute;
-  left: 15px;
+  right: 18px;
   top: 50%;
   transform: translateY(-50%);
-  color: #244a96;
+  color: #666;
   font-size: 1.1rem;
+  pointer-events: none;
 }
 
-.form-select {
-  border-radius: 15px;
+/* Select Modernizado */
+.eventos-filtros-card .form-select {
   border: 2px solid #e9ecef;
-  transition: all 0.3s ease;
+  border-radius: 16px;
   padding: 14px 20px;
   font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
   background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
 }
 
-.form-select:focus {
+.eventos-filtros-card .form-select:focus {
   border-color: #244a96;
-  box-shadow: 0 0 0 0.2rem rgba(36, 74, 150, 0.15);
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
   outline: none;
   background: white;
+}
+
+.eventos-filtros-card .form-select:hover {
+  border-color: #244a96;
+  background: white;
+}
+
+/* Botão Limpar Filtros */
+.eventos-btn-clear-filters {
+  width: 100%;
+  height: 52px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  color: #666;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eventos-btn-clear-filters:hover {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #dc2626;
+  transform: scale(1.05);
+}
+
+/* ============================================
+   FILTROS ATIVOS (BADGES) - NOVO ESTILO
+   ============================================ */
+.eventos-active-filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.eventos-filter-badge-label {
+  font-weight: 700;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.eventos-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: eventos-slideIn 0.4s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.eventos-filter-badge:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.eventos-filter-badge i {
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.eventos-filter-badge i:hover {
+  opacity: 1;
+}
+
+@keyframes eventos-slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Cards de Eventos */
@@ -518,6 +630,215 @@
   }
 }
 
+/* ============================================
+   LOGIN PROMPT MODERNIZADO (ESTILO VIDEOS)
+   ============================================ */
+.eventos-login-prompt-container {
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.eventos-login-prompt-card {
+  background: white;
+  border-radius: 30px;
+  padding: 3.5rem;
+  max-width: 650px;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(36, 74, 150, 0.2);
+  border: 1px solid #e9ecef;
+  position: relative;
+  overflow: hidden;
+}
+
+.eventos-login-prompt-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #244a96, #3b82f6);
+}
+
+.eventos-login-prompt-icon {
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #244a96, #3b82f6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  box-shadow: 0 8px 32px rgba(36, 74, 150, 0.15);
+  animation: eventos-pulse 2.5s infinite;
+}
+
+.eventos-login-prompt-icon i {
+  font-size: 2.75rem;
+  color: white;
+}
+
+@keyframes eventos-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 32px rgba(36, 74, 150, 0.15);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 12px 48px rgba(36, 74, 150, 0.2);
+  }
+}
+
+.eventos-login-prompt-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #244a96;
+  margin-bottom: 1.25rem;
+}
+
+.eventos-login-prompt-text {
+  font-size: 1.15rem;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.eventos-login-prompt-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  text-align: left;
+  background: #f8f9fa;
+  border-radius: 24px;
+  padding: 2rem;
+}
+
+.eventos-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.eventos-feature-item:hover {
+  transform: translateX(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.eventos-feature-item i {
+  color: #244a96;
+  font-size: 1.4rem;
+  min-width: 28px;
+}
+
+.eventos-feature-item span {
+  color: #333;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.eventos-login-prompt-actions {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.eventos-btn-login-primary,
+.eventos-btn-login-secondary {
+  padding: 16px 40px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.eventos-btn-login-primary {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  color: white;
+  box-shadow: 0 8px 32px rgba(36, 74, 150, 0.15);
+}
+
+.eventos-btn-login-primary:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 48px rgba(36, 74, 150, 0.2);
+  color: white;
+}
+
+.eventos-btn-login-secondary {
+  background: white;
+  color: #244a96;
+  border: 2px solid #244a96;
+}
+
+.eventos-btn-login-secondary:hover {
+  background: #244a96;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(36, 74, 150, 0.15);
+}
+
+/* ============================================
+   EMPTY STATE (ESTILO VIDEOS)
+   ============================================ */
+.eventos-empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.eventos-empty-state-icon {
+  width: 130px;
+  height: 130px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.eventos-empty-state-icon i {
+  font-size: 3.5rem;
+  color: #94a3b8;
+}
+
+.eventos-empty-state-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 1.25rem;
+}
+
+.eventos-empty-state-text {
+  font-size: 1.15rem;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* RESPONSIVE */
 @media (max-width: 991.98px) {
   .carousel-inner img {
@@ -532,15 +853,37 @@
     padding: 14px 35px;
     font-size: 1rem;
   }
+
+  .eventos-login-prompt-card {
+    padding: 2.5rem;
+  }
+
+  .eventos-login-prompt-title {
+    font-size: 1.85rem;
+  }
+
+  .eventos-login-prompt-actions {
+    flex-direction: column;
+  }
+
+  .eventos-btn-login-primary,
+  .eventos-btn-login-secondary {
+    width: 100%;
+  }
 }
 
 @media (max-width: 767.98px) {
   .eventos-filtros-card {
-    padding: 1.5rem;
+    padding: 1.75rem;
   }
 
-  .eventos-filtros-card .col-md-6 {
-    margin-bottom: 0.5rem;
+  .eventos-active-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .event-card .card-body {
+    padding: 1.5rem;
   }
 
   .modal-confirm {
@@ -620,6 +963,44 @@
     padding: 10px 25px;
     font-size: 0.9rem;
     min-width: 120px;
+  }
+
+  .eventos-login-prompt-card {
+    padding: 2rem;
+  }
+
+  .eventos-login-prompt-icon {
+    width: 90px;
+    height: 90px;
+  }
+
+  .eventos-login-prompt-icon i {
+    font-size: 2.25rem;
+  }
+
+  .eventos-login-prompt-title {
+    font-size: 1.65rem;
+  }
+
+  .eventos-login-prompt-text {
+    font-size: 1rem;
+  }
+
+  .eventos-empty-state {
+    padding: 3rem 1.5rem;
+  }
+
+  .eventos-empty-state-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .eventos-empty-state-icon i {
+    font-size: 2.75rem;
+  }
+
+  .eventos-empty-state-title {
+    font-size: 1.65rem;
   }
 }
 
@@ -759,14 +1140,3 @@
   animation: pulseSuccess 2s infinite;
 }
 
-/* DEBUG TEMPORÁRIO */
-.videos-login-prompt-actions .btn {
-  position: relative;
-  z-index: 1000;
-  cursor: pointer !important;
-}
-
-.videos-login-prompt-actions .btn:hover {
-  background-color: #007bff !important;
-  color: white !important;
-}

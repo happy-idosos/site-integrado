@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
-import LoginModal from "../../components/layout/LoginModal" // Importando o LoginModal
+import LoginModal from "../../components/layout/LoginModal"
 import "./Videos.css"
 
 import carouselum from "../../assets/img/carousels/carousel-2.jpg"
@@ -31,16 +31,22 @@ function Videos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [videoToDelete, setVideoToDelete] = useState(null)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false) // Estado para controlar o modal de login
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [categories] = useState([
+    { value: "eventos", label: "Eventos" },
+    { value: "depoimentos", label: "Depoimentos" },
+    { value: "tutoriais", label: "Tutoriais" },
+    { value: "atividades", label: "Atividades" },
+    { value: "comemoracoes", label: "Comemorações" },
+    { value: "outros", label: "Outros" }
+  ])
 
   const fileInputRef = useRef(null)
 
-  // Função para abrir o modal de login
   const handleOpenLoginModal = () => {
     setIsLoginModalOpen(true)
   }
 
-  // Função para fechar o modal de login
   const handleCloseLoginModal = () => {
     setIsLoginModalOpen(false)
   }
@@ -106,7 +112,7 @@ function Videos() {
     if (type === "success") {
       setTimeout(() => {
         hideNotification()
-      }, 3000)
+      }, 4000)
     }
   }
 
@@ -226,9 +232,15 @@ function Videos() {
     const file = selectedFile?.file
     const titulo = form.querySelector("#videoTitle").value
     const descricao = form.querySelector("#videoDescription").value
+    const categoria = form.querySelector("#videoCategory").value
 
     if (!file) {
       showNotification("error", "Por favor, selecione um arquivo de vídeo.")
+      return
+    }
+
+    if (!titulo.trim()) {
+      showNotification("error", "Por favor, informe um título para o vídeo.")
       return
     }
 
@@ -236,6 +248,7 @@ function Videos() {
     formData.append("video", file)
     formData.append("titulo", titulo)
     formData.append("descricao", descricao)
+    formData.append("categoria", categoria)
 
     try {
       setUploadProgress(15)
@@ -264,19 +277,20 @@ function Videos() {
       }
 
       setUploadProgress(100)
-      showNotification("success", "Vídeo enviado com sucesso!")
-      hideModal("uploadModal")
-      form.reset()
-      setSelectedFile(null)
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
-      loadVideos(true)
+      showNotification("success", "Vídeo enviado com sucesso! Ele já está disponível em nossa galeria.")
+      setTimeout(() => {
+        hideModal("uploadModal")
+        form.reset()
+        setSelectedFile(null)
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""
+        }
+        loadVideos(true)
+      }, 1500)
     } catch (err) {
       console.error("Erro no upload:", err)
-      showNotification("error", err.message || "Erro desconhecido no upload.")
-    } finally {
-      setTimeout(() => setUploadProgress(0), 1000)
+      showNotification("error", err.message || "Erro desconhecido no upload. Tente novamente.")
+      setUploadProgress(0)
     }
   }
 
@@ -525,11 +539,12 @@ function Videos() {
                       value={categoryFilter}
                       onChange={(e) => setCategoryFilter(e.target.value)}
                     >
-                      <option value="all">Todas</option>
-                      <option value="eventos">Eventos</option>
-                      <option value="depoimentos">Depoimentos</option>
-                      <option value="tutoriais">Tutoriais</option>
-                      <option value="outros">Outros</option>
+                      <option value="all">Todas as Categorias</option>
+                      {categories.map(category => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-md-1">
@@ -555,7 +570,7 @@ function Videos() {
                     )}
                     {categoryFilter !== "all" && (
                       <span className="videos-filter-badge">
-                        Categoria: {categoryFilter}
+                        Categoria: {categories.find(c => c.value === categoryFilter)?.label || categoryFilter}
                         <i className="fas fa-times" onClick={() => setCategoryFilter("all")}></i>
                       </span>
                     )}
@@ -618,6 +633,11 @@ function Videos() {
                           <i className="fas fa-play-circle"></i>
                         </div>
                         <h3 className="videos-title">{video.nome_midia}</h3>
+                        {video.categoria && (
+                          <span className="videos-category-badge">
+                            {categories.find(c => c.value === video.categoria)?.label || video.categoria}
+                          </span>
+                        )}
                         {video.descricao && (
                           <p className="videos-description">
                             {video.descricao.length > 120 ? `${video.descricao.substring(0, 120)}...` : video.descricao}
@@ -670,31 +690,7 @@ function Videos() {
         </section>
       </main>
 
-      <div className="modal fade videos-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
-        <div className="modal-dialog modal-xl modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{selectedVideo?.nome_midia}</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body p-0">
-              {selectedVideo && (
-                <div className="videos-player-container">
-                  <video src={`${API_BASE_URL}/${selectedVideo.url}`} controls autoPlay className="videos-player" />
-                </div>
-              )}
-            </div>
-            {selectedVideo?.descricao && (
-              <div className="modal-footer">
-                <div className="videos-description-full">
-                  <p>{selectedVideo.descricao}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
+      {/* Modal de Upload de Vídeo */}
       <div className="modal fade videos-upload-modal" id="uploadModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
@@ -732,6 +728,20 @@ function Videos() {
                       rows="3"
                       placeholder="Descreva o conteúdo do vídeo (opcional)..."
                     ></textarea>
+                  </div>
+                  <div className="col-12 mb-3">
+                    <label htmlFor="videoCategory" className="form-label">
+                      <i className="fas fa-tag"></i>
+                      Categoria *
+                    </label>
+                    <select className="form-select" id="videoCategory" required>
+                      <option value="">Selecione uma categoria</option>
+                      {categories.map(category => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="col-12 mb-3">
                     <label htmlFor="videoFile" className="form-label">
@@ -793,7 +803,7 @@ function Videos() {
                   <div className="videos-upload-progress-container">
                     <label className="videos-progress-label">
                       <i className="fas fa-spinner fa-spin"></i>
-                      Enviando vídeo...
+                      {uploadProgress === 100 ? "Processando..." : "Enviando vídeo..."}
                     </label>
                     <div className="videos-progress-bar-container">
                       <div className="videos-progress-bar-fill" style={{ width: `${uploadProgress}%` }}>
@@ -803,7 +813,7 @@ function Videos() {
                   </div>
                 )}
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" disabled={uploadProgress > 0}>
                     <i className="fas fa-times"></i>
                     Cancelar
                   </button>
@@ -811,7 +821,7 @@ function Videos() {
                     {uploadProgress > 0 ? (
                       <>
                         <i className="fas fa-spinner fa-spin"></i>
-                        Enviando...
+                        {uploadProgress === 100 ? "Finalizando..." : "Enviando..."}
                       </>
                     ) : (
                       <>
@@ -823,6 +833,32 @@ function Videos() {
                 </div>
               </form>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal de Player de Vídeo */}
+      <div className="modal fade videos-player-modal" id="videoPlayerModal" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-xl modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{selectedVideo?.nome_midia}</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body p-0">
+              {selectedVideo && (
+                <div className="videos-player-container">
+                  <video src={`${API_BASE_URL}/${selectedVideo.url}`} controls autoPlay className="videos-player" />
+                </div>
+              )}
+            </div>
+            {selectedVideo?.descricao && (
+              <div className="modal-footer">
+                <div className="videos-description-full">
+                  <p>{selectedVideo.descricao}</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

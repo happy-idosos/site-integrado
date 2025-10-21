@@ -23,7 +23,7 @@
   max-height: 750px;
   width: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center center; /* CENTRALIZADO PERFEITAMENTE */
 }
 
 .sobre-nos-page .carousel-caption {
@@ -248,14 +248,16 @@
   background: linear-gradient(90deg, transparent, rgba(36, 74, 150, 0.2), transparent);
 }
 
-/* Premium circular grid layout */
+/* Premium circular grid layout - CENTERED & PERFECTLY ALIGNED */
 .sobre-nos-page .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 40px 30px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
+  justify-items: center;
+  align-items: start; /* ALINHAMENTO PERFEITO NO TOPO */
 }
 
 /* Perfect circular team member card */
@@ -273,6 +275,9 @@
   align-items: center;
   text-align: center;
   overflow: hidden;
+  width: 100%;
+  max-width: 320px;
+  height: fit-content; /* ALTURA AUTOMÁTICA PERFEITA */
 }
 
 .sobre-nos-page .team-member-card::before {
@@ -299,7 +304,7 @@
   border-color: rgba(36, 74, 150, 0.1);
 }
 
-/* Perfect circular image container */
+/* Perfect circular image container - CENTRALIZADO PERFEITAMENTE */
 .sobre-nos-page .member-image-container {
   position: relative;
   width: 200px;
@@ -311,6 +316,9 @@
   box-shadow: 0 12px 35px rgba(36, 74, 150, 0.15);
   border: 6px solid white;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sobre-nos-page .team-member-card:hover .member-image-container {
@@ -318,11 +326,12 @@
   box-shadow: 0 18px 45px rgba(36, 74, 150, 0.25);
 }
 
-/* Perfect circular image */
+/* Perfect circular image - CENTRALIZADA PERFEITAMENTE */
 .sobre-nos-page .member-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center; /* CENTRALIZADA PERFEITAMENTE */
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   filter: grayscale(0%);
 }
@@ -386,10 +395,14 @@
   transform: translateY(0);
 }
 
-/* Member info styling */
+/* Member info styling - CENTRALIZADO PERFEITAMENTE */
 .sobre-nos-page .member-info {
   text-align: center;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .sobre-nos-page .member-name {
@@ -405,6 +418,8 @@
   align-items: center;
   justify-content: center;
   padding: 0 10px;
+  text-align: center;
+  width: 100%;
 }
 
 .sobre-nos-page .team-member-card:hover .member-name {
@@ -424,6 +439,7 @@
   border-radius: 25px;
   display: inline-block;
   border: 1px solid rgba(36, 74, 150, 0.1);
+  text-align: center;
 }
 
 .sobre-nos-page .team-member-card:hover .member-role {
@@ -433,19 +449,203 @@
 }
 
 /* ============================================
-   RESPONSIVE DESIGN - PERFECT CIRCULAR IMAGES
+   INTEGRANTES (TEAM PHOTO) - ENHANCED
    ============================================ */
 
-@media (max-width: 1399.98px) {
+.sobre-nos-page .integrantes {
+  padding: 120px 0;
+  background: white;
+  position: relative;
+}
+
+.sobre-nos-page .team-photo {
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto; /* CENTRALIZADO PERFEITAMENTE */
+}
+
+.sobre-nos-page .team-photo:hover {
+  transform: scale(1.02);
+  box-shadow: 0 24px 80px rgba(36, 74, 150, 0.25);
+}
+
+.sobre-nos-page .team-photo-caption {
+  margin-top: 24px;
+  color: #4a5568;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center; /* CENTRALIZADO */
+}
+
+/* ============================================
+   MISSÃO, VISÃO E VALORES - ENHANCED
+   ============================================ */
+
+.sobre-nos-page .missao-visao-valores {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);
+  position: relative;
+}
+
+.sobre-nos-page .mvv-card {
+  background: white;
+  padding: 45px 35px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  position: relative;
+  border-top: 6px solid #244a96;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* CENTRALIZADO */
+}
+
+.sobre-nos-page .mvv-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(36, 74, 150, 0.03), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sobre-nos-page .mvv-card:hover::before {
+  opacity: 1;
+}
+
+.sobre-nos-page .mvv-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 24px 60px rgba(36, 74, 150, 0.18);
+}
+
+.sobre-nos-page .mvv-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.08), rgba(26, 58, 122, 0.12));
+  border-radius: 50%;
+  color: #244a96;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(36, 74, 150, 0.1);
+}
+
+.sobre-nos-page .mvv-card:hover .mvv-icon {
+  transform: scale(1.15) rotate(5deg);
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.3);
+}
+
+.sobre-nos-page .mvv-card h3 {
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  text-align: center;
+  width: 100%;
+}
+
+.sobre-nos-page .mvv-card p {
+  color: #4a5568;
+  line-height: 1.75;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.sobre-nos-page .valores-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.sobre-nos-page .valores-list li {
+  color: #4a5568;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  padding: 12px 0 12px 35px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sobre-nos-page .valores-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.1), rgba(26, 58, 122, 0.15));
+  color: #244a96;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.sobre-nos-page .valores-list li:hover {
+  color: #1a1a1a;
+  padding-left: 40px;
+}
+
+.sobre-nos-page .valores-list li:hover::before {
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  color: white;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.sobre-nos-page .valores-list li strong {
+  color: #244a96;
+  font-weight: 700;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - PERFECTLY ALIGNED GRID
+   ============================================ */
+
+/* Large Desktop - Perfect 5 columns */
+@media (min-width: 1600px) {
   .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 35px 25px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 35px;
+    max-width: 1600px;
   }
 }
 
-@media (max-width: 1199.98px) {
+/* Desktop - 4 columns */
+@media (max-width: 1599.98px) and (min-width: 1200px) {
   .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+    gap: 35px;
+  }
+}
+
+/* Large Tablet - 3 columns */
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  .sobre-nos-page .team-grid {
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
   }
   
@@ -455,10 +655,11 @@
   }
 }
 
-@media (max-width: 991.98px) {
+/* Tablet - 2 columns */
+@media (max-width: 991.98px) and (min-width: 768px) {
   .sobre-nos-page .team-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px 25px;
+    gap: 30px;
   }
 
   .sobre-nos-page .member-image-container {
@@ -473,7 +674,8 @@
   }
 }
 
-@media (max-width: 767.98px) {
+/* Mobile Large - 2 columns */
+@media (max-width: 767.98px) and (min-width: 576px) {
   .sobre-nos-page .team-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 25px 20px;
@@ -508,6 +710,7 @@
   }
 }
 
+/* Mobile - 1 column */
 @media (max-width: 575.98px) {
   .sobre-nos-page .team-grid {
     grid-template-columns: 1fr;
@@ -567,469 +770,6 @@
    RESPONSIVE DESIGN - ULTRA MODERN
    ============================================ */
 
-@media (max-width: 1599.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
-  }
-}
-
-@media (max-width: 1399.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-  }
-  
-  .sobre-nos-page .member-image-wrapper {
-    width: 180px;
-    height: 180px;
-  }
-}
-
-@media (max-width: 1199.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    width: 160px;
-    height: 160px;
-    margin: 30px auto 15px;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    width: 150px;
-    height: 150px;
-    margin: 25px auto 15px;
-  }
-
-  .sobre-nos-page .member-info {
-    padding: 0 20px 25px;
-  }
-
-  .sobre-nos-page .member-name {
-    font-size: 1.05rem;
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 0 15px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    width: 140px;
-    height: 140px;
-    margin: 20px auto 12px;
-    border-width: 4px;
-  }
-
-  .sobre-nos-page .member-info {
-    padding: 0 18px 20px;
-  }
-
-  .sobre-nos-page .member-name {
-    font-size: 1rem;
-    min-height: 40px;
-  }
-
-  .sobre-nos-page .member-role {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-  }
-
-  .sobre-nos-page .member-social-link {
-    width: 56px;
-    height: 56px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 0 15px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    width: 160px;
-    height: 160px;
-    margin: 30px auto 15px;
-  }
-
-  .sobre-nos-page .member-info {
-    padding: 0 20px 25px;
-  }
-
-  .sobre-nos-page .member-name {
-    font-size: 1.1rem;
-    min-height: auto;
-  }
-
-  .sobre-nos-page .member-role {
-    font-size: 0.9rem;
-  }
-
-  .sobre-nos-page .member-social-link {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-@media (max-width: 375px) {
-  .sobre-nos-page .member-image-wrapper {
-    width: 140px;
-    height: 140px;
-    margin: 25px auto 12px;
-  }
-}
-
-/* Premium image wrapper with sophisticated overlay */
-.sobre-nos-page .member-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 360px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f8f9fb 0%, #e8eaf0 100%);
-}
-
-.sobre-nos-page .member-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: grayscale(0%) brightness(1);
-}
-
-.sobre-nos-page .team-member-card:hover .member-image {
-  transform: scale(1.15);
-  filter: grayscale(0%) brightness(1.1);
-}
-
-/* Sophisticated gradient overlay with social link */
-.sobre-nos-page .member-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(36, 74, 150, 0.85) 80%,
-    rgba(26, 58, 122, 0.95) 100%
-  );
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 32px;
-  opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sobre-nos-page .team-member-card:hover .member-overlay {
-  opacity: 1;
-}
-
-/* Premium social link button */
-.sobre-nos-page .member-social-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: white;
-  color: #244a96;
-  border-radius: 50%;
-  text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transform: translateY(30px);
-  position: relative;
-  overflow: hidden;
-}
-
-.sobre-nos-page .member-social-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.sobre-nos-page .member-social-link svg {
-  position: relative;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-.sobre-nos-page .team-member-card:hover .member-social-link {
-  transform: translateY(0);
-}
-
-.sobre-nos-page .member-social-link:hover {
-  transform: translateY(-6px) scale(1.15) rotate(5deg);
-  box-shadow: 0 12px 48px rgba(36, 74, 150, 0.5);
-}
-
-.sobre-nos-page .member-social-link:hover::before {
-  opacity: 1;
-}
-
-.sobre-nos-page .member-social-link:hover svg {
-  color: white;
-  transform: scale(1.1);
-}
-
-/* Premium member info section */
-.sobre-nos-page .member-info {
-  padding: 32px 24px;
-  text-align: center;
-  background: white;
-  position: relative;
-}
-
-.sobre-nos-page .member-name {
-  color: #1a1a1a;
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  transition: all 0.3s ease;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sobre-nos-page .team-member-card:hover .member-name {
-  color: #244a96;
-  transform: translateY(-2px);
-}
-
-.sobre-nos-page .member-role {
-  color: #6c757d;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0;
-  transition: color 0.3s ease;
-}
-
-.sobre-nos-page .team-member-card:hover .member-role {
-  color: #244a96;
-}
-
-/* ============================================
-   INTEGRANTES (TEAM PHOTO) - ENHANCED
-   ============================================ */
-
-.sobre-nos-page .integrantes {
-  padding: 120px 0;
-  background: white;
-  position: relative;
-}
-
-.sobre-nos-page .team-photo {
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 100%;
-  height: auto;
-}
-
-.sobre-nos-page .team-photo:hover {
-  transform: scale(1.02);
-  box-shadow: 0 24px 80px rgba(36, 74, 150, 0.25);
-}
-
-.sobre-nos-page .team-photo-caption {
-  margin-top: 24px;
-  color: #4a5568;
-  font-size: 1.1rem;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-/* ============================================
-   MISSÃO, VISÃO E VALORES - ENHANCED
-   ============================================ */
-
-.sobre-nos-page .missao-visao-valores {
-  padding: 120px 0;
-  background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);
-  position: relative;
-}
-
-.sobre-nos-page .mvv-card {
-  background: white;
-  padding: 45px 35px;
-  border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: center;
-  position: relative;
-  border-top: 6px solid #244a96;
-  height: 100%;
-  overflow: hidden;
-}
-
-.sobre-nos-page .mvv-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(36, 74, 150, 0.03), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.sobre-nos-page .mvv-card:hover::before {
-  opacity: 1;
-}
-
-.sobre-nos-page .mvv-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 24px 60px rgba(36, 74, 150, 0.18);
-}
-
-.sobre-nos-page .mvv-icon {
-  width: 90px;
-  height: 90px;
-  margin: 0 auto 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(36, 74, 150, 0.08), rgba(26, 58, 122, 0.12));
-  border-radius: 50%;
-  color: #244a96;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 16px rgba(36, 74, 150, 0.1);
-}
-
-.sobre-nos-page .mvv-card:hover .mvv-icon {
-  transform: scale(1.15) rotate(5deg);
-  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
-  color: white;
-  box-shadow: 0 8px 24px rgba(36, 74, 150, 0.3);
-}
-
-.sobre-nos-page .mvv-card h3 {
-  color: #1a1a1a;
-  font-weight: 700;
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.sobre-nos-page .mvv-card p {
-  color: #4a5568;
-  line-height: 1.75;
-  font-size: 1.05rem;
-  margin-bottom: 0;
-}
-
-.sobre-nos-page .valores-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: left;
-}
-
-.sobre-nos-page .valores-list li {
-  color: #4a5568;
-  font-size: 1.05rem;
-  line-height: 1.75;
-  padding: 12px 0 12px 35px;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.sobre-nos-page .valores-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 26px;
-  height: 26px;
-  background: linear-gradient(135deg, rgba(36, 74, 150, 0.1), rgba(26, 58, 122, 0.15));
-  color: #244a96;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-}
-
-.sobre-nos-page .valores-list li:hover {
-  color: #1a1a1a;
-  padding-left: 40px;
-}
-
-.sobre-nos-page .valores-list li:hover::before {
-  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
-  color: white;
-  transform: translateY(-50%) scale(1.15);
-}
-
-.sobre-nos-page .valores-list li strong {
-  color: #244a96;
-  font-weight: 700;
-}
-
-/* ============================================
-   RESPONSIVE DESIGN - ULTRA MODERN
-   ============================================ */
-
-@media (max-width: 1599.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
-  }
-}
-
-@media (max-width: 1399.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-  }
-}
-
-@media (max-width: 1199.98px) {
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    height: 320px;
-  }
-}
-
 @media (max-width: 991.98px) {
   .sobre-nos-page .carousel-inner img {
     max-height: 600px;
@@ -1054,15 +794,6 @@
 
   .sobre-nos-page .historia-content {
     padding: 40px;
-  }
-
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    height: 300px;
   }
 
   .sobre-nos-page .mvv-card {
@@ -1109,16 +840,6 @@
 
   .sobre-nos-page .historia-content {
     padding: 30px;
-  }
-
-  .sobre-nos-page .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 0 15px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    height: 280px;
   }
 
   .sobre-nos-page .member-info {
@@ -1201,16 +922,6 @@
     font-size: 1rem;
   }
 
-  .sobre-nos-page .team-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 0 15px;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    height: 320px;
-  }
-
   .sobre-nos-page .member-info {
     padding: 28px 20px;
   }
@@ -1268,10 +979,6 @@
 
   .sobre-nos-page .section-title {
     font-size: 1.5rem;
-  }
-
-  .sobre-nos-page .member-image-wrapper {
-    height: 280px;
   }
 }
 

@@ -1262,3 +1262,476 @@
     font-size: 3rem;
   }
 }
+
+/* ============================================
+   BADGE DE CATEGORIA NO CARD
+   ============================================ */
+.videos-category-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--videos-accent-blue), var(--videos-primary-blue));
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: var(--videos-radius-lg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--videos-shadow-sm);
+}
+
+/* ============================================
+   MELHORIAS NO MODAL DE NOTIFICAÇÃO
+   ============================================ */
+.notification-body {
+  padding: 2.5rem;
+  border-radius: var(--videos-radius-xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.notification-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.notification-body.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+}
+
+.notification-body.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+}
+
+.notification-icon {
+  width: 90px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.notification-icon i {
+  font-size: 2.75rem;
+  color: white;
+}
+
+.notification-content {
+  position: relative;
+  z-index: 2;
+}
+
+.notification-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-message {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.btn-close-notification {
+  background: white;
+  color: #dc2626;
+  border: none;
+  padding: 0.875rem 2.5rem;
+  border-radius: var(--videos-radius-lg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--videos-transition-normal);
+  box-shadow: var(--videos-shadow-md);
+  font-size: 1rem;
+}
+
+.btn-close-notification:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--videos-shadow-lg);
+  background: #f8f9fa;
+}
+
+/* ============================================
+   ANIMAÇÃO DE SUCESSO
+   ============================================ */
+.notification-body.success .notification-icon i {
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   MELHORIAS NO MODAL DE UPLOAD
+   ============================================ */
+.videos-upload-modal .modal-content {
+  border: none;
+  border-radius: var(--videos-radius-xl);
+  overflow: hidden;
+  box-shadow: var(--videos-shadow-xl);
+}
+
+.videos-upload-modal .modal-header {
+  background: linear-gradient(135deg, var(--videos-primary-blue), var(--videos-accent-blue));
+  color: white;
+  border-bottom: none;
+  padding: 1.75rem 2rem;
+}
+
+.videos-upload-modal .modal-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.videos-upload-modal .modal-title i {
+  margin-right: 0.75rem;
+}
+
+.videos-upload-modal .modal-body {
+  padding: 2rem;
+}
+
+.videos-upload-modal .form-label {
+  font-weight: 700;
+  color: var(--videos-text-dark);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.videos-upload-modal .form-label i {
+  color: var(--videos-primary-blue);
+  margin-right: 0.5rem;
+  width: 20px;
+}
+
+.videos-upload-modal .form-control,
+.videos-upload-modal .form-select {
+  border: 2px solid var(--videos-border-light);
+  border-radius: var(--videos-radius-lg);
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  transition: all var(--videos-transition-normal);
+}
+
+.videos-upload-modal .form-control:focus,
+.videos-upload-modal .form-select:focus {
+  border-color: var(--videos-primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.1);
+}
+
+/* ============================================
+   ÁREA DE UPLOAD DE ARQUIVO
+   ============================================ */
+.videos-file-upload-area {
+  border: 3px dashed var(--videos-border-light);
+  border-radius: var(--videos-radius-lg);
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--videos-transition-normal);
+  background: var(--videos-bg-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.videos-file-upload-area:hover {
+  border-color: var(--videos-primary-blue);
+  background: rgba(59, 130, 246, 0.02);
+}
+
+.videos-file-upload-area.dragover {
+  border-color: var(--videos-accent-blue);
+  background: rgba(59, 130, 246, 0.05);
+  transform: scale(1.02);
+}
+
+.videos-file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.videos-upload-placeholder i {
+  font-size: 4rem;
+  color: var(--videos-text-light);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.videos-upload-placeholder p {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--videos-text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.videos-upload-placeholder span {
+  color: var(--videos-text-light);
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   PREVIEW DO ARQUIVO
+   ============================================ */
+.videos-file-preview {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.videos-file-preview-video {
+  position: relative;
+  width: 120px;
+  height: 80px;
+  border-radius: var(--videos-radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.videos-file-preview-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videos-file-preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.videos-file-preview-overlay i {
+  font-size: 1.5rem;
+}
+
+.videos-file-preview-info {
+  flex: 1;
+}
+
+.videos-file-preview-name {
+  font-weight: 700;
+  color: var(--videos-text-dark);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.videos-file-preview-name i {
+  color: var(--videos-primary-blue);
+  margin-right: 0.5rem;
+}
+
+.videos-file-preview-details {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.videos-file-size,
+.videos-file-type {
+  background: var(--videos-bg-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--videos-radius-md);
+  font-size: 0.85rem;
+  color: var(--videos-text-light);
+  font-weight: 600;
+}
+
+.videos-btn-remove-file {
+  background: var(--videos-error);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--videos-radius-md);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--videos-transition-normal);
+  font-weight: 600;
+}
+
+.videos-btn-remove-file:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   BARRA DE PROGRESSO
+   ============================================ */
+.videos-upload-progress-container {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--videos-bg-light);
+  border-radius: var(--videos-radius-lg);
+  border: 2px solid var(--videos-border-light);
+}
+
+.videos-progress-label {
+  font-weight: 700;
+  color: var(--videos-text-dark);
+  margin-bottom: 1rem;
+  display: block;
+  font-size: 1rem;
+}
+
+.videos-progress-label i {
+  margin-right: 0.5rem;
+  color: var(--videos-primary-blue);
+}
+
+.videos-progress-bar-container {
+  width: 100%;
+  height: 24px;
+  background: var(--videos-border-light);
+  border-radius: var(--videos-radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.videos-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--videos-primary-blue), var(--videos-accent-blue));
+  border-radius: var(--videos-radius-full);
+  position: relative;
+  transition: width 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videos-progress-text {
+  color: white;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   BOTÕES DO MODAL
+   ============================================ */
+.videos-upload-modal .modal-footer {
+  border-top: 2px solid var(--videos-border-light);
+  padding: 1.75rem 2rem;
+  gap: 1rem;
+}
+
+.videos-upload-modal .btn {
+  padding: 0.875rem 2rem;
+  border-radius: var(--videos-radius-lg);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all var(--videos-transition-normal);
+  border: none;
+  cursor: pointer;
+}
+
+.videos-upload-modal .btn-primary {
+  background: linear-gradient(135deg, var(--videos-primary-blue), var(--videos-accent-blue));
+  color: white;
+}
+
+.videos-upload-modal .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--videos-shadow-lg);
+}
+
+.videos-upload-modal .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+@media (max-width: 768px) {
+  .videos-file-preview {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .videos-file-preview-details {
+    justify-content: center;
+  }
+  
+  .notification-body {
+    padding: 2rem 1.5rem;
+  }
+  
+  .notification-icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .notification-icon i {
+    font-size: 2rem;
+  }
+  
+  .notification-title {
+    font-size: 1.5rem;
+  }
+  
+  .notification-message {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   ANIMAÇÕES ADICIONAIS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.videos-upload-modal .modal-content {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.notification-body {
+  animation: fadeInUp 0.4s ease-out;
+}

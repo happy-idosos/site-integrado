@@ -34,63 +34,58 @@ import heloysa from "../../assets/img/sobrenos_integrantes/Heloysa Beatriz.png"
 const teamMembers = [
   {
     name: "Ana Caroline da Silva Santos",
-    role: "Gestão de Voluntários",
     image: ana,
     instagram: "https://www.instagram.com/anacarolinessz_",
   },
   {
     name: "Evellyn Soares Ferreira",
-    role: "Treinamento e Capacitação",
     image: evellyn,
-    instagram: "https://www.instagram.com/s.evellyn._",
+    instagram: "https://www.instagram.com/srzevllyn_",
   },
   {
     name: "Giovanna Queiroz Carvalho",
-    role: "Comunicação e Marketing",
     image: giovanna,
-    instagram: "https://www.instagram.com/giovannaqueirooz_",
+    instagram: "https://www.instagram.com/gqueirozz__",
   },
   {
-    name: "Heloisa Emanuele Gonçalves Godinho",
-    role: "Relacionamento Institucional",
+    name: "Heloisa Emanuele Gonçalves",
     image: heloisa,
-    instagram: "https://www.instagram.com/heloisaemanuele_",
+    instagram: "https://www.instagram.com/helo_por_um_dia",
   },
   {
     name: "Heloysa Beatriz Santos",
-    role: "Gestão de Projetos",
     image: heloysa,
-    instagram: "https://www.instagram.com/heloysabeatriz_",
+    instagram: "https://www.instagram.com/hel0_santos",
   },
   {
     name: "Lucas Martins Pereira",
     role: "Desenvolvedor Frontend",
     image: lucas,
-    instagram: "https://www.instagram.com/__martins_lucass",
+    instagram: "https://www.instagram.com/_martins_lucas_",
   },
   {
-    name: "Pedro Henrique Assunção Medeiros",
+    name: "Pedro Henrique Medeiros",
     role: "Desenvolvedor Backend",
     image: pedro,
-    instagram: "https://www.instagram.com/pedrohenrique",
+    instagram: "https://www.instagram.com/phmedeirxs",
   },
   {
     name: "Tiago de Carvalho Estrada",
-    role: "Desenvolvedor Full Stack",
+    role: "Desenvolvedor Frontend",
     image: tiago,
-    instagram: "https://www.instagram.com/tiagoestrada",
+    instagram: "https://www.instagram.com/tiago_estrad",
   },
   {
     name: "Vinícius Araujo Ramos",
     role: "Analista de Sistemas",
     image: vinicius,
-    instagram: "https://www.instagram.com/viniciusramos",
+    instagram: "https://www.instagram.com/ramosvini_",
   },
   {
     name: "Wesley Mendes de Sousa",
     role: "DevOps e Infraestrutura",
     image: wesley,
-    instagram: "https://www.instagram.com/wesleymendes",
+    instagram: "https://www.instagram.com/wesmendesss",
   },
 ]
 
@@ -266,56 +261,6 @@ const SobreNos = () => {
           </div>
         </section>
 
-        <section className="team-unified" id="perfis" data-aos="fade-up" data-aos-duration="800">
-  <div className="container">
-    <h2 className="section-title text-balance">Conheça Nossa Equipe</h2>
-    <p className="section-subtitle text-balance">
-      Profissionais dedicados trabalhando juntos para transformar vidas através da conexão entre gerações
-    </p>
-
-    <div className="team-grid">
-      {teamMembers.map((member, index) => (
-        <div
-          key={index}
-          className="team-member-card"
-          data-aos="fade-up"
-          data-aos-delay={index * 100}
-          data-aos-duration="800"
-        >
-          <div className="member-image-container">
-            <img
-              src={member.image || "/placeholder.svg"}
-              alt={member.name}
-              className="member-image"
-              loading="lazy"
-              onError={(e) => {
-                e.target.src = "/placeholder.svg"
-              }}
-            />
-            <div className="member-overlay">
-              <a
-                href={member.instagram}
-                className="member-social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Instagram de ${member.name}`}
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div className="member-info">
-            <h4 className="member-name text-balance">{member.name}</h4>
-            <p className="member-role">{member.role}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
         <section className="integrantes" id="equipe" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <div className="text-center" data-aos="zoom-in" data-aos-delay="200">
@@ -323,6 +268,56 @@ const SobreNos = () => {
               <p className="team-photo-caption text-balance">
                 Nossa equipe multidisciplinar trabalhando juntos para transformar vidas
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="team-unified" id="perfis" data-aos="fade-up" data-aos-duration="800">
+          <div className="container">
+            <h2 className="section-title text-balance">Conheça Nossa Equipe</h2>
+            <p className="section-subtitle text-balance">
+              Profissionais dedicados trabalhando juntos para transformar vidas através da conexão entre gerações
+            </p>
+
+            <div className="team-grid">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="team-member-card"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                  data-aos-duration="800"
+                >
+                  <div className="member-image-container">
+                    <img
+                      src={member.image || "/placeholder.svg"}
+                      alt={member.name}
+                      className="member-image"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = "/placeholder.svg"
+                      }}
+                    />
+                    <div className="member-overlay">
+                      <a
+                        href={member.instagram}
+                        className="member-social-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Instagram de ${member.name}`}
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                  <div className="member-info">
+                    <h4 className="member-name text-balance">{member.name}</h4>
+                    <p className="member-role">{member.role}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

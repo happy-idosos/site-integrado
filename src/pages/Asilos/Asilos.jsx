@@ -1,6 +1,6 @@
 "use client"
 
-import { asilosService } from '/src/services/asilos/asilos.service.js';
+import { asilosService } from "/src/services/asilos/asilos.service.js"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import AOS from "aos"
@@ -21,6 +21,13 @@ function Asilos() {
   const [loading, setLoading] = useState(false)
   const [asilosEncontrados, setAsilosEncontrados] = useState([])
 
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    icon: "check",
+  })
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -40,55 +47,79 @@ function Asilos() {
     }
   }, [])
 
+  const showModal = (title, message, icon = "check") => {
+    setModalConfig({
+      isOpen: true,
+      title,
+      message,
+      icon,
+    })
+  }
+
+  const closeModal = () => {
+    setModalConfig({
+      ...modalConfig,
+      isOpen: false,
+    })
+  }
+
   const buscarAsilos = async () => {
     setLoading(true)
 
-    // Validação
     if (!cidade.trim() || !estado) {
-      alert('Por favor, preencha cidade e estado.')
+      showModal("Atenção!", "Por favor, preencha cidade e estado para realizar a busca.", "search")
       setLoading(false)
       return
     }
 
     try {
-      // Formata os dados EXATAMENTE como o backend espera
       const filtros = {
         cidade: cidade.trim(),
         estado: estado,
-        distancia: parseInt(distancia) || 10
-        // O backend não usa "atividade" - vamos filtrar no frontend
+        distancia: Number.parseInt(distancia) || 10,
       }
-      
-      console.log('🎯 Enviando para backend:', filtros)
-      
+
+      console.log("🎯 Enviando para backend:", filtros)
+
       const resultado = await asilosService.buscarAsilos(filtros)
 
-      // O backend retorna {status: 200, asilos: [...]} ou {status: 400/404, message: "..."}
       if (resultado.status === 200) {
         let asilosDoBackend = resultado.asilos || []
-        
-        // Aplica filtro de atividade NO FRONTEND (backend não suporta)
+
         if (atividade) {
-          asilosDoBackend = asilosDoBackend.filter(asilo => {
+          asilosDoBackend = asilosDoBackend.filter((asilo) => {
             if (!asilo.atividades) return false
             return asilo.atividades.toLowerCase().includes(atividade.toLowerCase())
           })
         }
-        
+
         setAsilosEncontrados(asilosDoBackend)
-        console.log('✅ Asilos encontrados:', asilosDoBackend)
-        
+        console.log("✅ Asilos encontrados:", asilosDoBackend)
+
         if (asilosDoBackend.length === 0) {
-          alert('Nenhum asilo encontrado com os filtros aplicados.')
+          showModal(
+            "Nenhum resultado",
+            "Não encontramos asilos com os filtros aplicados. Tente ajustar sua busca.",
+            "search",
+          )
+        } else {
+          showModal(
+            "Busca concluída!",
+            `Encontramos ${asilosDoBackend.length} ${asilosDoBackend.length === 1 ? "asilo" : "asilos"} na sua região. Confira os resultados abaixo!`,
+            "search",
+          )
         }
       } else {
-        // Erro do backend (400, 404, etc)
-        alert(resultado.message || 'Erro na busca de asilos')
+        showModal("Erro na busca", resultado.message || "Erro ao buscar asilos. Tente novamente.", "search")
         setAsilosEncontrados([])
       }
     } catch (error) {
-      console.error('❌ Erro de conexão:', error)
-      alert('Erro ao conectar com o servidor. Verifique se o backend está rodando.')
+      console.error("❌ Erro de conexão:", error)
+      showModal(
+        "Erro de conexão",
+        "Não foi possível conectar com o servidor. Verifique sua conexão e tente novamente.",
+        "search",
+      )
       setAsilosEncontrados([])
     } finally {
       setLoading(false)
@@ -97,15 +128,17 @@ function Asilos() {
 
   const carregarMaisAsilos = () => {
     console.log("Carregando mais asilos...")
-    // Aqui você pode adicionar a lógica para carregar mais resultados
   }
 
   const interesseVoluntario = (asiloId) => {
-    alert("Interesse registrado! Entraremos em contato em breve.")
+    showModal(
+      "Interesse Registrado!",
+      "Obrigado pelo seu interesse! Entraremos em contato em breve com mais informações sobre como você pode ajudar.",
+      "heart",
+    )
     console.log("Interesse registrado para:", asiloId)
   }
 
-  // Função para renderizar os asilos da API
   const renderAsilosAPI = () => {
     if (!asilosEncontrados || asilosEncontrados.length === 0) {
       return (
@@ -116,7 +149,7 @@ function Asilos() {
         </div>
       )
     }
-    
+
     return asilosEncontrados.map((asilo, index) => (
       <div key={asilo.id_asilo || index} className="asilo-card" data-aos="zoom-in" data-aos-delay={(index % 3) * 100}>
         <div className="asilo-header">
@@ -131,7 +164,7 @@ function Asilos() {
             {asilo.cidade || "Cidade não informada"}, {asilo.estado || "Estado não informado"}
             {asilo.distancia_km && ` - ${asilo.distancia_km} km de distância`}
           </p>
-          
+
           {asilo.endereco && (
             <p>
               <strong>
@@ -140,7 +173,7 @@ function Asilos() {
               {asilo.endereco}
             </p>
           )}
-          
+
           {asilo.descricao && (
             <p>
               <strong>
@@ -176,7 +209,7 @@ function Asilos() {
                 </strong>
               </p>
               <ul className="lista-atividades">
-                {asilo.atividades.split(',').map((atividade, idx) => (
+                {asilo.atividades.split(",").map((atividade, idx) => (
                   <li key={idx}>
                     <i className="fas fa-check"></i> {atividade.trim()}
                   </li>
@@ -194,11 +227,67 @@ function Asilos() {
     ))
   }
 
+  const renderModal = () => {
+    if (!modalConfig.isOpen) return null
+
+    const getIconComponent = () => {
+      switch (modalConfig.icon) {
+        case "check":
+          return (
+            <svg className="modal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )
+        case "heart":
+          return (
+            <svg className="modal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )
+        case "search":
+          return (
+            <svg className="modal-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )
+        default:
+          return null
+      }
+    }
+
+    return (
+      <div className="modal-overlay" onClick={closeModal}>
+        <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+          <button className="modal-close" onClick={closeModal} aria-label="Fechar modal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          <div className={`modal-icon modal-icon-${modalConfig.icon}`}>{getIconComponent()}</div>
+
+          <h3 className="modal-title">{modalConfig.title}</h3>
+          <p className="modal-message">{modalConfig.message}</p>
+
+          <button className="modal-button" onClick={closeModal}>
+            Entendi
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="home-page">
       <Header />
-      
-      {/* Hero Carousel */}
+
+      {renderModal()}
+
       <div
         id="heroCarousel"
         className="carousel slide hero-carousel"
@@ -282,7 +371,6 @@ function Asilos() {
       </div>
 
       <main>
-        {/* Busca e Filtros */}
         <section className="busca-asilos" id="busca-asilos" data-aos="fade-up">
           <div className="container">
             <h2 className="section-title text-balance">Encontre Asilos Próximos</h2>
@@ -382,7 +470,6 @@ function Asilos() {
           </div>
         </section>
 
-        {/* Asilos Disponíveis */}
         <section className="asilos-section" id="asilos-proximos" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
             <h2 className="section-title text-balance">Asilos Disponíveis</h2>
@@ -399,16 +486,13 @@ function Asilos() {
               </div>
             )}
 
-            {/* RESULTADOS DA API */}
             {asilosEncontrados && asilosEncontrados.length > 0 && (
               <div className="mb-5">
                 <h3 className="text-center mb-4 text-success">
                   <i className="fas fa-search me-2"></i>
                   Resultados da Busca ({asilosEncontrados.length} asilos encontrados)
                 </h3>
-                <div className="asilos-container">
-                  {renderAsilosAPI()}
-                </div>
+                <div className="asilos-container">{renderAsilosAPI()}</div>
               </div>
             )}
 
@@ -421,14 +505,13 @@ function Asilos() {
             )}
 
             <div className="text-center mt-5">
-              <button className="btn btn-outline-primary btn-lg" onClick={carregarMaisAsilos} disabled={loading}>
+              <button className="btn btn-primary btn-lg px-5" onClick={carregarMaisAsilos} disabled={loading}>
                 <i className="fas fa-plus me-2"></i>Carregar Mais Asilos
               </button>
             </div>
           </div>
         </section>
 
-        {/* Call to Action */}
         <section className="cta" data-aos="fade-up">
           <div className="container">
             <div className="cta-content">

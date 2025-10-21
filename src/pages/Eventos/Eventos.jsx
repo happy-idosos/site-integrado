@@ -774,23 +774,23 @@ const Eventos = () => {
           data-aos-duration="800"
         >
           <div className="container">
-            <h2 className="text-center mb-4 eventos-main-title">Próximos Eventos</h2>
+            <h2 className="section-title text-balance">Próximos Eventos</h2>
 
             {isAuthenticated && currentUser?.tipo === 'asilo' && (
               <div className="text-center mb-5">
-                <button className="btn-criar-evento" onClick={showCreateEventModal}>
-                  <i className="fas fa-plus-circle me-2"></i>
+                <button className="videos-btn-criar" onClick={showCreateEventModal}>
+                  <i className="fas fa-cloud-upload-alt"></i>
                   Criar Novo Evento
                 </button>
               </div>
             )}
 
             {isAuthenticated && (
-              <div className="eventos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
+              <div className="videos-filtros-card mb-5" data-aos="fade-up" data-aos-duration="800">
                 <div className="row g-3 align-items-end">
                   <div className="col-12 mb-4">
-                    <label htmlFor="searchInput" className="form-label fw-semibold text-primary mb-3">
-                      <i className="fas fa-search me-2"></i>Buscar Eventos
+                    <label htmlFor="searchInput" className="videos-filter-label">
+                      <i className="fas fa-search"></i>Buscar Eventos
                     </label>
                     <div className="search-box">
                       <input
@@ -806,7 +806,7 @@ const Eventos = () => {
                   </div>
 
                   <div className="col-md-6">
-                    <label htmlFor="categoryFilter" className="form-label fw-semibold text-primary mb-3">
+                    <label htmlFor="categoryFilter" className="videos-filter-label">
                       <i className="fas fa-tags me-2"></i>Filtrar por Categoria
                     </label>
                     <select
@@ -816,16 +816,16 @@ const Eventos = () => {
                       onChange={(e) => setSelectedCategory(e.target.value)}
                     >
                       <option value="">Todas as categorias</option>
-                      <option value="musica">🎵 Música</option>
-                      <option value="arte">🎨 Arte</option>
-                      <option value="conversa">💬 Conversa</option>
-                      <option value="exercicio">💪 Exercício</option>
-                      <option value="culinaria">🍳 Culinária</option>
+                      <option value="musica"> Música</option>
+                      <option value="arte"> Arte</option>
+                      <option value="conversa"> Conversa</option>
+                      <option value="exercicio"> Exercício</option>
+                      <option value="culinaria"> Culinária</option>
                     </select>
                   </div>
                   
                   <div className="col-md-6">
-                    <label htmlFor="dateFilter" className="form-label fw-semibold text-primary mb-3">
+                    <label htmlFor="dateFilter" className="videos-filter-label">
                       <i className="fas fa-calendar me-2"></i>Filtrar por Data
                     </label>
                     <select
@@ -835,9 +835,9 @@ const Eventos = () => {
                       onChange={(e) => setSelectedDate(e.target.value)}
                     >
                       <option value="">Todas as datas</option>
-                      <option value="hoje">📅 Hoje</option>
-                      <option value="semana">🗓️ Esta semana</option>
-                      <option value="mes">📆 Este mês</option>
+                      <option value="hoje"> Hoje</option>
+                      <option value="semana"> Esta semana</option>
+                      <option value="mes"> Este mês</option>
                     </select>
                   </div>
 
@@ -956,172 +956,202 @@ const Eventos = () => {
         </section>
       </main>
 
-      {showModal && (
-        <div className="modal fade show" style={{ display: "block", backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Criar Novo Evento</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+{showModal && (
+  <div className="modal fade videos-upload-modal show" style={{ display: "block", backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
+    <div className="modal-dialog modal-dialog-centered modal-lg">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">
+            <i className="fas fa-plus-circle"></i>
+            Criar Novo Evento
+          </h5>
+          <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+        </div>
+        <div className="modal-body">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              createEvent()
+            }}
+          >
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventTitle" className="form-label">
+                  <i className="fas fa-heading me-2"></i>
+                  Título do Evento *
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="eventTitle"
+                  value={eventForm.title}
+                  onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
+                  required
+                  maxLength={100}
+                  placeholder="Digite um título atrativo para seu evento..."
+                />
               </div>
-              <div className="modal-body">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    createEvent()
-                  }}
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventCategory" className="form-label">
+                  <i className="fas fa-tag me-2"></i>
+                  Categoria
+                </label>
+                <select
+                  className="form-select"
+                  id="eventCategory"
+                  value={eventForm.category}
+                  onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
                 >
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventTitle" className="form-label">
-                        Título do Evento *
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="eventTitle"
-                        value={eventForm.title}
-                        onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
-                        required
-                        maxLength={100}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventCategory" className="form-label">
-                        Categoria
-                      </label>
-                      <select
-                        className="form-select"
-                        id="eventCategory"
-                        value={eventForm.category}
-                        onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
-                      >
-                        <option value="">Selecione uma categoria</option>
-                        <option value="musica">Música</option>
-                        <option value="arte">Arte</option>
-                        <option value="conversa">Conversa</option>
-                        <option value="exercicio">Exercício</option>
-                        <option value="culinaria">Culinária</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="eventDescription" className="form-label">
-                      Descrição *
-                    </label>
-                    <textarea
-                      className="form-control"
-                      id="eventDescription"
-                      rows="3"
-                      value={eventForm.description}
-                      onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
-                      required
-                      maxLength={500}
-                    ></textarea>
-                    <div className="form-text">{eventForm.description.length}/500 caracteres</div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventDate" className="form-label">
-                        Data do Evento *
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        id="eventDate"
-                        value={eventForm.date}
-                        onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
-                        required
-                        min={new Date().toISOString().split("T")[0]}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventTime" className="form-label">
-                        Horário
-                      </label>
-                      <input
-                        type="time"
-                        className="form-control"
-                        id="eventTime"
-                        value={eventForm.time}
-                        onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="eventLocation" className="form-label">
-                      Localização
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="eventLocation"
-                      value={eventForm.location}
-                      onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
-                      placeholder="Endereço ou local do evento"
-                      maxLength={200}
-                    />
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventContact" className="form-label">
-                        Telefone para Contato *
-                      </label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        id="eventContact"
-                        value={eventForm.contact}
-                        onChange={(e) => handlePhoneChange(e.target.value)}
-                        placeholder="(11) 99999-9999"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="eventCapacity" className="form-label">
-                        Capacidade (pessoas) *
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="eventCapacity"
-                        value={eventForm.capacity}
-                        onChange={(e) => setEventForm({ ...eventForm, capacity: parseInt(e.target.value) || 1 })}
-                        min="1"
-                        max="1000"
-                        required
-                      />
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={createEvent}
-                  disabled={isLoadingAction}
-                >
-                  {isLoadingAction ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                      Criando...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-plus-circle me-2"></i>
-                      Criar Evento
-                    </>
-                  )}
-                </button>
+                  <option value="">Selecione uma categoria</option>
+                  <option value="musica"> Música</option>
+                  <option value="arte"> Arte</option>
+                  <option value="conversa"> Conversa</option>
+                  <option value="exercicio"> Exercício</option>
+                  <option value="culinaria">   Culinária</option>
+                </select>
               </div>
             </div>
-          </div>
+            
+            <div className="mb-3">
+              <label htmlFor="eventDescription" className="form-label">
+                <i className="fas fa-align-left me-2"></i>
+                Descrição *
+              </label>
+              <textarea
+                className="form-control"
+                id="eventDescription"
+                rows="3"
+                value={eventForm.description}
+                onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
+                required
+                maxLength={500}
+                placeholder="Descreva detalhadamente o que os participantes podem esperar do evento..."
+              ></textarea>
+              <div className="form-text text-end">
+                <span className={eventForm.description.length > 450 ? "text-warning" : "text-muted"}>
+                  {eventForm.description.length}/500 caracteres
+                </span>
+              </div>
+            </div>
+            
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventDate" className="form-label">
+                  <i className="fas fa-calendar-day me-2"></i>
+                  Data do Evento *
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="eventDate"
+                  value={eventForm.date}
+                  onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                />
+              </div>
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventTime" className="form-label">
+                  <i className="fas fa-clock me-2"></i>
+                  Horário
+                </label>
+                <input
+                  type="time"
+                  className="form-control"
+                  id="eventTime"
+                  value={eventForm.time}
+                  onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
+                />
+              </div>
+            </div>
+            
+            <div className="mb-3">
+              <label htmlFor="eventLocation" className="form-label">
+                <i className="fas fa-map-marker-alt me-2"></i>
+                Localização
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="eventLocation"
+                value={eventForm.location}
+                onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
+                placeholder="Digite o endereço completo ou local do evento..."
+                maxLength={200}
+              />
+            </div>
+            
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventContact" className="form-label">
+                  <i className="fas fa-phone me-2"></i>
+                  Telefone para Contato *
+                </label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  id="eventContact"
+                  value={eventForm.contact}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  placeholder="(11) 99999-9999"
+                  required
+                />
+              </div>
+              <div className="col-md-6 mb-3">
+                <label htmlFor="eventCapacity" className="form-label">
+                  <i className="fas fa-users me-2"></i>
+                  Capacidade (pessoas) *
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="eventCapacity"
+                  value={eventForm.capacity}
+                  onChange={(e) => setEventForm({ ...eventForm, capacity: parseInt(e.target.value) || 1 })}
+                  min="1"
+                  max="1000"
+                  required
+                />
+                <div className="form-text">
+                  Número máximo de participantes
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-      )}
+        <div className="modal-footer">
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            onClick={() => setShowModal(false)}
+            disabled={isLoadingAction}
+          >
+            <i className="fas fa-times me-2"></i>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={createEvent}
+            disabled={isLoadingAction}
+          >
+            {isLoadingAction ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Criando...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-plus-circle me-2"></i>
+                Criar Evento
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       <InscricaoModal />
       <SuccessModal />

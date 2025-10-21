@@ -371,43 +371,65 @@ function Videos() {
     return currentUser && video.id_usuario === currentUser.id_usuario
   }
 
-  const DeleteConfirmModal = () => (
-    <div
-      className="modal fade"
-      id="deleteConfirmModal"
-      tabIndex="-1"
-      aria-labelledby="deleteConfirmModalLabel"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">
-              <i className="fas fa-exclamation-triangle me-2"></i>
-              Confirmar Exclusão
-            </h5>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+const DeleteConfirmModal = () => (
+  <div
+    className="modal fade videos-upload-modal"
+    id="deleteConfirmModal"
+    tabIndex="-1"
+    aria-labelledby="deleteConfirmModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog modal-dialog-centered modal-lg">
+      <div className="modal-content">
+        <div className="modal-header bg-primary text-white">
+          <h5 className="modal-title">
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            Confirmar Exclusão
+          </h5>
+          <button 
+            type="button" 
+            className="btn-close btn-close-white" 
+            data-bs-dismiss="modal" 
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="modal-body">
+          <div className="alert alert-warning">
+            <i className="fas fa-exclamation-circle me-2"></i>
+            <strong>Atenção!</strong> Esta ação não pode ser desfeita.
           </div>
-          <div className="modal-body">
-            <p>
-              Tem certeza que deseja excluir o vídeo <strong>"{videoToDelete?.nome_midia}"</strong>?
-            </p>
-            <p className="text-muted mb-0">Esta ação não pode ser desfeita.</p>
+          <p className="mb-3">
+            Tem certeza que deseja excluir o vídeo <strong className="text-danger">"{videoToDelete?.nome_midia}"</strong>?
+          </p>
+          <div className="border rounded p-3 bg-light">
+            <small className="text-muted">
+              <i className="fas fa-info-circle me-1"></i>
+              O vídeo será removido permanentemente do sistema.
+            </small>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-              <i className="fas fa-times me-2"></i>
-              Cancelar
-            </button>
-            <button type="button" className="btn btn-danger" onClick={() => handleDeleteVideo(videoToDelete?.id_midia)}>
-              <i className="fas fa-trash me-2"></i>
-              Excluir Vídeo
-            </button>
-          </div>
+        </div>
+        <div className="modal-footer">
+          <button 
+            type="button" 
+            className="btn btn-outline-secondary" 
+            data-bs-dismiss="modal"
+          >
+            <i className="fas fa-times me-2"></i>
+            Cancelar
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-danger" 
+            onClick={() => handleDeleteVideo(videoToDelete?.id_midia)}
+          >
+            <i className="fas fa-trash me-2"></i>
+            Excluir Vídeo
+          </button>
         </div>
       </div>
     </div>
-  )
+  </div>
+)
 
   return (
     <div className="videos-page">
@@ -454,7 +476,7 @@ function Videos() {
       <main>
         <section className="videos-lista py-5" data-aos="fade-up" data-aos-duration="800">
           <div className="container">
-            <h2 className="text-center mb-4 videos-main-title">Nossa Galeria de Vídeos</h2>
+            <h2 className="section-title text-balance">Nossa Galeria de Vídeos</h2>
 
             {isAuthenticated && (
               <div className="text-center mb-5">

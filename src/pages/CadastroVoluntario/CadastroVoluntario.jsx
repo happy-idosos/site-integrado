@@ -429,7 +429,7 @@ export default function CadastroVoluntario() {
       if (result.success) {
         showModalMessage(
           "Cadastro Realizado com Sucesso!", 
-          "Seu cadastro foi realizado com sucesso! Redirecionando para login...", 
+          "Redirecionando para Login:", 
           "success"
         )
 

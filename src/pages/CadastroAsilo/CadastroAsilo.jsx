@@ -398,7 +398,7 @@ export default function CadastroAsilo() {
       if (result.success) {
         showModalMessage(
           "Cadastro Realizado!",
-          "Cadastro da instituição realizado com sucesso! Redirecionando para login...",
+          "Redirecionando para Login:",
           "success"
         )
 

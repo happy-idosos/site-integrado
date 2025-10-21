@@ -178,7 +178,7 @@ const LoginVoluntario = () => {
       if (result.success) {
         showModalMessage(
           "Login Realizado com Sucesso!", 
-          "Login realizado com sucesso! Redirecionando para a página inicial...", 
+          "Redirecionando para a Tela Inicial:", 
           "success"
         )
 

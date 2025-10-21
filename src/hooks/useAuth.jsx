@@ -35,10 +35,10 @@ export const AuthProvider = ({ children }) => {
           foto_url: userData.foto_url || userData.logo_url || null
         };
 
-        // ✅ SE NÃO TEM FOTO, TENTAR BUSCAR PERFIL COMPLETO
-        if (!userWithPhoto.foto_url && token) {
+        // ✅ SE NÃO TEM FOTO OU FOTO PODE ESTAR DESATUALIZADA, TENTAR BUSCAR PERFIL COMPLETO
+        if ((!userWithPhoto.foto_url || !userWithPhoto.foto_perfil) && token) {
           try {
-            console.log('🔄 Buscando perfil completo para carregar foto...');
+            console.log('🔄 Buscando perfil completo para carregar foto atualizada...');
             const perfilCompleto = await authService.buscarPerfilCompleto();
             
             if (perfilCompleto.perfil) {
@@ -50,12 +50,13 @@ export const AuthProvider = ({ children }) => {
               userWithPhoto = {
                 ...userWithPhoto,
                 foto_url: fotoUrl,
-                logo_url: fotoUrl
+                logo_url: fotoUrl,
+                foto_perfil: perfilCompleto.perfil.foto_perfil // ✅ MANTER REFERÊNCIA DA FOTO
               };
 
-              // ✅ ATUALIZAR LOCALSTORAGE COM FOTO
+              // ✅ ATUALIZAR LOCALSTORAGE COM FOTO ATUALIZADA
               saveAuthData(token, userWithPhoto);
-              console.log('✅ Foto carregada do perfil completo:', fotoUrl);
+              console.log('✅ Foto atualizada carregada do perfil completo:', fotoUrl);
             }
           } catch (error) {
             console.warn('⚠️ Não foi possível carregar perfil completo:', error);
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     loadAuthState();
   }, [loadAuthState]);
 
-  // ✅ LOGIN MELHORADO - AGORA COM FOTO
+  // ✅ LOGIN MELHORADO - SEMPRE BUSCAR PERFIL ATUALIZADO
   const login = useCallback(async (email, senha) => {
     try {
       setLoading(true);
@@ -96,14 +97,9 @@ export const AuthProvider = ({ children }) => {
       if (result.status === 200 && result.data) {
         console.log('✅ Login bem-sucedido:', result.data);
         
-        // ✅ CARREGAR ESTADO ATUALIZADO DO LOCALSTORAGE
-        const userData = getUserData();
-        if (userData) {
-          setUser(userData);
-          setIsAuthenticated(true);
-          console.log('✅ Estado do usuário atualizado:', userData);
-        }
-
+        // ✅ FORÇAR RECARREGAMENTO DO ESTADO APÓS LOGIN
+        await loadAuthState();
+        
         return { success: true, data: result.data };
       } else {
         console.error('❌ Login falhou:', result.message);
@@ -121,10 +117,10 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadAuthState]);
 
   // ✅ ATUALIZAR FOTO DO PERFIL - MELHORADA
-  const updateUserPhoto = useCallback((photoUrl) => {
+  const updateUserPhoto = useCallback((photoUrl, fotoPerfil = null) => {
     if (!user) {
       console.error('❌ Nenhum usuário logado para atualizar foto');
       return;
@@ -137,7 +133,8 @@ export const AuthProvider = ({ children }) => {
       const updatedUser = {
         ...user,
         foto_url: photoUrl,
-        logo_url: photoUrl // Para compatibilidade com asilos
+        logo_url: photoUrl, // Para compatibilidade com asilos
+        foto_perfil: fotoPerfil || user.foto_perfil // ✅ MANTER REFERÊNCIA DA FOTO
       };
       
       setUser(updatedUser);

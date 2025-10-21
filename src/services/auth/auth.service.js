@@ -84,7 +84,7 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-// ✅ FUNÇÃO PARA BUSCAR PERFIL COMPLETO APÓS LOGIN
+// ✅ FUNÇÃO MELHORADA PARA BUSCAR PERFIL COMPLETO
 const buscarPerfilCompleto = async () => {
   try {
     const token = getToken();
@@ -92,7 +92,7 @@ const buscarPerfilCompleto = async () => {
       throw new Error('Token não disponível');
     }
 
-    console.log('🔄 Buscando perfil completo após login...');
+    console.log('🔄 Buscando perfil completo...');
     
     const response = await fetch(`${API_BASE_URL}/api/perfil`, {
       method: 'GET',
@@ -107,6 +107,14 @@ const buscarPerfilCompleto = async () => {
     }
 
     const data = await response.json();
+    
+    // ✅ GARANTIR URL ABSOLUTA PARA FOTO
+    if (data.perfil && data.perfil.foto_perfil) {
+      if (!data.perfil.foto_perfil.startsWith('http')) {
+        data.perfil.foto_url = `${API_BASE_URL}/uploads/perfis/${data.perfil.foto_perfil}`;
+      }
+    }
+    
     console.log('✅ Perfil completo carregado:', data);
     
     return data;
@@ -118,7 +126,7 @@ const buscarPerfilCompleto = async () => {
 
 // ✅ SERVIÇO DE AUTENTICAÇÃO CORRIGIDO
 export const authService = {
-  // ✅ LOGIN - AGORA BUSCA PERFIL COMPLETO
+  // ✅ LOGIN - AGORA BUSCA PERFIL COMPLETO SEMPRE
   async login(email, senha) {
     const data = await fetchAPI(API_ENDPOINTS.LOGIN, {
       method: 'POST',
@@ -129,9 +137,19 @@ export const authService = {
       console.log('✅ Login bem-sucedido, buscando perfil completo...');
       
       try {
-        // ✅ BUSCAR PERFIL COMPLETO APÓS LOGIN
+        // ✅ BUSCAR PERFIL COMPLETO APÓS LOGIN (AGORA É OBRIGATÓRIO)
         const perfilCompleto = await buscarPerfilCompleto();
         
+        // ✅ CONSTRUIR URL ABSOLUTA DA FOTO
+        let fotoUrl = null;
+        if (perfilCompleto.perfil?.foto_perfil) {
+          fotoUrl = `${API_BASE_URL}/uploads/perfis/${perfilCompleto.perfil.foto_perfil}`;
+        } else if (perfilCompleto.perfil?.foto_url) {
+          fotoUrl = perfilCompleto.perfil.foto_url.startsWith('http') 
+            ? perfilCompleto.perfil.foto_url 
+            : `${API_BASE_URL}${perfilCompleto.perfil.foto_url}`;
+        }
+
         // ✅ MESCLAR DADOS DO LOGIN COM DADOS DO PERFIL COMPLETO
         const userDataCompleto = {
           id: data.data.id,
@@ -140,20 +158,21 @@ export const authService = {
           tipo: data.data.tipo,
           role: data.data.tipo,
           // ✅ USAR FOTO DO PERFIL COMPLETO (SE DISPONÍVEL)
-          foto_url: perfilCompleto.perfil?.foto_url || 
-                   perfilCompleto.perfil?.foto_perfil ? 
-                   `${API_BASE_URL}/uploads/perfis/${perfilCompleto.perfil.foto_perfil}` : 
-                   data.data.foto_url || null,
-          logo_url: perfilCompleto.perfil?.logo_url || 
-                   perfilCompleto.perfil?.foto_perfil ? 
-                   `${API_BASE_URL}/uploads/perfis/${perfilCompleto.perfil.foto_perfil}` : 
-                   data.data.logo_url || null
+          foto_url: fotoUrl,
+          logo_url: fotoUrl,
+          // ✅ INCLUIR DADOS ADICIONAIS DO PERFIL
+          foto_perfil: perfilCompleto.perfil?.foto_perfil || null
         };
 
-        console.log('✅ Dados completos do usuário:', userDataCompleto);
+        console.log('✅ Dados completos do usuário com foto:', userDataCompleto);
         
         // ✅ SALVAR DADOS COMPLETOS NO LOCALSTORAGE
         saveAuthData(data.data.token, userDataCompleto);
+        
+        return {
+          ...data,
+          userDataCompleto: userDataCompleto // ✅ RETORNAR DADOS COMPLETOS
+        };
         
       } catch (error) {
         console.warn('⚠️ Não foi possível carregar perfil completo, usando dados básicos:', error);
@@ -164,9 +183,11 @@ export const authService = {
           email: data.data.email,
           tipo: data.data.tipo,
           role: data.data.tipo,
-          foto_url: data.data.foto_url || null,
-          logo_url: data.data.logo_url || null
+          foto_url: null, // ❌ SEM FOTO SE PERFIL FALHAR
+          logo_url: null
         });
+        
+        return data;
       }
     }
 

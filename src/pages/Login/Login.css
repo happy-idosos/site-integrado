@@ -1,0 +1,698 @@
+/* Login.css - Split-screen responsive layout for HAPPYIDOSOS */
+
+/* Base page styles with HAPPYIDOSOS brand colors */
+.login-page {
+    font-family: "Nunito", sans-serif;
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Split container - 50/50 layout for desktop */
+  .login-split-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+  }
+  
+  /* Left side - Logo section (50% on desktop) */
+  .login-logo-side {
+    flex: 1;
+    background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .login-logo-side::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: login-pulse 15s ease-in-out infinite;
+  }
+  
+  @keyframes login-pulse {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(10%, 10%) scale(1.1);
+    }
+  }
+  
+  .login-logo-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  
+  .login-brand-logo {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transition: transform 0.4s ease;
+  }
+  
+  .login-brand-logo:hover {
+    transform: scale(1.05) rotate(2deg);
+  }
+  
+  /* Right side - Form section (50% on desktop) */
+  .login-form-side {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+  }
+  
+  /* Mobile logo - hidden on desktop */
+  .login-mobile-logo {
+    display: none;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .login-mobile-logo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(36, 74, 150, 0.2);
+  }
+  
+  /* Back Button */
+  .login-back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: rgba(36, 74, 150, 0.1);
+    border: 2px solid #244a96;
+    color: #244a96;
+    padding: 0.75rem 1.25rem;
+    border-radius: 25px;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+  
+  .login-back-btn:hover {
+    background: #244a96;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+  }
+  
+  /* Form Wrapper */
+  .login-form-wrapper {
+    width: 100%;
+    max-width: 480px;
+  }
+  
+  /* Form Header */
+  .login-form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .login-form-header h1 {
+    color: #244a96;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+  
+  .login-form-header p {
+    color: #666;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  /* Form Container */
+  .login-form-container {
+    background: white;
+    border-radius: 0;
+    padding: 0;
+  }
+  
+  /* Form Sections */
+  .login-form-section {
+    margin-bottom: 2rem;
+  }
+  
+  /* Form Groups */
+  .login-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-form-group:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Form Controls */
+  .login-form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .login-form-group input {
+    padding: 1rem 1.25rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-family: "Nunito", sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    width: 100%;
+  }
+  
+  .login-form-group input:focus {
+    outline: none;
+    border-color: #244a96;
+    box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
+    background: #fafbfc;
+  }
+  
+  .login-form-group input::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+  }
+  
+  /* Password Field */
+  .login-password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .login-password-field input {
+    padding-right: 3rem;
+  }
+  
+  .login-toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-toggle-password:hover {
+    color: #244a96;
+    background: rgba(36, 74, 150, 0.1);
+  }
+  
+  /* Forgot Password */
+  .login-forgot-password {
+    text-align: right;
+    margin-top: 0.75rem;
+  }
+  
+  /* Links */
+  .login-link {
+    color: #244a96;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .login-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: #244a96;
+    transition: width 0.3s ease;
+  }
+  
+  .login-link:hover {
+    color: #1a3a7a;
+  }
+  
+  .login-link:hover::after {
+    width: 100%;
+  }
+  
+  /* Submit Button */
+  .login-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #244a96, #1a3a7a);
+    color: white;
+    border: none;
+    padding: 1.2rem 2rem;
+    border-radius: 15px;
+    font-family: "Nunito", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-submit-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .login-submit-btn:hover:not(:disabled)::before {
+    left: 100%;
+  }
+  
+  .login-submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1a3a7a, #112a63);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(36, 74, 150, 0.4);
+  }
+  
+  .login-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  .login-btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .login-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: login-spin 1s linear infinite;
+  }
+  
+  @keyframes login-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Register Link */
+  .login-register-link {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+  }
+  
+  .login-register-link p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  
+  /* Form Validation */
+  .login-error {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+  }
+  
+  .login-success {
+    border-color: #28a745 !important;
+    background-color: #f0fdf4 !important;
+  }
+  
+  .login-error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .login-error-message::before {
+    content: "⚠";
+    font-size: 1rem;
+  }
+  
+  /* ===== MODAL STYLES ===== */
+  .login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: login-modal-fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes login-modal-fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .login-modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    animation: login-modal-slideUp 0.4s ease-out;
+  }
+  
+  @keyframes login-modal-slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .login-modal-success {
+    border-top: 4px solid #28a745;
+  }
+  
+  .login-modal-error {
+    border-top: 4px solid #dc3545;
+  }
+  
+  .login-modal-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-modal-icon {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .login-modal-success .login-modal-icon {
+    color: #28a745;
+  }
+  
+  .login-modal-error .login-modal-icon {
+    color: #dc3545;
+  }
+  
+  .login-modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    line-height: 1.3;
+  }
+  
+  .login-modal-body {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .login-modal-message {
+    color: #666;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .login-modal-footer {
+    text-align: center;
+  }
+  
+  .login-modal-btn {
+    background: linear-gradient(135deg, #244a96, #1a3a7a);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-family: "Nunito", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+  }
+  
+  .login-modal-btn-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+  }
+  
+  .login-modal-btn-error {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+  }
+  
+  .login-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(36, 74, 150, 0.3);
+  }
+  
+  .login-modal-btn-success:hover {
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+  }
+  
+  .login-modal-btn-error:hover {
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+  }
+  
+  /* Dark mode support for HAPPYIDOSOS */
+  @media (prefers-color-scheme: dark) {
+    .login-form-side {
+      background: #1a1a1a;
+    }
+  
+    .login-form-header h1 {
+      color: #ffffff;
+    }
+  
+    .login-form-header p {
+      color: #cccccc;
+    }
+  
+    .login-form-group label {
+      color: #ffffff;
+    }
+  
+    .login-form-group input {
+      background: #2a2a2a;
+      border-color: #3a3a3a;
+      color: #ffffff;
+    }
+  
+    .login-form-group input:focus {
+      background: #333333;
+      border-color: #244a96;
+    }
+  
+    .login-form-group input::placeholder {
+      color: #888888;
+    }
+  
+    .login-register-link {
+      border-top-color: #3a3a3a;
+    }
+  
+    .login-register-link p {
+      color: #cccccc;
+    }
+  
+    .login-modal-content {
+      background: #2a2a2a;
+    }
+  
+    .login-modal-title {
+      color: #ffffff;
+    }
+  
+    .login-modal-message {
+      color: #cccccc;
+    }
+  }
+  
+  /* Responsive Design - Mobile stacked layout */
+  @media (max-width: 768px) {
+    .login-split-container {
+      flex-direction: column;
+    }
+  
+    /* Hide desktop logo section on mobile */
+    .login-logo-side {
+      display: none;
+    }
+  
+    /* Show mobile logo */
+    .login-mobile-logo {
+      display: block;
+    }
+  
+    .login-form-side {
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+  
+    .login-back-btn {
+      top: 1rem;
+      left: 1rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+    }
+  
+    .login-form-wrapper {
+      padding-top: 3rem;
+    }
+  
+    .login-form-header h1 {
+      font-size: 1.75rem;
+    }
+  
+    .login-form-header p {
+      font-size: 0.95rem;
+    }
+  
+    .login-modal-content {
+      padding: 2rem;
+      max-width: 400px;
+    }
+  
+    .login-modal-title {
+      font-size: 1.3rem;
+    }
+  
+    .login-modal-message {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-form-side {
+      padding: 1.5rem 1rem;
+    }
+  
+    .login-mobile-logo img {
+      width: 65px;
+      height: 65px;
+    }
+  
+    .login-form-header h1 {
+      font-size: 1.5rem;
+    }
+  
+    .login-form-header p {
+      font-size: 0.9rem;
+    }
+  
+    .login-form-group input {
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+    }
+  
+    .login-submit-btn {
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+    }
+  
+    .login-modal-content {
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+  
+    .login-modal-title {
+      font-size: 1.2rem;
+    }
+  
+    .login-modal-message {
+      font-size: 0.95rem;
+    }
+  
+    .login-modal-btn {
+      padding: 0.9rem 2rem;
+      font-size: 0.95rem;
+      min-width: 120px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .login-back-btn,
+    .login-brand-logo,
+    .login-submit-btn,
+    .login-link::after {
+      transition: none;
+    }
+  
+    .login-spinner {
+      animation: none;
+      border: 2px solid white;
+      border-top: 2px solid transparent;
+    }
+  
+    .login-modal-overlay,
+    .login-modal-content {
+      animation: none;
+    }
+  
+    .login-logo-side::before {
+      animation: none;
+    }
+  }
+  

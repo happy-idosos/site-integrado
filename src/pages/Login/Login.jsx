@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -12,29 +12,31 @@ import logo from "../../assets/img/happyidosos.jpg"
 
 // Componente Modal para Login
 const LoginModal = ({ show, type, title, message, onClose }) => {
-  if (!show) return null
-
   useEffect(() => {
+    if (!show) return
+
     const handleEscape = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose()
       }
     }
-    
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [onClose])
+
+    document.addEventListener("keydown", handleEscape)
+    return () => document.removeEventListener("keydown", handleEscape)
+  }, [show, onClose])
+
+  if (!show) return null
 
   return (
     <div className="login-modal-overlay" onClick={onClose}>
-      <div 
+      <div
         className={`login-modal-content login-modal-${type}`}
         onClick={(e) => e.stopPropagation()}
         data-aos="zoom-in"
       >
         <div className="login-modal-header">
           <div className="login-modal-icon">
-            {type === 'success' ? (
+            {type === "success" ? (
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
@@ -49,11 +51,11 @@ const LoginModal = ({ show, type, title, message, onClose }) => {
           </div>
           <h3 className="login-modal-title">{title}</h3>
         </div>
-        
+
         <div className="login-modal-body">
           <p className="login-modal-message">{message}</p>
         </div>
-        
+
         <div className="login-modal-footer">
           <button className={`login-modal-btn login-modal-btn-${type}`} onClick={onClose}>
             Entendido
@@ -67,7 +69,7 @@ const LoginModal = ({ show, type, title, message, onClose }) => {
 const Login = () => {
   const navigate = useNavigate()
   const { login, loading: authLoading, isAuthenticated } = useAuth()
-  
+
   // Estado para tipo de login selecionado
   const [tipoLogin, setTipoLogin] = useState("asilo") // "asilo" ou "voluntario"
 
@@ -77,11 +79,11 @@ const Login = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [modal, setModal] = useState({ 
-    show: false, 
-    title: "", 
-    message: "", 
-    type: "success" 
+  const [modal, setModal] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "success",
   })
   const [errors, setErrors] = useState({})
 
@@ -97,11 +99,11 @@ const Login = () => {
       textoCadastro: "Cadastre sua instituição aqui",
       mensagensErro: {
         padrao: "E-mail ou senha incorretos. Tente novamente.",
-        naoEncontrado: "Nenhuma instituição encontrada com este e-mail."
-      }
+        naoEncontrado: "Nenhuma instituição encontrada com este e-mail.",
+      },
     },
     voluntario: {
-      titulo: "Login do Voluntário", 
+      titulo: "Login do Voluntário",
       subtitulo: "Acesse sua conta e continue fazendo a diferença",
       labelEmail: "E-mail *",
       placeholderEmail: "Digite seu e-mail",
@@ -110,9 +112,9 @@ const Login = () => {
       textoCadastro: "Cadastre-se aqui",
       mensagensErro: {
         padrao: "E-mail ou senha incorretos. Tente novamente.",
-        naoEncontrado: "Nenhum voluntário encontrado com este e-mail."
-      }
-    }
+        naoEncontrado: "Nenhum voluntário encontrado com este e-mail.",
+      },
+    },
   }
 
   const config = configs[tipoLogin]
@@ -182,12 +184,12 @@ const Login = () => {
       show: true,
       title,
       message,
-      type
+      type,
     })
   }
 
   const closeModal = () => {
-    setModal(prev => ({ ...prev, show: false }))
+    setModal((prev) => ({ ...prev, show: false }))
   }
 
   // ✅ SUBMIT UNIFICADO - FUNCIONA PERFEITAMENTE COM SEUS SERVICES
@@ -195,11 +197,7 @@ const Login = () => {
     e.preventDefault()
 
     if (!validateForm()) {
-      showModalMessage(
-        "Formulário Inválido", 
-        "Por favor, corrija os erros no formulário antes de continuar.", 
-        "error"
-      )
+      showModalMessage("Formulário Inválido", "Por favor, corrija os erros no formulário antes de continuar.", "error")
       return
     }
 
@@ -208,13 +206,9 @@ const Login = () => {
     try {
       // ✅ USA SEU useAuth.login ATUAL - COMPROVADAMENTE FUNCIONAL
       const result = await login(formData.email, formData.senha)
-      
+
       if (result.success) {
-        showModalMessage(
-          "Login Realizado com Sucesso!", 
-          "Redirecionando para a Tela Inicial...", 
-          "success"
-        )
+        showModalMessage("Login Realizado com Sucesso!", "Redirecionando para a Tela Inicial...", "success")
 
         setTimeout(() => {
           navigate("/")
@@ -222,7 +216,7 @@ const Login = () => {
       } else {
         // ✅ MENSAGENS ESPECÍFICAS BASEADAS NO TIPO SELECIONADO
         let errorMessage = config.mensagensErro.padrao
-        
+
         if (result.error) {
           if (result.error.includes("credenciais")) {
             errorMessage = "Credenciais inválidas. Verifique seu e-mail e senha."
@@ -234,30 +228,30 @@ const Login = () => {
             errorMessage = result.error
           }
         }
-        
+
         showModalMessage("Erro no Login", errorMessage, "error")
-        
-        setFormData(prev => ({
+
+        setFormData((prev) => ({
           ...prev,
-          senha: ""
+          senha: "",
         }))
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error)
-      
+
       let errorMessage = "Erro de conexão. Verifique sua internet e tente novamente."
-      
+
       if (error.message.includes("Failed to fetch")) {
         errorMessage = "Não foi possível conectar ao servidor. Verifique sua conexão com a internet."
       } else if (error.message.includes("servidor")) {
         errorMessage = "Erro interno do servidor. Tente novamente em alguns instantes."
       }
-      
+
       showModalMessage("Erro de Conexão", errorMessage, "error")
-      
-      setFormData(prev => ({
+
+      setFormData((prev) => ({
         ...prev,
-        senha: ""
+        senha: "",
       }))
     } finally {
       setLoading(false)
@@ -307,14 +301,14 @@ const Login = () => {
 
             {/* ✅ SELETOR DE TIPO DE LOGIN */}
             <div className="login-type-selector" data-aos="fade-up">
-              <button 
+              <button
                 className={`login-type-btn ${tipoLogin === "asilo" ? "login-type-active" : ""}`}
                 onClick={() => setTipoLogin("asilo")}
                 type="button"
               >
                 🏠 Instituição
               </button>
-              <button 
+              <button
                 className={`login-type-btn ${tipoLogin === "voluntario" ? "login-type-active" : ""}`}
                 onClick={() => setTipoLogin("voluntario")}
                 type="button"
@@ -362,12 +356,26 @@ const Login = () => {
                         aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                       >
                         {showPassword ? (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
                             <line x1="1" y1="1" x2="23" y2="23" />
                           </svg>
                         ) : (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                             <circle cx="12" cy="12" r="3" />
                           </svg>
@@ -384,11 +392,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <button 
-                  type="submit" 
-                  className="login-submit-btn" 
-                  disabled={isLoading}
-                >
+                <button type="submit" className="login-submit-btn" disabled={isLoading}>
                   {isLoading ? (
                     <span className="login-btn-loading">
                       <div className="login-spinner"></div>
@@ -413,13 +417,7 @@ const Login = () => {
         </div>
       </div>
 
-      <LoginModal
-        show={modal.show}
-        type={modal.type}
-        title={modal.title}
-        message={modal.message}
-        onClose={closeModal}
-      />
+      {modal.show && <LoginModal type={modal.type} title={modal.title} message={modal.message} onClose={closeModal} />}
     </div>
   )
 }

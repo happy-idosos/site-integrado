@@ -1,493 +1,734 @@
-/* ======= COMPRAS PAGE STYLES ======= */
+/* ======= VENDAS PAGE STYLES - MODERNIZED ======= */
 
 /* Hero Section */
-.compras-hero {
-    background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-    padding: 120px 0 80px;
-    position: relative;
-    overflow: hidden;
+.vendas-hero {
+  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
+  padding: 120px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vendas-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>')
+    no-repeat bottom;
+  background-size: cover;
+  opacity: 0.3;
+}
+
+.vendas-hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.vendas-hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.vendas-hero-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Filter Section - NEW */
+.vendas-filter-section {
+  background: #fff;
+  padding: 2rem 0;
+  border-bottom: 2px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.vendas-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.vendas-filter-btn {
+  padding: 0.75rem 1.5rem;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vendas-filter-btn:hover {
+  background: #e9ecef;
+  border-color: #244a96;
+  color: #244a96;
+  transform: translateY(-2px);
+}
+
+.vendas-filter-btn.active {
+  background: linear-gradient(135deg, #244a96, #1a3670);
+  border-color: #244a96;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+/* Section Styles */
+.vendas-produtos-section {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.vendas-produtos-section-alt {
+  background: #f8f9fa;
+}
+
+.vendas-section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.vendas-section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 1rem;
+}
+
+.vendas-section-subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Products Grid - ENHANCED */
+.vendas-produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.vendas-produto-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.vendas-produto-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vendas-produto-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(36, 74, 150, 0.2);
+}
+
+.vendas-produto-card:hover::before {
+  opacity: 1;
+}
+
+.vendas-produto-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.vendas-produto-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vendas-produto-card:hover .vendas-produto-image {
+  transform: scale(1.1);
+}
+
+.vendas-produto-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #244a96, #1a3670);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.4);
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.vendas-produto-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #244a96;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.vendas-produto-content {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.vendas-produto-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.vendas-produto-description {
+  color: #6c757d;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.vendas-produto-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #244a96, #1a3670);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.vendas-produto-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.vendas-produto-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.vendas-produto-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.4);
+}
+
+.vendas-produto-btn svg {
+  position: relative;
+  z-index: 1;
+}
+
+.vendas-produto-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Processo Section */
+.vendas-processo-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.vendas-processo-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.vendas-processo-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.vendas-processo-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(135deg, #244a96, #1a3670);
+  transform: scaleY(0);
+  transition: transform 0.4s ease;
+}
+
+.vendas-processo-card:hover {
+  transform: translateX(12px);
+  box-shadow: 0 12px 40px rgba(36, 74, 150, 0.2);
+}
+
+.vendas-processo-card:hover::before {
+  transform: scaleY(1);
+}
+
+.vendas-processo-number {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+  position: relative;
+}
+
+.vendas-processo-number::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid #244a96;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.vendas-processo-card:hover .vendas-processo-number::after {
+  opacity: 0.3;
+}
+
+.vendas-processo-content {
+  flex: 1;
+}
+
+.vendas-processo-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 0.75rem;
+}
+
+.vendas-processo-description {
+  color: #6c757d;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+/* Impacto Section */
+.vendas-impacto-section {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.vendas-impacto-content {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.vendas-impacto-icon {
+  margin-bottom: 2rem;
+  color: #244a96;
+  animation: vendas-pulse 2s ease-in-out infinite;
+}
+
+@keyframes vendas-pulse {
+  0%,
+  100% {
+    transform: scale(1);
   }
-  
-  .compras-hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>')
-      no-repeat bottom;
-    background-size: cover;
-    opacity: 0.3;
-  }
-  
-  .compras-hero-content {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .compras-hero-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .compras-hero-subtitle {
-    font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1.8;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  
-  /* Section Styles */
-  .produtos-section {
-    padding: 80px 0;
-    background: #fff;
-  }
-  
-  .produtos-section-alt {
-    background: #f8f9fa;
-  }
-  
-  .section-header {
-    text-align: center;
-    margin-bottom: 60px;
-  }
-  
-  .section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #244a96;
-    margin-bottom: 1rem;
-  }
-  
-  .section-subtitle {
-    font-size: 1.1rem;
-    color: #6c757d;
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-  
-  /* Products Grid */
-  .produtos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-  
-  .produto-card {
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .produto-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(36, 74, 150, 0.15);
-  }
-  
-  .produto-image-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 100%;
-    overflow: hidden;
-    background: #f8f9fa;
-  }
-  
-  .produto-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-  
-  .produto-card:hover .produto-image {
+  50% {
     transform: scale(1.05);
   }
-  
-  .produto-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #244a96;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
+}
+
+.vendas-impacto-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #244a96;
+  margin-bottom: 1.5rem;
+}
+
+.vendas-impacto-description {
+  font-size: 1.2rem;
+  color: #6c757d;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.vendas-impacto-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.vendas-impacto-stat {
+  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(36, 74, 150, 0.25);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.vendas-impacto-stat::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transition: transform 0.6s ease;
+}
+
+.vendas-impacto-stat:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(36, 74, 150, 0.35);
+}
+
+.vendas-impacto-stat:hover::before {
+  transform: translate(-25%, -25%);
+}
+
+.vendas-impacto-stat-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.vendas-impacto-stat-label {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+/* CTA Section */
+.vendas-cta {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.vendas-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>')
+    no-repeat top;
+  background-size: cover;
+  opacity: 0.3;
+}
+
+.vendas-cta-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.vendas-cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.vendas-cta-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+.vendas-cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.vendas-btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+.vendas-btn-whatsapp:hover {
+  background: #20ba5a;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+}
+
+.vendas-btn-secondary {
+  background: #fff;
+  color: #244a96;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.vendas-btn-secondary:hover {
+  background: transparent;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Loading Animation - NEW */
+.vendas-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+}
+
+.vendas-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #244a96;
+  border-radius: 50%;
+  animation: vendas-spin 1s linear infinite;
+}
+
+@keyframes vendas-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vendas-hero {
+    padding: 80px 0 60px;
+  }
+
+  .vendas-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .vendas-hero-subtitle {
     font-size: 1.1rem;
-    box-shadow: 0 4px 12px rgba(36, 74, 150, 0.3);
   }
-  
-  .produto-content {
-    padding: 1.5rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .produto-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #244a96;
-    margin-bottom: 0.75rem;
-  }
-  
-  .produto-description {
-    color: #6c757d;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    flex: 1;
-  }
-  
-  .produto-btn {
-    width: 100%;
-    padding: 12px 24px;
-    background: #244a96;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .produto-btn:hover {
-    background: #1a3670;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
-  }
-  
-  /* Processo Section */
-  .processo-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  }
-  
-  .processo-grid {
-    display: grid;
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-  
-  .processo-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    transition: all 0.3s ease;
-  }
-  
-  .processo-card:hover {
-    transform: translateX(8px);
-    box-shadow: 0 8px 30px rgba(36, 74, 150, 0.15);
-  }
-  
-  .processo-number {
-    flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+  .vendas-section-title {
     font-size: 2rem;
-    font-weight: 700;
-    box-shadow: 0 4px 16px rgba(36, 74, 150, 0.3);
   }
-  
-  .processo-content {
-    flex: 1;
-  }
-  
-  .processo-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #244a96;
-    margin-bottom: 0.75rem;
-  }
-  
-  .processo-description {
-    color: #6c757d;
-    line-height: 1.8;
+
+  .vendas-section-subtitle {
     font-size: 1rem;
   }
-  
-  /* Impacto Section */
-  .impacto-section {
-    padding: 80px 0;
-    background: #fff;
-  }
-  
-  .impacto-content {
-    text-align: center;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  
-  .impacto-icon {
-    margin-bottom: 2rem;
-    color: #244a96;
-  }
-  
-  .impacto-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #244a96;
-    margin-bottom: 1.5rem;
-  }
-  
-  .impacto-description {
-    font-size: 1.2rem;
-    color: #6c757d;
-    line-height: 1.8;
-    margin-bottom: 3rem;
-  }
-  
-  .impacto-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  .vendas-produtos-grid {
+    grid-template-columns: 1fr;
     gap: 2rem;
-    margin-top: 3rem;
   }
-  
-  .impacto-stat {
-    background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(36, 74, 150, 0.2);
-    transition: all 0.3s ease;
+
+  .vendas-filter-container {
+    padding: 0 1rem;
   }
-  
-  .impacto-stat:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(36, 74, 150, 0.3);
+
+  .vendas-filter-btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
   }
-  
-  .impacto-stat-number {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-  
-  .impacto-stat-label {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-  }
-  
-  /* CTA Section */
-  .compras-cta {
-    padding: 80px 0;
-    background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .compras-cta::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>')
-      no-repeat top;
-    background-size: cover;
-    opacity: 0.3;
-  }
-  
-  .compras-cta-content {
-    position: relative;
-    z-index: 1;
+
+  .vendas-processo-card {
+    flex-direction: column;
     text-align: center;
-    max-width: 800px;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+
+  .vendas-processo-card:hover {
+    transform: translateY(-8px);
+  }
+
+  .vendas-processo-number {
     margin: 0 auto;
   }
-  
-  .compras-cta-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1.5rem;
+
+  .vendas-impacto-title {
+    font-size: 2rem;
   }
-  
-  .compras-cta-subtitle {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1.8;
-    margin-bottom: 2.5rem;
+
+  .vendas-impacto-description {
+    font-size: 1.1rem;
   }
-  
-  .compras-cta-buttons {
-    display: flex;
-    gap: 1rem;
+
+  .vendas-impacto-stats {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .vendas-cta-title {
+    font-size: 2rem;
+  }
+
+  .vendas-cta-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .vendas-cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vendas-btn-whatsapp,
+  .vendas-btn-secondary {
+    width: 100%;
     justify-content: center;
-    flex-wrap: wrap;
   }
-  
-  .btn-whatsapp {
-    background: #25d366;
-    color: #fff;
-    padding: 14px 32px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+}
+
+@media (max-width: 480px) {
+  .vendas-hero-title {
+    font-size: 2rem;
   }
-  
-  .btn-whatsapp:hover {
-    background: #20ba5a;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.4);
+
+  .vendas-section-title {
+    font-size: 1.75rem;
   }
-  
-  .btn-secondary {
-    background: #fff;
-    color: #244a96;
-    padding: 14px 32px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border: 2px solid #fff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    text-decoration: none;
+
+  .vendas-produtos-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .btn-secondary:hover {
-    background: transparent;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(255, 255, 255, 0.2);
+
+  .vendas-processo-title {
+    font-size: 1.35rem;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .compras-hero {
-      padding: 80px 0 60px;
-    }
-  
-    .compras-hero-title {
-      font-size: 2.5rem;
-    }
-  
-    .compras-hero-subtitle {
-      font-size: 1.1rem;
-    }
-  
-    .section-title {
-      font-size: 2rem;
-    }
-  
-    .section-subtitle {
-      font-size: 1rem;
-    }
-  
-    .produtos-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  
-    .processo-card {
-      flex-direction: column;
-      text-align: center;
-      gap: 1.5rem;
-    }
-  
-    .processo-card:hover {
-      transform: translateY(-8px);
-    }
-  
-    .processo-number {
-      margin: 0 auto;
-    }
-  
-    .impacto-title {
-      font-size: 2rem;
-    }
-  
-    .impacto-description {
-      font-size: 1.1rem;
-    }
-  
-    .impacto-stats {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  
-    .compras-cta-title {
-      font-size: 2rem;
-    }
-  
-    .compras-cta-subtitle {
-      font-size: 1.1rem;
-    }
-  
-    .compras-cta-buttons {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .btn-whatsapp,
-    .btn-secondary {
-      width: 100%;
-      justify-content: center;
-    }
+
+  .vendas-impacto-stat-number {
+    font-size: 2.8rem;
   }
-  
-  @media (max-width: 480px) {
-    .compras-hero-title {
-      font-size: 2rem;
-    }
-  
-    .section-title {
-      font-size: 1.75rem;
-    }
-  
-    .produtos-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .processo-title {
-      font-size: 1.25rem;
-    }
-  
-    .impacto-stat-number {
-      font-size: 2.5rem;
-    }
+
+  .vendas-produto-badge {
+    font-size: 1rem;
+    padding: 8px 16px;
   }
-  
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .vendas-produto-card,
+  .vendas-processo-card,
+  .vendas-impacto-stat,
+  .vendas-produto-image,
+  .vendas-impacto-icon {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .vendas-filter-section,
+  .vendas-cta {
+    display: none;
+  }
+}

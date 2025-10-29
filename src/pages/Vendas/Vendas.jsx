@@ -6,9 +6,17 @@ import AOS from "aos"
 import "aos/dist/aos.css"
 import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
-import "./Compras.css"
+import "./Vendas.css"
 
-function Compras() {
+// Import dos nossos produtos
+import camiseta1 from "../../assets/img/Vendas/Camiseta Fundo Branco.png"
+import camiseta2 from "../../assets/img/Vendas/Camiseta Fundo Preto.png"
+import caneca1branco from "../../assets/img/Vendas/Caneca1 Fundo Branco.png"
+import caneca1preto from "../../assets/img/Vendas/Caneca1 Fundo Preto.png"
+import caneca2branco from "../../assets/img/Vendas/Caneca2 Fundo Branco.png"
+import caneca2preto from "../../assets/img/Vendas/Caneca2 Fundo Preto.png"
+
+function Vendas() {
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   useEffect(() => {
@@ -356,4 +364,4 @@ function Compras() {
   )
 }
 
-export default Compras
+export default Vendas

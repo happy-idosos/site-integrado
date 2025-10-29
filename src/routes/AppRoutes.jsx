@@ -12,7 +12,7 @@ import Eventos from "../pages/Eventos/Eventos"
 import Videos from "../pages/Videos/Videos"
 import SobreNos from "../pages/SobreNos/SobreNos"
 import SobreProjeto from "../pages/SobreProjeto/SobreProjeto"
-import Compras from "../pages/Compras/Compras"
+import Vendas from "../pages/Vendas/Vendas"
 import Contato from "../pages/Contato/Contato"
 import TermosDeUso from "../pages/TermosDeUso/TermosDeUso"
 import PoliticaDePrivacidade from "../pages/PoliticaDePrivacidade/PoliticaDePrivacidade"
@@ -29,8 +29,8 @@ function AppRoutes() {
       <Route path="/eventos" element={<Eventos />} />
       <Route path="/videos" element={<Videos />} />
       <Route path="/sobrenos" element={<SobreNos />} />
-      <Route path="/compras" element={<Compras />} />
       <Route path="/sobreprojeto" element={<SobreProjeto />} />
+      <Route path="/vendas" element={<Vendas />} />
       <Route path="/contato" element={<Contato />} />
       <Route path="/termosdeuso" element={<TermosDeUso />} />
       <Route path="/politicadeprivacidade" element={<PoliticaDePrivacidade />} />

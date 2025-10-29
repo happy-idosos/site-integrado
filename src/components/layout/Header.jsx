@@ -331,6 +331,10 @@ function Header() {
               <span className="nav-icon"></span>
               <span className="nav-text">Equipe</span>
             </Link>
+            <Link to="/vendas" className={`nav-item ${isActive("/vendas")}`} onClick={handleNavClick}>
+              <span className="nav-icon"></span>
+              <span className="nav-text">Vendas</span>
+            </Link>
             <Link to="/contato" className={`nav-item ${isActive("/contato")}`} onClick={handleNavClick}>
               <span className="nav-icon"></span>
               <span className="nav-text">Contato</span>

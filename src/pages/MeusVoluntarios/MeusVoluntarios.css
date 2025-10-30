@@ -1,0 +1,509 @@
+/* ========================================
+   MEUS VOLUNTÁRIOS PAGE - VERSÃO PROFISSIONAL
+   ======================================== */
+
+.meus-voluntarios-page {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Header da Página */
+.page-header {
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
+  color: white;
+  padding: 60px 0 40px;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Seções */
+.metrics-section,
+.filters-section,
+.volunteers-section,
+.teams-section {
+  padding: 40px 0;
+}
+
+/* Cartões de Métricas */
+.metric-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-left: 4px solid #244a96;
+  transition: transform 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+}
+
+.metric-icon {
+  width: 50px;
+  height: 50px;
+  background: #e3f2fd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #244a96;
+  font-size: 1.25rem;
+}
+
+.metric-content h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.metric-content p {
+  margin: 5px 0 0 0;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Filtros */
+.filters-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input-wrapper .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.search-input-wrapper .form-control {
+  padding-left: 35px;
+}
+
+/* Tabela de Voluntários */
+.volunteers-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.volunteers-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.volunteers-table th {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.volunteers-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.volunteers-table tr:last-child td {
+  border-bottom: none;
+}
+
+.volunteers-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* Informações do Voluntário na Tabela */
+.volunteer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.volunteer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.volunteer-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.volunteer-email {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+/* Participações e Avaliação */
+.participations {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.participations .count {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.rating {
+  display: flex;
+  gap: 2px;
+}
+
+.rating i {
+  font-size: 0.75rem;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.ativo {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.inativo {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Ações */
+.actions {
+  display: flex;
+  gap: 5px;
+}
+
+.actions .btn {
+  padding: 6px 10px;
+  font-size: 0.875rem;
+}
+
+/* Cartões de Equipe */
+.team-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-2px);
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 0;
+  margin-bottom: 15px;
+}
+
+.team-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-name {
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.team-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.team-description {
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.team-description p {
+  margin: 0;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.team-members {
+  padding: 0 20px 20px;
+}
+
+.team-members h6 {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #495057;
+}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.member-item:hover {
+  background: #e9ecef;
+}
+
+.member-item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.member-item span {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: #dc3545;
+  color: white;
+}
+
+/* Nova Equipe Card */
+.new-team-card {
+  border: 2px dashed #dee2e6;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-team-card:hover {
+  border-color: #244a96;
+  background: #e3f2fd;
+}
+
+.new-team-content {
+  text-align: center;
+  color: #6c757d;
+  padding: 40px 20px;
+}
+
+.new-team-content i {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: #244a96;
+}
+
+.new-team-content h4 {
+  color: #244a96;
+  margin-bottom: 8px;
+}
+
+.new-team-content p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 500px;
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 25px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.modal-footer {
+  padding: 20px 25px;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Estados de Loading e Vazio */
+.loading-state,
+.empty-state {
+  background: white;
+  padding: 60px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 40px 0 30px;
+    text-align: center;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .metric-card {
+    padding: 20px;
+  }
+  
+  .volunteers-table {
+    font-size: 0.875rem;
+  }
+  
+  .volunteers-table th,
+  .volunteers-table td {
+    padding: 10px 15px;
+  }
+  
+  .team-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .modal-container {
+    margin: 20px;
+  }
+}
+
+/* Utilitários */
+.section-header {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #1a1a1a;
+}
+
+.section-subtitle {
+  color: #6c757d;
+  margin: 0;
+}

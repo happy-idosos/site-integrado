@@ -20,6 +20,13 @@ import EsqueciASenha from "../pages/EsqueciASenha/EsqueciASenha"
 import PerfilAsilo from "../pages/PerfilAsilo/PerfilAsilo"
 import PerfilVoluntario from "../pages/PerfilVoluntario/PerfilVoluntario"
 
+//IMPORT DE NOVAS TELAS
+
+import MeusVoluntarios from "../pages/MeusVoluntarios/MeusVoluntarios"
+import MinhasInscricoes from "../pages/MinhasInscricoes/MinhasInscricoes"
+import ConfirmarPresenca from "../pages/ConfirmarPresenca/ConfirmarPresenca"
+import GerenciarVoluntarios from "../pages/GerenciarVoluntarios/GerenciarVoluntarios"
+
 function AppRoutes() {
   return (
     <Routes>
@@ -37,6 +44,11 @@ function AppRoutes() {
       <Route path="/esqueciasenha" element={<EsqueciASenha />} />
       <Route path="/perfilasilo" element={<PerfilAsilo />} />
       <Route path="/perfilvoluntario" element={<PerfilVoluntario />} />
+      <Route path="/meusvoluntarios" element={<MeusVoluntarios />} />
+      <Route path="/minhasinscricoes" element={<MinhasInscricoes />} />
+      <Route path="/confirmarpresenca" element={<ConfirmarPresenca />} />
+      <Route path="/gerenciarvoluntarios" element={<GerenciarVoluntarios />} />
+
 
       {/* Auth Routes */}
       <Route path="/cadastrovoluntario" element={<CadastroVoluntario />} />

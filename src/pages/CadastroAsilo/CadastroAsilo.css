@@ -1,278 +1,338 @@
-/* ========================================
-   SOLUÇÃO DEFINITIVA - BOTÃO SEPARADO POR DISPOSITIVO
-   ======================================== */
+/* CadastroAsilo.css - Modern responsive layout matching Login design */
 
-/* BOTÃO VOLTAR APENAS PARA DESKTOP */
-.cadastro-asilo-back-btn-desktop {
-  position: fixed !important;
-  top: 1.5rem !important;
-  left: 1.5rem !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  border: 2px solid #244a96 !important;
-  color: #244a96 !important;
-  padding: 0.75rem 1.25rem !important;
-  border-radius: 25px !important;
-  font-family: "Nunito", sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  transition: all 0.3s ease !important;
-  z-index: 1000 !important;
-  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  white-space: nowrap !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-  text-decoration: none !important;
+/* Base page styles with HAPPYIDOSOS brand colors */
+.cadastro-asilo-page {
+  font-family: "Nunito", sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.cadastro-asilo-back-btn-desktop:hover {
-  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
-  color: white !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25) !important;
-  text-decoration: none !important;
-}
-
-.cadastro-asilo-back-btn-desktop svg {
-  flex-shrink: 0 !important;
-  transition: transform 0.3s ease !important;
-}
-
-.cadastro-asilo-back-btn-desktop:hover svg {
-  transform: translateX(-3px) !important;
-}
-
-/* HEADER PARA MOBILE/TABLET */
+/* Mobile Header */
 .cadastro-asilo-mobile-header {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border-bottom: 1px solid rgba(36, 74, 150, 0.1) !important;
-  padding: 0.75rem 1rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  z-index: 9999 !important;
-  height: 60px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  display: none;
+  background: #1a1a1a;
+  padding: 1rem;
+  border-bottom: 1px solid #3a3a3a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .cadastro-asilo-mobile-back-btn {
-  background: transparent !important;
-  border: 1.5px solid #244a96 !important;
-  color: #244a96 !important;
-  padding: 0.5rem 0.75rem !important;
-  border-radius: 20px !important;
-  font-family: "Nunito", sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.8rem !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.4rem !important;
-  transition: all 0.3s ease !important;
-  white-space: nowrap !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-  flex-shrink: 0 !important;
+  background: rgba(36, 74, 150, 0.15);
+  border: 2px solid rgba(36, 74, 150, 0.3);
+  color: #5a8fd8;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.3s ease;
 }
 
 .cadastro-asilo-mobile-back-btn:hover {
-  background: #244a96 !important;
-  color: white !important;
-  transform: translateY(-1px) !important;
-}
-
-.cadastro-asilo-mobile-back-btn svg {
-  width: 16px !important;
-  height: 16px !important;
-  flex-shrink: 0 !important;
+  background: #244a96;
+  border-color: #244a96;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .cadastro-asilo-mobile-title {
-  color: #244a96 !important;
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  margin: 0 !important;
-  text-align: center !important;
-  flex: 1 !important;
-  padding: 0 0.5rem !important;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
 }
 
 .cadastro-asilo-mobile-spacer {
-  width: 80px !important;
-  flex-shrink: 0 !important;
+  width: 80px;
 }
 
-/* AJUSTES DE LAYOUT PARA MOBILE */
-.cadastro-asilo-page.mobile-layout {
-  padding-top: 60px !important;
+/* Desktop Back Button */
+.cadastro-asilo-back-btn-desktop {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(36, 74, 150, 0.15);
+  border: 2px solid rgba(36, 74, 150, 0.3);
+  color: #5a8fd8;
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.cadastro-asilo-back-btn-desktop:hover {
+  background: #244a96;
+  border-color: #244a96;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+}
+
+/* Main Container */
+.cadastro-asilo-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  padding: 3rem;
+  gap: 4rem;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .cadastro-asilo-container.mobile-layout {
-  padding-top: 0.5rem !important;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  gap: 2rem;
 }
 
-/* Ajuste do container principal */
-.cadastro-asilo-page {
-  position: relative;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  font-family: "Nunito", sans-serif;
-  color: #333;
-  line-height: 1.6;
-  padding: 2rem 0;
-}
-
-.cadastro-asilo-container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  position: relative;
-}
-
-/* Resto do seu CSS existente permanece igual... */
+/* Logo Section */
 .cadastro-asilo-logo-section {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 2.5rem;
-  padding-top: 1rem;
+  position: sticky;
+  top: 3rem;
 }
 
 .cadastro-asilo-logo {
-  height: 90px;
-  width: auto;
-  margin-bottom: 1.25rem;
-  border-radius: 50%;
-  object-fit: cover;
-  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
-  transition: transform 0.3s ease;
-  background: white;
-  padding: 0.5rem;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(36, 74, 150, 0.3);
+  margin-bottom: 2rem;
+  transition: transform 0.4s ease;
 }
 
 .cadastro-asilo-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) rotate(2deg);
 }
 
 .cadastro-asilo-logo-section h1 {
-  color: #244a96;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: #ffffff;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
   line-height: 1.2;
 }
 
 .cadastro-asilo-logo-section p {
-  color: #666;
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  font-weight: 400;
-  max-width: min(500px, 90%);
-  margin: 0 auto;
-  line-height: 1.5;
+  color: #b0b0b0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 320px;
 }
 
+/* Form Container */
 .cadastro-asilo-form-container {
-  background: white;
-  border-radius: 20px;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  box-shadow: 0 15px 35px rgba(36, 74, 150, 0.1);
-  border: 1px solid rgba(36, 74, 150, 0.1);
-  transition: box-shadow 0.3s ease;
-  margin-top: 1rem;
+  flex: 1;
+  max-width: 700px;
+  background: #2a2a2a;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 1px solid #3a3a3a;
 }
 
-.cadastro-asilo-form-container:hover {
-  box-shadow: 0 20px 45px rgba(36, 74, 150, 0.15);
-}
-
+/* Form Sections */
 .cadastro-asilo-form-section {
-  margin-bottom: 2rem;
-  padding: clamp(1rem, 3vw, 1.5rem);
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-radius: 15px;
-  border-left: 4px solid #244a96;
-  transition: all 0.3s ease;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #3a3a3a;
 }
 
-.cadastro-asilo-form-section:hover {
-  border-left-width: 6px;
-  box-shadow: 0 4px 12px rgba(36, 74, 150, 0.08);
+.cadastro-asilo-form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .cadastro-asilo-form-section h3 {
-  color: #244a96;
-  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  color: #ffffff;
+  font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  line-height: 1.3;
 }
 
 .cadastro-asilo-form-section h3 svg {
-  flex-shrink: 0;
+  color: #244a96;
 }
 
+/* Form Grid */
 .cadastro-asilo-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-  gap: clamp(0.75rem, 2vw, 1.25rem);
-  align-items: start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
+/* Form Groups */
 .cadastro-asilo-form-group {
   display: flex;
   flex-direction: column;
-  min-width: 0;
 }
 
-.cadastro-asilo-form-group.cadastro-asilo-full-width {
+.cadastro-asilo-full-width {
   grid-column: 1 / -1;
 }
 
 .cadastro-asilo-form-group label {
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 0.5rem;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
-  line-height: 1.4;
+  font-size: 0.95rem;
 }
 
 .cadastro-asilo-form-group input,
 .cadastro-asilo-form-group select {
-  padding: clamp(0.75rem, 2vw, 0.875rem);
-  border: 2px solid #e9ecef;
+  padding: 1rem 1.25rem;
+  border: 2px solid #3a3a3a;
   border-radius: 12px;
   font-family: "Nunito", sans-serif;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: #1a1a1a;
+  color: #ffffff;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .cadastro-asilo-form-group input:focus,
 .cadastro-asilo-form-group select:focus {
   outline: none;
   border-color: #244a96;
-  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.2);
+  background: #222222;
 }
 
 .cadastro-asilo-form-group input::placeholder {
-  color: #adb5bd;
+  color: #666;
   font-style: italic;
-  font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+/* Password Field */
+.cadastro-asilo-password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cadastro-asilo-password-field input {
+  padding-right: 3rem;
+}
+
+.cadastro-asilo-toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cadastro-asilo-toggle-password:hover {
+  color: #244a96;
+  background: rgba(36, 74, 150, 0.15);
+}
+
+/* Password Requirements */
+.cadastro-asilo-password-requirements {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: rgba(36, 74, 150, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(36, 74, 150, 0.2);
+}
+
+.cadastro-asilo-password-requirements strong {
+  color: #ffffff;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.cadastro-asilo-password-requirements ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cadastro-asilo-password-requirements li {
+  color: #888;
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.cadastro-asilo-password-requirements li::before {
+  content: "○";
+  position: absolute;
+  left: 0;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.cadastro-asilo-password-requirements li.valid {
+  color: #28a745;
+}
+
+.cadastro-asilo-password-requirements li.valid::before {
+  content: "✓";
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Terms Section */
+.cadastro-asilo-terms-section {
+  background: rgba(36, 74, 150, 0.05);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid rgba(36, 74, 150, 0.2);
+}
+
+.cadastro-asilo-terms-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cadastro-asilo-terms-header h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
 }
 
 .cadastro-asilo-checkbox-group {
@@ -280,50 +340,68 @@
   align-items: flex-start;
   gap: 0.75rem;
   cursor: pointer;
-  font-weight: 500;
-  line-height: 1.6;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  margin-bottom: 1rem;
 }
 
 .cadastro-asilo-checkbox-group input[type="checkbox"] {
-  margin: 0;
-  margin-top: 0.25rem;
-  accent-color: #244a96;
-  width: clamp(18px, 4vw, 20px);
-  height: clamp(18px, 4vw, 20px);
+  width: 20px;
+  height: 20px;
+  margin-top: 0.2rem;
   cursor: pointer;
+  accent-color: #244a96;
   flex-shrink: 0;
 }
 
-.cadastro-asilo-link {
-  color: #244a96;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  word-break: break-word;
+.cadastro-asilo-checkbox-group span {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-.cadastro-asilo-link:hover {
-  color: #1a3a7a;
+.cadastro-asilo-link-button {
+  background: none;
+  border: none;
+  color: #5a8fd8;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease;
+  display: inline;
+}
+
+.cadastro-asilo-link-button:hover {
+  color: #7aa8e8;
   text-decoration: underline;
 }
 
+.cadastro-asilo-terms-notice {
+  color: #ffc107;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.75rem;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #ffc107;
+}
+
+/* Submit Button */
 .cadastro-asilo-submit-btn {
   width: 100%;
   background: linear-gradient(135deg, #244a96, #1a3a7a);
   color: white;
   border: none;
-  padding: clamp(1rem, 3vw, 1.125rem) clamp(1.5rem, 4vw, 2rem);
+  padding: 1.2rem 2rem;
   border-radius: 15px;
   font-family: "Nunito", sans-serif;
-  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   margin-bottom: 1.5rem;
-  min-height: 54px;
 }
 
 .cadastro-asilo-submit-btn::before {
@@ -337,20 +415,19 @@
   transition: left 0.5s ease;
 }
 
-.cadastro-asilo-submit-btn:hover::before {
+.cadastro-asilo-submit-btn:hover:not(:disabled)::before {
   left: 100%;
 }
 
 .cadastro-asilo-submit-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #1a3a7a, #112a63);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.3);
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.4);
 }
 
 .cadastro-asilo-submit-btn:disabled {
-  background: #ccc;
   cursor: not-allowed;
-  transform: none;
+  opacity: 0.7;
 }
 
 .cadastro-asilo-btn-loading {
@@ -361,8 +438,8 @@
 }
 
 .cadastro-asilo-spinner {
-  width: clamp(18px, 4vw, 20px);
-  height: clamp(18px, 4vw, 20px);
+  width: 20px;
+  height: 20px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
   border-radius: 50%;
@@ -378,791 +455,146 @@
   }
 }
 
+/* Login Link */
 .cadastro-asilo-login-link {
   text-align: center;
   padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid #3a3a3a;
 }
 
 .cadastro-asilo-login-link p {
-  color: #666;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
-  line-height: 1.5;
+  color: #888;
+  font-size: 0.95rem;
+  margin: 0;
 }
 
-.cadastro-asilo-alert {
-  padding: clamp(1rem, 3vw, 1.125rem) clamp(1rem, 3vw, 1.5rem);
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-  animation: cadastro-asilo-fadeIn 0.6s ease-out;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
+.cadastro-asilo-link {
+  color: #5a8fd8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
-.cadastro-asilo-alert-success {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  color: #155724;
-  border: 1px solid #c3e6cb;
+.cadastro-asilo-link:hover {
+  color: #7aa8e8;
+  text-decoration: underline;
 }
 
-.cadastro-asilo-alert-error {
-  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
+/* Form Validation */
 .cadastro-asilo-error {
   border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.1) !important;
 }
 
 .cadastro-asilo-success {
   border-color: #28a745 !important;
+  background-color: rgba(40, 167, 69, 0.1) !important;
 }
 
 .cadastro-asilo-error-message {
-  color: #dc3545;
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
-  margin-top: 0.375rem;
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  line-height: 1.3;
+  gap: 0.25rem;
 }
 
 .cadastro-asilo-error-message::before {
   content: "⚠";
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
-@keyframes cadastro-asilo-fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Enhanced Terms Section Styling */
-.cadastro-asilo-terms-section {
-  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%) !important;
-  border-left-color: #244a96 !important;
-}
-
-.cadastro-asilo-terms-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  color: #244a96;
-}
-
-.cadastro-asilo-terms-header h4 {
-  margin: 0;
-  font-size: clamp(1rem, 2.5vw, 1.1rem);
-  font-weight: 700;
-}
-
-.cadastro-asilo-terms-notice {
-  margin-top: 1rem;
-  padding: clamp(0.75rem, 2vw, 1rem);
-  background: rgba(243, 156, 18, 0.1);
-  border-left: 3px solid #244a96;
-  border-radius: 8px;
-  font-size: clamp(0.8rem, 2vw, 0.9rem);
-  color: #856404;
-  line-height: 1.6;
-}
-
-/* ========================================
-   RESPONSIVE DESIGN - SOLUÇÃO DEFINITIVA
-   ======================================== */
-
-/* Tablets e dispositivos médios */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .cadastro-asilo-container {
-    max-width: 90%;
-    padding: 1.5rem 1rem;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .cadastro-asilo-logo-section {
+    position: static;
+    flex: none;
+    margin-bottom: 2rem;
+  }
+
+  .cadastro-asilo-form-container {
+    width: 100%;
   }
 }
 
-/* Tablets pequenos e mobile (768px ou menos) */
-@media (max-width: 800px) {
-  .cadastro-asilo-back-btn-desktop {
-    display: none !important;
+@media (max-width: 768px) {
+  .cadastro-asilo-mobile-header {
+    display: flex;
   }
 
-  .cadastro-asilo-page {
-    padding: 0 !important;
-    min-height: 100vh;
+  .cadastro-asilo-back-btn-desktop {
+    display: none;
   }
 
   .cadastro-asilo-container {
-    padding: 1rem 0.75rem;
-    max-width: 95%;
-    margin-top: 0;
-  }
-
-  .cadastro-asilo-logo {
-    height: 70px;
-    margin-bottom: 1rem;
+    padding: 1.5rem 1rem;
   }
 
   .cadastro-asilo-logo-section {
     margin-bottom: 1.5rem;
-    padding-top: 4.5rem;
   }
 
-  .cadastro-asilo-logo-section h1,
+  .cadastro-asilo-logo {
+    max-width: 200px;
+  }
+
+  .cadastro-asilo-logo-section h1 {
+    font-size: 1.5rem;
+  }
+
   .cadastro-asilo-logo-section p {
-    display: none;
+    font-size: 0.95rem;
   }
 
   .cadastro-asilo-form-container {
-    padding: 1.25rem;
-    margin-top: 0;
-    border-radius: 15px;
-  }
-
-  .cadastro-asilo-form-section {
-    padding: 1rem;
-    margin-bottom: 1.25rem;
-    border-radius: 12px;
-  }
-
-  .cadastro-asilo-form-section h3 {
-    margin-bottom: 1rem;
-    gap: 0.5rem;
-    font-size: 1.1rem;
+    padding: 2rem 1.5rem;
   }
 
   .cadastro-asilo-form-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+
+  .cadastro-asilo-form-section h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cadastro-asilo-form-container {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .cadastro-asilo-form-group input,
+  .cadastro-asilo-form-group select {
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
   }
 
   .cadastro-asilo-submit-btn {
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    margin-bottom: 1.25rem;
-    min-height: 50px;
-  }
-
-  .cadastro-asilo-checkbox-group {
-    gap: 0.5rem;
-    align-items: flex-start;
   }
 }
 
-/* Mobile - Portrait */
-@media (max-width: 480px) {
-  .cadastro-asilo-mobile-header {
-    padding: 0.75rem 0.5rem !important;
-    height: 55px !important;
-  }
-
-  .cadastro-asilo-mobile-back-btn {
-    padding: 0.4rem 0.6rem !important;
-    font-size: 0.75rem !important;
-    gap: 0.3rem !important;
-  }
-
-  .cadastro-asilo-mobile-back-btn svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .cadastro-asilo-mobile-title {
-    font-size: 1rem !important;
-  }
-
-  .cadastro-asilo-container {
-    padding: 0.5rem;
-    max-width: 100%;
-  }
-
-  .cadastro-asilo-logo {
-    height: 60px;
-  }
-
-  .cadastro-asilo-form-container {
-    padding: 1rem;
-    border-radius: 12px;
-  }
-
-  .cadastro-asilo-form-section {
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .cadastro-asilo-back-btn-desktop,
+  .cadastro-asilo-logo,
   .cadastro-asilo-submit-btn {
-    padding: 0.875rem 1.25rem;
-    font-size: 0.95rem;
-    min-height: 46px;
-  }
-}
-
-/* Mobile muito pequeno */
-@media (max-width: 375px) {
-  .cadastro-asilo-mobile-header {
-    padding: 0.5rem !important;
-    height: 50px !important;
+    transition: none;
   }
 
-  .cadastro-asilo-mobile-back-btn {
-    padding: 0.35rem 0.5rem !important;
-    font-size: 0.7rem !important;
+  .cadastro-asilo-spinner {
+    animation: none;
   }
-
-  .cadastro-asilo-mobile-title {
-    font-size: 0.9rem !important;
-  }
-
-  .cadastro-asilo-container {
-    padding: 0.25rem;
-  }
-
-  .cadastro-asilo-form-container {
-    padding: 0.75rem;
-  }
-
-  .cadastro-asilo-form-section {
-    padding: 0.5rem;
-  }
-
-  .cadastro-asilo-logo {
-    height: 50px;
-  }
-}
-
-/* Orientação landscape em mobile */
-@media (max-width: 768px) and (orientation: landscape) {
-  .cadastro-asilo-page {
-    min-height: auto;
-  }
-
-  .cadastro-asilo-mobile-header {
-    height: 50px !important;
-    padding: 0.5rem !important;
-  }
-
-  .cadastro-asilo-container {
-    padding: 0.5rem;
-  }
-
-  .cadastro-asilo-logo-section {
-    margin-bottom: 1rem;
-    padding-top: 0.25rem;
-  }
-
-  .cadastro-asilo-logo {
-    height: 45px;
-    margin-bottom: 0.5rem;
-  }
-}
-
-/* ========================================
-   MODAL STYLES PARA CADASTRO
-   ======================================== */
-.cadastro-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  padding: 1rem;
-  animation: cadastro-modal-fadeIn 0.3s ease-out;
-}
-
-.cadastro-modal-content {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-  max-width: 450px;
-  width: 100%;
-  animation: cadastro-modal-slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  border: 1px solid rgba(36, 74, 150, 0.1);
-}
-
-.cadastro-modal-header {
-  padding: 1.5rem 2rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.cadastro-modal-success .cadastro-modal-header {
-  background: linear-gradient(135deg, #d4edda, #c3e6cb);
-  color: #155724;
-}
-
-.cadastro-modal-error .cadastro-modal-header {
-  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-  color: #721c24;
-}
-
-.cadastro-modal-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.cadastro-modal-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.cadastro-modal-body {
-  padding: 2rem;
-  text-align: center;
-}
-
-.cadastro-modal-message {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #333;
-  margin: 0;
-}
-
-.cadastro-modal-footer {
-  padding: 0 2rem 2rem;
-  text-align: center;
-}
-
-.cadastro-modal-btn {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
-  color: white;
-  border: none;
-  padding: 0.875rem 2rem;
-  border-radius: 12px;
-  font-family: "Nunito", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.cadastro-modal-btn:hover {
-  background: linear-gradient(135deg, #1a3a7a, #112a63);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(36, 74, 150, 0.3);
-}
-
-.cadastro-modal-btn:active {
-  transform: translateY(0);
-}
-
-@keyframes cadastro-modal-fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cadastro-modal-slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .cadastro-modal-overlay {
-    padding: 0.5rem;
-  }
-  
-  .cadastro-modal-content {
-    max-width: 100%;
-    margin: 1rem;
-  }
-  
-  .cadastro-modal-header {
-    padding: 1.25rem 1.5rem 0.75rem;
-  }
-  
-  .cadastro-modal-body {
-    padding: 1.5rem;
-  }
-  
-  .cadastro-modal-footer {
-    padding: 0 1.5rem 1.5rem;
-  }
-  
-  .cadastro-modal-title {
-    font-size: 1.3rem;
-  }
-  
-  .cadastro-modal-message {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .cadastro-modal-header {
-    padding: 1rem 1.25rem 0.5rem;
-  }
-  
-  .cadastro-modal-body {
-    padding: 1.25rem;
-  }
-  
-  .cadastro-modal-footer {
-    padding: 0 1.25rem 1.25rem;
-  }
-  
-  .cadastro-modal-icon {
-    font-size: 2.5rem;
-  }
-}
-
-/* ===== MELHORIAS PARA OS CAMPOS DE SENHA ===== */
-.cadastro-asilo-password-field {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.cadastro-asilo-password-field input {
-  padding-right: 3rem;
-  width: 100%;
-}
-
-.cadastro-asilo-toggle-password {
-  position: absolute;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cadastro-asilo-toggle-password:hover {
-  color: #244a96;
-  background: rgba(36, 74, 150, 0.1);
-}
-
-/* ===== REQUISITOS DE SENHA MELHORADOS ===== */
-.cadastro-asilo-password-requirements {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: #666;
-  text-align: left; /* Alinha todo o conteúdo à esquerda */
-  width: 100%;
-}
-
-.cadastro-asilo-password-requirements ul {
-  list-style: none;
-  padding: 0;
-  margin: 0.25rem 0;
-  text-align: left; /* Garante que a lista fique à esquerda */
-}
-
-.cadastro-asilo-password-requirements li {
-  padding: 0.1rem 0;
-  position: relative;
-  padding-left: 1.2rem;
-  text-align: left; /* Cada item da lista alinhado à esquerda */
-}
-
-.cadastro-asilo-password-requirements li:before {
-  content: "○";
-  position: absolute;
-  left: 0;
-  color: #dc3545;
-}
-
-.cadastro-asilo-password-requirements li.valid:before {
-  content: "✓";
-  color: #28a745;
-}
-
-.cadastro-asilo-password-requirements strong {
-  color: #333;
-  font-size: 0.85rem;
-  display: block; /* Faz o strong ocupar toda a linha */
-  text-align: left; /* Alinha o título à esquerda */
-  margin-bottom: 0.25rem;
-}
-
-/* ===== MENSAGEM DE SUCESSO PARA SENHAS ===== */
-.cadastro-asilo-success-message {
-  color: #28a745;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ===== MODAL STYLES ATUALIZADOS ===== */
-.cadastro-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  padding: 1rem;
-  animation: cadastro-modal-fadeIn 0.3s ease-out;
-}
-
-@keyframes cadastro-modal-fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.cadastro-modal-content {
-  background: white;
-  border-radius: 20px;
-  padding: 2.5rem;
-  max-width: 450px;
-  width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  animation: cadastro-modal-slideUp 0.4s ease-out;
-}
-
-@keyframes cadastro-modal-slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.cadastro-modal-success {
-  border-top: 4px solid #28a745;
-}
-
-.cadastro-modal-error {
-  border-top: 4px solid #dc3545;
-}
-
-.cadastro-modal-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.cadastro-modal-icon {
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
-}
-
-.cadastro-modal-success .cadastro-modal-icon {
-  color: #28a745;
-}
-
-.cadastro-modal-error .cadastro-modal-icon {
-  color: #dc3545;
-}
-
-.cadastro-modal-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.cadastro-modal-body {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.cadastro-modal-message {
-  color: #666;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.cadastro-modal-footer {
-  text-align: center;
-}
-
-.cadastro-modal-btn {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 12px;
-  font-family: "Nunito", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
-}
-
-.cadastro-modal-btn-success {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
-}
-
-.cadastro-modal-btn-error {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-}
-
-.cadastro-modal-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.3);
-}
-
-.cadastro-modal-btn-success:hover {
-  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
-}
-
-.cadastro-modal-btn-error:hover {
-  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
-}
-
-/* Responsive para modal */
-@media (max-width: 480px) {
-  .cadastro-modal-content {
-    padding: 1.5rem;
-    border-radius: 16px;
-  }
-  
-  .cadastro-modal-title {
-    font-size: 1.2rem;
-  }
-  
-  .cadastro-modal-message {
-    font-size: 0.95rem;
-  }
-}
-
-/* ===== CORREÇÃO PARA O BOTÃO VOLTAR DESKTOP ===== */
-.cadastro-asilo-back-btn-desktop {
-  position: fixed !important;
-  top: 1.5rem !important;
-  left: 1.5rem !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  border: 2px solid #244a96 !important;
-  color: #244a96 !important;
-  padding: 0.75rem 1.25rem !important;
-  border-radius: 25px !important;
-  font-family: "Nunito", sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  transition: all 0.3s ease !important;
-  z-index: 1000 !important;
-  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.15) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  white-space: nowrap !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-  text-decoration: none !important;
-}
-
-.cadastro-asilo-back-btn-desktop:hover {
-  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
-  color: white !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.25) !important;
-  text-decoration: none !important;
-}
-
-.cadastro-asilo-back-btn-desktop svg {
-  flex-shrink: 0 !important;
-  transition: transform 0.3s ease !important;
-}
-
-.cadastro-asilo-back-btn-desktop:hover svg {
-  transform: translateX(-3px) !important;
-}
-
-/* ===== MELHORIAS RESPONSIVAS ADICIONAIS ===== */
-@media (max-width: 768px) {
-  .cadastro-asilo-password-requirements ul {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.2rem;
-  }
-  
-  .cadastro-asilo-password-requirements li {
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .cadastro-asilo-password-requirements {
-    font-size: 0.7rem;
-  }
-  
-  .cadastro-asilo-password-requirements li {
-    padding-left: 1rem;
-  }
-}
-
-/* CadastroVoluntario.css e CadastroAsilo.css - Adicione estas classes */
-
-.cadastro-voluntario-link-button,
-.cadastro-asilo-link-button {
-  background: none;
-  border: none;
-  color: #244a96;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-}
-
-.cadastro-voluntario-link-button:hover,
-.cadastro-asilo-link-button:hover {
-  color: #1a3570;
-  text-decoration: none;
-}
-
-.cadastro-voluntario-link-button:focus,
-.cadastro-asilo-link-button:focus {
-  outline: 2px solid #244a96;
-  outline-offset: 2px;
 }

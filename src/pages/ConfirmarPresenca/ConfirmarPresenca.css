@@ -1,0 +1,673 @@
+/* ConfirmarPresenca.css - Página de confirmação de presença em eventos */
+
+/* Base page styles */
+.confirmacao-page {
+  font-family: "Nunito", sans-serif;
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Loading State */
+.confirmacao-loading {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.confirmacao-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(36, 74, 150, 0.2);
+  border-top: 4px solid #244a96;
+  border-radius: 50%;
+  animation: confirmacao-spin 1s linear infinite;
+}
+
+@keyframes confirmacao-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.confirmacao-loading p {
+  color: #b0b0b0;
+  font-size: 1.1rem;
+}
+
+/* Main Content */
+.confirmacao-main {
+  padding: 6rem 0 4rem;
+  min-height: calc(100vh - 200px);
+}
+
+/* Header Section */
+.confirmacao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.confirmacao-header-content {
+  flex: 1;
+}
+
+.confirmacao-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.confirmacao-subtitle {
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.confirmacao-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(36, 74, 150, 0.15);
+  border: 2px solid rgba(36, 74, 150, 0.3);
+  border-radius: 12px;
+  color: #5a8fd8;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.confirmacao-back-btn:hover {
+  background: #244a96;
+  border-color: #244a96;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+}
+
+/* Statistics Cards */
+.confirmacao-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: #244a96;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon-pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+.stat-icon-confirmed {
+  background: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+}
+
+.stat-icon-total {
+  background: rgba(36, 74, 150, 0.15);
+  color: #5a8fd8;
+}
+
+.stat-content h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+}
+
+.stat-content p {
+  font-size: 0.95rem;
+  color: #888;
+  margin: 0.25rem 0 0;
+}
+
+/* Filters */
+.confirmacao-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem;
+  background: #2a2a2a;
+  border: 2px solid #3a3a3a;
+  border-radius: 12px;
+  color: #888;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #244a96;
+  color: #5a8fd8;
+  background: rgba(36, 74, 150, 0.1);
+}
+
+.filter-active {
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border-color: #244a96;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+/* Events Grid */
+.confirmacao-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Event Card */
+.confirmacao-card {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmacao-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+  border-color: #244a96;
+}
+
+.confirmacao-card-header {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.evento-tipo-badge {
+  padding: 0.5rem 1rem;
+  background: rgba(36, 74, 150, 0.15);
+  color: #5a8fd8;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pendente {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+.status-confirmado {
+  background: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+}
+
+.status-ausente {
+  background: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+}
+
+.confirmacao-card-body {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+.evento-titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.evento-descricao {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.evento-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.info-item svg {
+  flex-shrink: 0;
+  color: #5a8fd8;
+}
+
+.info-item-full {
+  grid-column: 1 / -1;
+}
+
+.confirmacao-card-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #3a3a3a;
+}
+
+.btn-confirmar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-confirmar:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.4);
+}
+
+.confirmacao-success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(40, 167, 69, 0.15);
+  border: 2px solid rgba(40, 167, 69, 0.3);
+  border-radius: 12px;
+  color: #28a745;
+  font-weight: 600;
+}
+
+.confirmacao-info-message {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+  font-style: italic;
+}
+
+/* Empty State */
+.confirmacao-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #2a2a2a;
+  border: 2px dashed #3a3a3a;
+  border-radius: 20px;
+  margin: 2rem 0;
+}
+
+.empty-icon {
+  margin-bottom: 1.5rem;
+  color: #5a8fd8;
+  opacity: 0.5;
+}
+
+.confirmacao-empty h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.confirmacao-empty p {
+  font-size: 1.1rem;
+  color: #888;
+  margin-bottom: 2rem;
+}
+
+.confirmacao-empty .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.confirmacao-empty .btn-primary:hover {
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.4);
+}
+
+/* ===== MODAL STYLES ===== */
+.confirmacao-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: confirmacao-modal-fadeIn 0.3s ease-out;
+}
+
+@keyframes confirmacao-modal-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmacao-modal-content {
+  background: #2a2a2a;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid #3a3a3a;
+  position: relative;
+  animation: confirmacao-modal-slideUp 0.4s ease-out;
+}
+
+@keyframes confirmacao-modal-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.confirmacao-modal-success {
+  border-top: 4px solid #28a745;
+}
+
+.confirmacao-modal-error {
+  border-top: 4px solid #dc3545;
+}
+
+.confirmacao-modal-warning {
+  border-top: 4px solid #ffc107;
+}
+
+.confirmacao-modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.confirmacao-modal-icon {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmacao-modal-success .confirmacao-modal-icon {
+  color: #28a745;
+}
+
+.confirmacao-modal-error .confirmacao-modal-icon {
+  color: #dc3545;
+}
+
+.confirmacao-modal-warning .confirmacao-modal-icon {
+  color: #ffc107;
+}
+
+.confirmacao-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.confirmacao-modal-body {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.confirmacao-modal-message {
+  color: #b0b0b0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.confirmacao-modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirmacao-modal-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.confirmacao-modal-btn-success {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+}
+
+.confirmacao-modal-btn-error {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.confirmacao-modal-btn-warning {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #1a1a1a;
+}
+
+.confirmacao-modal-btn-secondary {
+  background: #3a3a3a;
+  color: #b0b0b0;
+}
+
+.confirmacao-modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.confirmacao-modal-btn-success:hover {
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.confirmacao-modal-btn-error:hover {
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.confirmacao-modal-btn-warning:hover {
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .confirmacao-main {
+    padding: 4rem 0 3rem;
+  }
+
+  .confirmacao-title {
+    font-size: 2rem;
+  }
+
+  .confirmacao-subtitle {
+    font-size: 1rem;
+  }
+
+  .confirmacao-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .confirmacao-back-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .confirmacao-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmacao-filters {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .confirmacao-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .confirmacao-modal-content {
+    padding: 2rem;
+  }
+
+  .confirmacao-modal-footer {
+    flex-direction: column;
+  }
+
+  .confirmacao-modal-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .confirmacao-title {
+    font-size: 1.75rem;
+  }
+
+  .confirmacao-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-content h3 {
+    font-size: 1.75rem;
+  }
+
+  .evento-titulo {
+    font-size: 1.25rem;
+  }
+
+  .confirmacao-modal-title {
+    font-size: 1.25rem;
+  }
+
+  .confirmacao-modal-message {
+    font-size: 1rem;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .confirmacao-card,
+  .stat-card,
+  .filter-btn,
+  .btn-confirmar,
+  .confirmacao-back-btn {
+    transition: none;
+  }
+
+  .confirmacao-spinner {
+    animation: none;
+    border: 4px solid #244a96;
+    border-top: 4px solid transparent;
+  }
+
+  .confirmacao-modal-overlay,
+  .confirmacao-modal-content {
+    animation: none;
+  }
+}

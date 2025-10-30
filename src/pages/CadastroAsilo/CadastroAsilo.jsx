@@ -418,7 +418,7 @@ export default function CadastroAsilo() {
         localStorage.removeItem('cadastroAsiloData')
 
         setTimeout(() => {
-          navigate("/loginasilo")
+          navigate("/login")
         }, 3000)
       } else {
         showModalMessage(
@@ -880,7 +880,7 @@ export default function CadastroAsilo() {
             <div className="cadastro-asilo-login-link" data-aos="fade-up" data-aos-delay="400">
               <p>
                 Já é cadastrado?{" "}
-                <Link to="/loginasilo" className="cadastro-asilo-link">
+                <Link to="/login" className="cadastro-asilo-link">
                   Faça login aqui
                 </Link>
               </p>

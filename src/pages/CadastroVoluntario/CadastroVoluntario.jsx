@@ -449,7 +449,7 @@ export default function CadastroVoluntario() {
 
         // Redirecionar para login após 3 segundos
         setTimeout(() => {
-          navigate("/loginvoluntario")
+          navigate("/login")
         }, 3000)
       } else {
         showModalMessage(
@@ -802,7 +802,7 @@ export default function CadastroVoluntario() {
             <div className="cadastro-voluntario-login-link" data-aos="fade-up" data-aos-delay="400">
               <p>
                 Já é cadastrado?{" "}
-                <Link to="/loginvoluntario" className="cadastro-voluntario-link">
+                <Link to="/login" className="cadastro-voluntario-link">
                   Faça login aqui
                 </Link>
               </p>

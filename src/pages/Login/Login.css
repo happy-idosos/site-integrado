@@ -72,7 +72,7 @@
 /* Right side - Form section (50% on desktop) */
 .login-form-side {
   flex: 1;
-  background: #ffffff;
+  background: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,9 +100,9 @@
   position: absolute;
   top: 2rem;
   left: 2rem;
-  background: rgba(36, 74, 150, 0.1);
-  border: 2px solid #244a96;
-  color: #244a96;
+  background: rgba(36, 74, 150, 0.15);
+  border: 2px solid rgba(36, 74, 150, 0.3);
+  color: #5a8fd8;
   padding: 0.75rem 1.25rem;
   border-radius: 25px;
   font-family: "Nunito", sans-serif;
@@ -118,6 +118,7 @@
 
 .login-back-btn:hover {
   background: #244a96;
+  border-color: #244a96;
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
@@ -136,7 +137,7 @@
 }
 
 .login-form-header h1 {
-  color: #244a96;
+  color: #ffffff;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -144,15 +145,64 @@
 }
 
 .login-form-header p {
-  color: #666;
+  color: #b0b0b0;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
 }
 
+/* Type selector buttons with proper styling and SVG icons */
+.login-type-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: #2a2a2a;
+  padding: 0.5rem;
+  border-radius: 15px;
+  border: 1px solid #3a3a3a;
+}
+
+.login-type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  color: #888;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.login-type-btn svg {
+  transition: all 0.3s ease;
+}
+
+.login-type-btn:hover {
+  color: #b0b0b0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.login-type-active {
+  background: linear-gradient(135deg, #244a96, #1a3a7a) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+}
+
+.login-type-active svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
 /* Form Container */
 .login-form-container {
-  background: white;
+  background: transparent;
   border-radius: 0;
   padding: 0;
 }
@@ -176,31 +226,32 @@
 /* Form Controls */
 .login-form-group label {
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
 }
 
 .login-form-group input {
   padding: 1rem 1.25rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid #3a3a3a;
   border-radius: 12px;
   font-family: "Nunito", sans-serif;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: #2a2a2a;
+  color: #ffffff;
   width: 100%;
 }
 
 .login-form-group input:focus {
   outline: none;
   border-color: #244a96;
-  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.1);
-  background: #fafbfc;
+  box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.2);
+  background: #333333;
 }
 
 .login-form-group input::placeholder {
-  color: #adb5bd;
+  color: #666;
   font-style: italic;
 }
 
@@ -220,7 +271,7 @@
   right: 1rem;
   background: none;
   border: none;
-  color: #666;
+  color: #888;
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 6px;
@@ -232,7 +283,7 @@
 
 .login-toggle-password:hover {
   color: #244a96;
-  background: rgba(36, 74, 150, 0.1);
+  background: rgba(36, 74, 150, 0.15);
 }
 
 /* Forgot Password */
@@ -243,7 +294,7 @@
 
 /* Links */
 .login-link {
-  color: #244a96;
+  color: #5a8fd8;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
@@ -258,12 +309,12 @@
   height: 2px;
   bottom: -2px;
   left: 0;
-  background: #244a96;
+  background: #5a8fd8;
   transition: width 0.3s ease;
 }
 
 .login-link:hover {
-  color: #1a3a7a;
+  color: #7aa8e8;
 }
 
 .login-link:hover::after {
@@ -345,11 +396,11 @@
 .login-register-link {
   text-align: center;
   padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid #3a3a3a;
 }
 
 .login-register-link p {
-  color: #666;
+  color: #888;
   font-size: 0.95rem;
   margin: 0;
 }
@@ -357,16 +408,16 @@
 /* Form Validation */
 .login-error {
   border-color: #dc3545 !important;
-  background-color: #fff5f5 !important;
+  background-color: rgba(220, 53, 69, 0.1) !important;
 }
 
 .login-success {
   border-color: #28a745 !important;
-  background-color: #f0fdf4 !important;
+  background-color: rgba(40, 167, 69, 0.1) !important;
 }
 
 .login-error-message {
-  color: #dc3545;
+  color: #ff6b6b;
   font-size: 0.85rem;
   margin-top: 0.5rem;
   font-weight: 500;
@@ -387,7 +438,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -407,13 +458,13 @@
 }
 
 .login-modal-content {
-  background: white;
+  background: #2a2a2a;
   border-radius: 20px;
   padding: 2.5rem;
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid #3a3a3a;
   position: relative;
   animation: login-modal-slideUp 0.4s ease-out;
 }
@@ -459,7 +510,7 @@
 .login-modal-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: #ffffff;
   margin: 0;
   line-height: 1.3;
 }
@@ -470,7 +521,7 @@
 }
 
 .login-modal-message {
-  color: #666;
+  color: #b0b0b0;
   font-size: 1.05rem;
   line-height: 1.6;
   margin: 0;
@@ -515,72 +566,16 @@
   box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
 }
 
-/* Dark mode support for HAPPYIDOSOS */
-@media (prefers-color-scheme: dark) {
-  .login-form-side {
-    background: #1a1a1a;
-  }
-
-  .login-form-header h1 {
-    color: #ffffff;
-  }
-
-  .login-form-header p {
-    color: #cccccc;
-  }
-
-  .login-form-group label {
-    color: #ffffff;
-  }
-
-  .login-form-group input {
-    background: #2a2a2a;
-    border-color: #3a3a3a;
-    color: #ffffff;
-  }
-
-  .login-form-group input:focus {
-    background: #333333;
-    border-color: #244a96;
-  }
-
-  .login-form-group input::placeholder {
-    color: #888888;
-  }
-
-  .login-register-link {
-    border-top-color: #3a3a3a;
-  }
-
-  .login-register-link p {
-    color: #cccccc;
-  }
-
-  .login-modal-content {
-    background: #2a2a2a;
-  }
-
-  .login-modal-title {
-    color: #ffffff;
-  }
-
-  .login-modal-message {
-    color: #cccccc;
-  }
-}
-
 /* Responsive Design - Mobile stacked layout */
 @media (max-width: 768px) {
   .login-split-container {
     flex-direction: column;
   }
 
-  /* Hide desktop logo section on mobile */
   .login-logo-side {
     display: none;
   }
 
-  /* Show mobile logo */
   .login-mobile-logo {
     display: block;
   }
@@ -607,6 +602,15 @@
 
   .login-form-header p {
     font-size: 0.95rem;
+  }
+
+  .login-type-selector {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .login-type-btn {
+    padding: 0.9rem 1.25rem;
   }
 
   .login-modal-content {

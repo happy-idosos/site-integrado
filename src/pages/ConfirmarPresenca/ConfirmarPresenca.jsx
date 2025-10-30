@@ -1,13 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../../hooks/useAuth"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "aos/dist/aos.css"
-import AOS from "aos"
-import Header from "../../components/layout/Header"
-import Footer from "../../components/layout/Footer"
 import "./ConfirmarPresenca.css"
 
 // Modal de Confirmação
@@ -32,7 +25,6 @@ const ConfirmacaoModal = ({ show, type, title, message, onClose, onConfirm }) =>
       <div
         className={`confirmacao-modal-content confirmacao-modal-${type}`}
         onClick={(e) => e.stopPropagation()}
-        data-aos="zoom-in"
       >
         <div className="confirmacao-modal-header">
           <div className="confirmacao-modal-icon">
@@ -83,13 +75,82 @@ const ConfirmacaoModal = ({ show, type, title, message, onClose, onConfirm }) =>
   )
 }
 
+// Componentes simplificados para substituir as dependências
+const Header = () => {
+  return (
+    <header style={{ 
+      padding: '1rem 0', 
+      background: 'rgba(26, 31, 46, 0.95)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid rgba(90, 143, 216, 0.2)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 1000
+    }}>
+      <div className="container">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          color: 'white'
+        }}>
+          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>VoluntariApp</h1>
+          <nav>
+            <button 
+              onClick={() => window.location.href = '/'}
+              style={{
+                background: 'rgba(36, 74, 150, 0.2)',
+                border: '1px solid rgba(90, 143, 216, 0.3)',
+                color: '#5a8fd8',
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Início
+            </button>
+          </nav>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+const Footer = () => {
+  return (
+    <footer style={{ 
+      padding: '2rem 0', 
+      background: 'rgba(26, 31, 46, 0.95)',
+      borderTop: '1px solid rgba(90, 143, 216, 0.2)',
+      color: '#9ca3af',
+      textAlign: 'center'
+    }}>
+      <div className="container">
+        <p style={{ margin: 0 }}>VoluntariApp © 2024 - Conectando voluntários a causas nobres</p>
+      </div>
+    </footer>
+  )
+}
+
+// Hook de autenticação simplificado
+const useAuth = () => {
+  return {
+    user: { 
+      id: 1, 
+      nome: "João Silva", 
+      email: "joao.silva@email.com", 
+      tipo: "voluntario" 
+    },
+    isAuthenticated: true,
+    loading: false
+  }
+}
+
 const ConfirmarPresenca = () => {
-  const navigate = useNavigate()
   const { user, isAuthenticated, loading: authLoading } = useAuth()
 
   const [eventos, setEventos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filtroStatus, setFiltroStatus] = useState("todos") // todos, pendente, confirmado
   const [modal, setModal] = useState({
     show: false,
     title: "",
@@ -99,83 +160,127 @@ const ConfirmarPresenca = () => {
   })
 
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 100,
-    })
+    // Simular inicialização do AOS
+    const initAnimations = () => {
+      // Simular AOS - adicionar classes de animação após um delay
+      setTimeout(() => {
+        const elements = document.querySelectorAll('[data-aos]')
+        elements.forEach(el => {
+          el.style.opacity = '1'
+          el.style.transform = 'translateY(0)'
+        })
+      }, 100)
+    }
+
+    initAnimations()
   }, [])
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      navigate("/login")
+      window.location.href = "/login"
     }
-  }, [isAuthenticated, authLoading, navigate])
+  }, [isAuthenticated, authLoading, user])
 
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && user.tipo === "voluntario") {
       carregarEventos()
     }
   }, [isAuthenticated, user])
 
-  // ========== INTEGRAÇÃO: CARREGAR EVENTOS ==========
   const carregarEventos = async () => {
     setLoading(true)
     try {
-      // TODO: Substituir por chamada real à API
-      // const response = await fetch(`/api/eventos/inscricoes/${user.id}`)
-      // const data = await response.json()
-
-      // Dados mockados para demonstração
+      // Dados mockados
       const eventosMock = [
         {
           id: 1,
           titulo: "Tarde de Música e Poesia",
           descricao: "Apresentação musical com violão e recital de poesias clássicas",
-          data: "2025-11-15",
+          data: "2024-12-15",
           horario: "14:00",
-          local: "Asilo Lar dos Idosos",
+          asilo: "Asilo Lar dos Idosos",
+          local: "Salão Principal",
           endereco: "Rua das Flores, 123 - Centro",
           vagas: 30,
-          statusConfirmacao: "pendente", // pendente, confirmado, ausente
-          dataInscricao: "2025-10-20",
+          confirmacao_presenca: false,
+          data_confirmacao: null,
+          dataInscricao: "2024-11-20",
           tipoEvento: "Cultural",
         },
         {
           id: 2,
           titulo: "Oficina de Artesanato",
           descricao: "Aprenda técnicas de crochê e tricô com os idosos",
-          data: "2025-11-20",
+          data: "2024-12-20",
           horario: "10:00",
-          local: "Casa de Repouso Vida Plena",
+          asilo: "Casa de Repouso Vida Plena",
+          local: "Sala de Atividades",
           endereco: "Av. Principal, 456 - Jardim",
           vagas: 15,
-          statusConfirmacao: "confirmado",
-          dataInscricao: "2025-10-22",
+          confirmacao_presenca: true,
+          data_confirmacao: "2024-11-01T10:30:00",
+          dataInscricao: "2024-11-22",
           tipoEvento: "Recreativo",
         },
         {
           id: 3,
           titulo: "Caminhada no Parque",
           descricao: "Atividade física leve ao ar livre com os residentes",
-          data: "2025-11-10",
+          data: "2024-12-10",
           horario: "08:00",
-          local: "Residencial Feliz Idade",
+          asilo: "Residencial Feliz Idade",
+          local: "Parque Municipal",
           endereco: "Rua do Parque, 789 - Vila Nova",
           vagas: 20,
-          statusConfirmacao: "pendente",
-          dataInscricao: "2025-10-25",
+          confirmacao_presenca: false,
+          data_confirmacao: null,
+          dataInscricao: "2024-11-25",
           tipoEvento: "Esportivo",
         },
         {
           id: 4,
           titulo: "Festa Junina",
-          data: "2025-10-25",
+          descricao: "Celebração tradicional com comidas típicas e quadrilha",
+          data: "2024-11-25",
           horario: "15:00",
-          local: "Asilo São José",
-          statusConfirmacao: "ausente",
-          dataInscricao: "2025-10-10",
+          asilo: "Asilo São José",
+          local: "Pátio Externo",
+          endereco: "Rua São José, 321 - Centro",
+          confirmacao_presenca: true,
+          compareceu: false,
+          data_confirmacao: "2024-11-20T14:00:00",
+          dataInscricao: "2024-11-10",
           tipoEvento: "Festivo",
+        },
+        {
+          id: 5,
+          titulo: "Bingo Beneficente",
+          descricao: "Tarde de bingo com prêmios e muita diversão",
+          data: "2024-11-18",
+          horario: "14:30",
+          asilo: "Lar Santa Clara",
+          local: "Salão de Eventos",
+          endereco: "Av. das Acácias, 555 - Jardim",
+          confirmacao_presenca: true,
+          compareceu: true,
+          data_confirmacao: "2024-11-15T09:00:00",
+          dataInscricao: "2024-11-05",
+          tipoEvento: "Recreativo",
+        },
+        {
+          id: 6,
+          titulo: "Palestra sobre Saúde",
+          descricao: "Orientações sobre cuidados com a saúde na terceira idade",
+          data: "2024-11-12",
+          horario: "10:00",
+          asilo: "Casa de Repouso Vida Plena",
+          local: "Auditório",
+          endereco: "Av. Principal, 456 - Jardim",
+          confirmacao_presenca: false,
+          compareceu: null,
+          data_confirmacao: null,
+          dataInscricao: "2024-11-08",
+          tipoEvento: "Educativo",
         },
       ]
 
@@ -188,25 +293,19 @@ const ConfirmarPresenca = () => {
     }
   }
 
-  // ========== INTEGRAÇÃO: CONFIRMAR PRESENÇA ==========
   const confirmarPresenca = async (eventoId) => {
     try {
-      // TODO: Substituir por chamada real à API
-      // const response = await fetch(`/api/eventos/${eventoId}/confirmar-presenca`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ usuarioId: user.id })
-      // })
-      // const data = await response.json()
-
-      // Simulação de sucesso
       setEventos((prev) =>
-        prev.map((evento) => (evento.id === eventoId ? { ...evento, statusConfirmacao: "confirmado" } : evento)),
+        prev.map((evento) =>
+          evento.id === eventoId
+            ? { ...evento, confirmacao_presenca: true, data_confirmacao: new Date().toISOString() }
+            : evento,
+        ),
       )
 
       showModalMessage(
         "Presença Confirmada!",
-        "Sua presença foi confirmada com sucesso. Aguardamos você no evento!",
+        "Sua presença foi confirmada com sucesso. O asilo foi notificado e aguardamos você no evento!",
         "success",
       )
     } catch (error) {
@@ -230,9 +329,15 @@ const ConfirmarPresenca = () => {
   }
 
   const handleConfirmarClick = (evento) => {
+    const prazo = calcularPrazoHoras(evento.data, evento.horario)
+    if (prazo < 0) {
+      showModalMessage("Prazo Expirado", "O prazo para confirmar presença neste evento já passou.", "error")
+      return
+    }
+
     showModalMessage(
       "Confirmar Presença",
-      `Deseja confirmar sua presença no evento "${evento.titulo}"?`,
+      `Deseja confirmar sua presença no evento "${evento.titulo}" no ${evento.asilo}?`,
       "warning",
       evento.id,
     )
@@ -254,6 +359,14 @@ const ConfirmarPresenca = () => {
     })
   }
 
+  const formatarDataCurta = (dataString) => {
+    const data = new Date(dataString + "T00:00:00")
+    return data.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+    })
+  }
+
   const isEventoFuturo = (dataString) => {
     const dataEvento = new Date(dataString + "T00:00:00")
     const hoje = new Date()
@@ -261,13 +374,29 @@ const ConfirmarPresenca = () => {
     return dataEvento >= hoje
   }
 
-  const eventosFiltrados = eventos.filter((evento) => {
-    if (filtroStatus === "todos") return true
-    return evento.statusConfirmacao === filtroStatus
-  })
+  const calcularPrazoHoras = (dataString, horario) => {
+    const [ano, mes, dia] = dataString.split("-")
+    const [hora, minuto] = horario.split(":")
+    const dataEvento = new Date(ano, mes - 1, dia, hora, minuto)
+    const agora = new Date()
+    const diferencaMs = dataEvento - agora
+    const diferencaHoras = Math.floor(diferencaMs / (1000 * 60 * 60))
+    return diferencaHoras
+  }
 
-  const eventosPendentes = eventos.filter((e) => e.statusConfirmacao === "pendente" && isEventoFuturo(e.data))
-  const eventosConfirmados = eventos.filter((e) => e.statusConfirmacao === "confirmado")
+  const formatarPrazo = (horas) => {
+    if (horas < 0) return "Prazo expirado"
+    if (horas < 24) return `${horas}h restantes`
+    const dias = Math.floor(horas / 24)
+    const horasRestantes = horas % 24
+    return `${dias}d ${horasRestantes}h restantes`
+  }
+
+  const eventosFuturos = eventos.filter((e) => isEventoFuturo(e.data))
+  const eventosPassados = eventos.filter((e) => !isEventoFuturo(e.data))
+
+  const eventosAguardando = eventosFuturos.filter((e) => !e.confirmacao_presenca)
+  const eventosConfirmados = eventosFuturos.filter((e) => e.confirmacao_presenca)
 
   if (authLoading || loading) {
     return (
@@ -293,15 +422,18 @@ const ConfirmarPresenca = () => {
             <div className="confirmacao-header-content">
               <h1 className="confirmacao-title">Confirmar Presença</h1>
               <p className="confirmacao-subtitle">
-                Gerencie suas confirmações de presença nos eventos em que você está inscrito
+                Confirme sua presença nos eventos aprovados pelos asilos e mantenha seu histórico atualizado
               </p>
             </div>
-            <Link to="/minhasinscricoes" className="confirmacao-back-btn">
+            <button 
+              className="confirmacao-back-btn"
+              onClick={() => window.history.back()}
+            >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               Minhas Inscrições
-            </Link>
+            </button>
           </div>
 
           {/* Estatísticas */}
@@ -314,8 +446,8 @@ const ConfirmarPresenca = () => {
                 </svg>
               </div>
               <div className="stat-content">
-                <h3>{eventosPendentes.length}</h3>
-                <p>Pendentes</p>
+                <h3>{eventosAguardando.length}</h3>
+                <p>Aguardando Confirmação</p>
               </div>
             </div>
             <div className="stat-card">
@@ -340,121 +472,223 @@ const ConfirmarPresenca = () => {
                 </svg>
               </div>
               <div className="stat-content">
-                <h3>{eventos.length}</h3>
-                <p>Total de Eventos</p>
+                <h3>{eventosFuturos.length}</h3>
+                <p>Eventos Futuros</p>
               </div>
             </div>
           </div>
 
-          {/* Filtros */}
-          <div className="confirmacao-filters" data-aos="fade-up">
-            <button
-              className={`filter-btn ${filtroStatus === "todos" ? "filter-active" : ""}`}
-              onClick={() => setFiltroStatus("todos")}
-            >
-              Todos
-            </button>
-            <button
-              className={`filter-btn ${filtroStatus === "pendente" ? "filter-active" : ""}`}
-              onClick={() => setFiltroStatus("pendente")}
-            >
-              Pendentes
-            </button>
-            <button
-              className={`filter-btn ${filtroStatus === "confirmado" ? "filter-active" : ""}`}
-              onClick={() => setFiltroStatus("confirmado")}
-            >
-              Confirmados
-            </button>
-            <button
-              className={`filter-btn ${filtroStatus === "ausente" ? "filter-active" : ""}`}
-              onClick={() => setFiltroStatus("ausente")}
-            >
-              Ausentes
-            </button>
-          </div>
-
-          {/* Lista de Eventos */}
-          {eventosFiltrados.length === 0 ? (
-            <div className="confirmacao-empty" data-aos="fade-up">
-              <div className="empty-icon">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
+          <div className="confirmacao-section" data-aos="fade-up">
+            <div className="section-header">
+              <h2 className="section-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
-              </div>
-              <h3>Nenhum evento encontrado</h3>
-              <p>Você não possui eventos com este status.</p>
-              <Link to="/eventos" className="btn-primary">
-                Explorar Eventos
-              </Link>
+                Aguardando Confirmação
+              </h2>
+              <span className="section-badge">{eventosAguardando.length}</span>
             </div>
-          ) : (
-            <div className="confirmacao-grid">
-              {eventosFiltrados.map((evento, index) => (
-                <div key={evento.id} className="confirmacao-card" data-aos="fade-up" data-aos-delay={index * 100}>
-                  <div className="confirmacao-card-header">
-                    <div className="evento-tipo-badge">{evento.tipoEvento || "Evento"}</div>
-                    <div className={`status-badge status-${evento.statusConfirmacao}`}>
-                      {evento.statusConfirmacao === "pendente" && "Pendente"}
-                      {evento.statusConfirmacao === "confirmado" && "Confirmado"}
-                      {evento.statusConfirmacao === "ausente" && "Ausente"}
+
+            {eventosAguardando.length === 0 ? (
+              <div className="confirmacao-empty-small">
+                <p>Você não possui eventos aguardando confirmação.</p>
+              </div>
+            ) : (
+              <div className="confirmacao-grid">
+                {eventosAguardando.map((evento, index) => {
+                  const prazoHoras = calcularPrazoHoras(evento.data, evento.horario)
+                  const prazoExpirado = prazoHoras < 48
+
+                  return (
+                    <div
+                      key={evento.id}
+                      className={`confirmacao-card ${prazoExpirado ? "prazo-urgente" : ""}`}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 100}
+                      style={{
+                        opacity: 0,
+                        transform: 'translateY(20px)',
+                        animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
+                      }}
+                    >
+                      <div className="confirmacao-card-header">
+                        <div className="evento-tipo-badge">{evento.tipoEvento || "Evento"}</div>
+                        <div className={`prazo-badge ${prazoExpirado ? "prazo-urgente" : ""}`}>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                          {formatarPrazo(prazoHoras)}
+                        </div>
+                      </div>
+
+                      <div className="confirmacao-card-body">
+                        <h3 className="evento-titulo">{evento.titulo}</h3>
+                        {evento.descricao && <p className="evento-descricao">{evento.descricao}</p>}
+
+                        <div className="evento-info">
+                          <div className="info-item">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            </svg>
+                            <span className="info-asilo">{evento.asilo}</span>
+                          </div>
+                          <div className="info-item">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                              <line x1="16" y1="2" x2="16" y2="6" />
+                              <line x1="8" y1="2" x2="8" y2="6" />
+                              <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            <span>{formatarData(evento.data)}</span>
+                          </div>
+                          <div className="info-item">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span>{evento.horario}</span>
+                          </div>
+                          <div className="info-item">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>{evento.local}</span>
+                          </div>
+                          {evento.endereco && (
+                            <div className="info-item info-item-full">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                              </svg>
+                              <span>{evento.endereco}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {prazoExpirado && (
+                          <div className="alerta-prazo">
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="12" y1="8" x2="12" y2="12" />
+                              <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Confirme sua presença em até 48h antes do evento!</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="confirmacao-card-footer">
+                        <button className="btn-confirmar" onClick={() => handleConfirmarClick(evento)}>
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                          </svg>
+                          Confirmar Presença
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
 
-                  <div className="confirmacao-card-body">
-                    <h3 className="evento-titulo">{evento.titulo}</h3>
-                    {evento.descricao && <p className="evento-descricao">{evento.descricao}</p>}
+          {eventosConfirmados.length > 0 && (
+            <div className="confirmacao-section" data-aos="fade-up">
+              <div className="section-header">
+                <h2 className="section-title">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  Presença Confirmada
+                </h2>
+                <span className="section-badge">{eventosConfirmados.length}</span>
+              </div>
 
-                    <div className="evento-info">
-                      <div className="info-item">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                          <line x1="16" y1="2" x2="16" y2="6" />
-                          <line x1="8" y1="2" x2="8" y2="6" />
-                          <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                        <span>{formatarData(evento.data)}</span>
-                      </div>
-                      <div className="info-item">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="10" />
-                          <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                        <span>{evento.horario}</span>
-                      </div>
-                      <div className="info-item">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        <span>{evento.local}</span>
-                      </div>
-                      {evento.endereco && (
-                        <div className="info-item info-item-full">
+              <div className="confirmacao-grid">
+                {eventosConfirmados.map((evento, index) => (
+                  <div 
+                    key={evento.id} 
+                    className="confirmacao-card" 
+                    data-aos="fade-up" 
+                    data-aos-delay={index * 100}
+                    style={{
+                      opacity: 0,
+                      transform: 'translateY(20px)',
+                      animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
+                    }}
+                  >
+                    <div className="confirmacao-card-header">
+                      <div className="evento-tipo-badge">{evento.tipoEvento || "Evento"}</div>
+                      <div className="status-badge status-confirmado">Confirmado</div>
+                    </div>
+
+                    <div className="confirmacao-card-body">
+                      <h3 className="evento-titulo">{evento.titulo}</h3>
+                      {evento.descricao && <p className="evento-descricao">{evento.descricao}</p>}
+
+                      <div className="evento-info">
+                        <div className="info-item">
                           <svg
                             width="18"
                             height="18"
@@ -465,29 +699,56 @@ const ConfirmarPresenca = () => {
                           >
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                           </svg>
-                          <span>{evento.endereco}</span>
+                          <span className="info-asilo">{evento.asilo}</span>
                         </div>
-                      )}
+                        <div className="info-item">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                          </svg>
+                          <span>{formatarData(evento.data)}</span>
+                        </div>
+                        <div className="info-item">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                          <span>{evento.horario}</span>
+                        </div>
+                        <div className="info-item">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                          </svg>
+                          <span>{evento.local}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="confirmacao-card-footer">
-                    {evento.statusConfirmacao === "pendente" && isEventoFuturo(evento.data) ? (
-                      <button className="btn-confirmar" onClick={() => handleConfirmarClick(evento)}>
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                          <polyline points="22 4 12 14.01 9 11.01" />
-                        </svg>
-                        Confirmar Presença
-                      </button>
-                    ) : evento.statusConfirmacao === "confirmado" ? (
+                    <div className="confirmacao-card-footer">
                       <div className="confirmacao-success-message">
                         <svg
                           width="20"
@@ -500,14 +761,137 @@ const ConfirmarPresenca = () => {
                           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                           <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
-                        Presença confirmada
+                        Presença confirmada - Aguardamos você!
                       </div>
-                    ) : (
-                      <div className="confirmacao-info-message">Evento já realizado</div>
-                    )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+          )}
+
+          {eventosPassados.length > 0 && (
+            <div className="confirmacao-section historico-section" data-aos="fade-up">
+              <div className="section-header">
+                <h2 className="section-title">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 8 10" />
+                  </svg>
+                  Histórico de Eventos
+                </h2>
+                <span className="section-badge">{eventosPassados.length}</span>
+              </div>
+
+              <div className="historico-lista">
+                {eventosPassados.map((evento, index) => (
+                  <div 
+                    key={evento.id} 
+                    className="historico-item" 
+                    data-aos="fade-up" 
+                    data-aos-delay={index * 50}
+                    style={{
+                      opacity: 0,
+                      transform: 'translateX(-20px)',
+                      animation: `fadeInLeft 0.6s ease-out ${index * 0.05}s forwards`
+                    }}
+                  >
+                    <div className="historico-icon-wrapper">
+                      {evento.confirmacao_presenca && evento.compareceu && (
+                        <div className="historico-icon historico-icon-success">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                          </svg>
+                        </div>
+                      )}
+                      {evento.confirmacao_presenca && !evento.compareceu && (
+                        <div className="historico-icon historico-icon-error">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="15" y1="9" x2="9" y2="15" />
+                            <line x1="9" y1="9" x2="15" y2="15" />
+                          </svg>
+                        </div>
+                      )}
+                      {!evento.confirmacao_presenca && (
+                        <div className="historico-icon historico-icon-warning">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="historico-content">
+                      <div className="historico-header">
+                        <h4 className="historico-titulo">{evento.titulo}</h4>
+                        <span className="historico-data">{formatarDataCurta(evento.data)}</span>
+                      </div>
+                      <div className="historico-info">
+                        <span className="historico-asilo">{evento.asilo}</span>
+                        <span className="historico-separador">•</span>
+                        <span className="historico-horario">{evento.horario}</span>
+                      </div>
+                      <div className="historico-status">
+                        {evento.confirmacao_presenca && evento.compareceu && (
+                          <span className="status-text status-success">Confirmado e compareceu</span>
+                        )}
+                        {evento.confirmacao_presenca && !evento.compareceu && (
+                          <span className="status-text status-error">Confirmado mas ausente</span>
+                        )}
+                        {!evento.confirmacao_presenca && (
+                          <span className="status-text status-warning">Não confirmou presença</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Empty State - Nenhum evento */}
+          {eventos.length === 0 && (
+            <div className="confirmacao-empty" data-aos="fade-up">
+              <div className="empty-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <h3>Nenhum evento aprovado</h3>
+              <p>Você ainda não foi aprovado em nenhum evento. Inscreva-se em eventos disponíveis!</p>
+              <button 
+                className="btn-primary"
+                onClick={() => window.location.href = '/eventos'}
+              >
+                Explorar Eventos
+              </button>
             </div>
           )}
         </div>
@@ -516,6 +900,36 @@ const ConfirmarPresenca = () => {
       <Footer />
 
       {modal.show && <ConfirmacaoModal {...modal} onClose={closeModal} onConfirm={handleModalConfirm} />}
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
+      `}</style>
     </div>
   )
 }

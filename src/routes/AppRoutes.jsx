@@ -26,6 +26,7 @@ import MeusVoluntarios from "../pages/MeusVoluntarios/MeusVoluntarios"
 import MinhasInscricoes from "../pages/MinhasInscricoes/MinhasInscricoes"
 import ConfirmarPresenca from "../pages/ConfirmarPresenca/ConfirmarPresenca"
 import GerenciarVoluntarios from "../pages/GerenciarVoluntarios/GerenciarVoluntarios"
+import PainelAdministrador from "../pages/PainelAdministrador/PainelAdministrador"
 
 function AppRoutes() {
   return (
@@ -48,6 +49,7 @@ function AppRoutes() {
       <Route path="/minhasinscricoes" element={<MinhasInscricoes />} />
       <Route path="/confirmarpresenca" element={<ConfirmarPresenca />} />
       <Route path="/gerenciarvoluntarios" element={<GerenciarVoluntarios />} />
+      <Route path="/paineladministrador" element={<PainelAdministrador />} />
 
 
       {/* Auth Routes */}

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "./MinhasInscricoes.css"
 
@@ -14,8 +14,8 @@ const DADOS_VOLUNTARIO = {
     totalInscricoes: 12,
     eventosConcluidos: 8,
     asilosVisitados: 5,
-    horasVoluntariadas: 45
-  }
+    horasVoluntariadas: 45,
+  },
 }
 
 const INSCRICOES_MOCK = [
@@ -30,7 +30,7 @@ const INSCRICOES_MOCK = [
     status: "pendente",
     dataInscricao: "2024-03-10",
     descricao: "Uma tarde de bingo com os idosos, com prêmios e muita diversão.",
-    curtido: true
+    curtido: true,
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ const INSCRICOES_MOCK = [
     status: "aprovado",
     dataInscricao: "2024-03-08",
     descricao: "Workshop de artesanato para estimular a criatividade dos idosos.",
-    curtido: false
+    curtido: false,
   },
   {
     id: 3,
@@ -56,7 +56,7 @@ const INSCRICOES_MOCK = [
     status: "confirmado",
     dataInscricao: "2024-03-05",
     descricao: "Chá da tarde acompanhado de música ao vivo e conversas.",
-    curtido: true
+    curtido: true,
   },
   {
     id: 4,
@@ -72,9 +72,9 @@ const INSCRICOES_MOCK = [
     curtido: true,
     avaliacao: {
       nota: 4.5,
-      comentario: "Voluntário muito dedicado e atencioso com todos."
-    }
-  }
+      comentario: "Voluntário muito dedicado e atencioso com todos.",
+    },
+  },
 ]
 
 const ASILOS_CURTIDOS_MOCK = [
@@ -87,7 +87,7 @@ const ASILOS_CURTIDOS_MOCK = [
     foto: null,
     eventosAtivos: 3,
     curtido: true,
-    descricao: "Asilo com foco em atividades recreativas e integração social."
+    descricao: "Asilo com foco em atividades recreativas e integração social.",
   },
   {
     id: 2,
@@ -98,7 +98,7 @@ const ASILOS_CURTIDOS_MOCK = [
     foto: null,
     eventosAtivos: 2,
     curtido: true,
-    descricao: "Instituição com tradição de 20 anos no cuidado com idosos."
+    descricao: "Instituição com tradição de 20 anos no cuidado com idosos.",
   },
   {
     id: 3,
@@ -109,8 +109,8 @@ const ASILOS_CURTIDOS_MOCK = [
     foto: null,
     eventosAtivos: 1,
     curtido: true,
-    descricao: "Focado em cuidados especiais e atividades terapêuticas."
-  }
+    descricao: "Focado em cuidados especiais e atividades terapêuticas.",
+  },
 ]
 
 const VIDEOS_MOCK = [
@@ -123,7 +123,7 @@ const VIDEOS_MOCK = [
     asilo: "Lar dos Idosos Felizes",
     evento: "Bingo Solidário",
     visualizacoes: 150,
-    curtidas: 25
+    curtidas: 25,
   },
   {
     id: 2,
@@ -134,8 +134,8 @@ const VIDEOS_MOCK = [
     asilo: "Casa de Repouso Esperança",
     evento: "Oficina de Artesanato",
     visualizacoes: 89,
-    curtidas: 18
-  }
+    curtidas: 18,
+  },
 ]
 
 const MinhasInscricoes = () => {
@@ -159,22 +159,26 @@ const MinhasInscricoes = () => {
   // Estatísticas calculadas
   const estatisticas = {
     totalInscricoes: inscricoes.length,
-    pendentes: inscricoes.filter(i => i.status === "pendente").length,
-    aprovadas: inscricoes.filter(i => i.status === "aprovado").length,
-    confirmadas: inscricoes.filter(i => i.status === "confirmado").length,
-    concluidas: inscricoes.filter(i => i.status === "concluido").length,
-    recusadas: inscricoes.filter(i => i.status === "recusado").length,
-    taxaAprovacao: Math.round((inscricoes.filter(i => ["aprovado", "confirmado", "concluido"].includes(i.status)).length / Math.max(inscricoes.length, 1)) * 100),
+    pendentes: inscricoes.filter((i) => i.status === "pendente").length,
+    aprovadas: inscricoes.filter((i) => i.status === "aprovado").length,
+    confirmadas: inscricoes.filter((i) => i.status === "confirmado").length,
+    concluidas: inscricoes.filter((i) => i.status === "concluido").length,
+    recusadas: inscricoes.filter((i) => i.status === "recusado").length,
+    taxaAprovacao: Math.round(
+      (inscricoes.filter((i) => ["aprovado", "confirmado", "concluido"].includes(i.status)).length /
+        Math.max(inscricoes.length, 1)) *
+        100,
+    ),
     engajamento: calcularEngajamento(inscricoes),
     asilosCurtidos: asilosCurtidos.length,
     videosUpload: videos.length,
-    totalVisualizacoes: videos.reduce((acc, video) => acc + video.visualizacoes, 0)
+    totalVisualizacoes: videos.reduce((acc, video) => acc + video.visualizacoes, 0),
   }
 
   function calcularEngajamento(inscricoes) {
-    const concluidas = inscricoes.filter(i => i.status === "concluido")
+    const concluidas = inscricoes.filter((i) => i.status === "concluido")
     if (concluidas.length === 0) return 0
-    
+
     const somaNotas = concluidas.reduce((acc, curr) => acc + (curr.avaliacao?.nota || 0), 0)
     return Math.round((somaNotas / concluidas.length) * 20)
   }
@@ -190,17 +194,16 @@ const MinhasInscricoes = () => {
   }, [])
 
   // Filtragem das inscrições
-  const inscricoesFiltradas = inscricoes.filter(inscricao => {
+  const inscricoesFiltradas = inscricoes.filter((inscricao) => {
     const statusMatch = filtroStatus === "todos" || inscricao.status === filtroStatus
     const asiloMatch = filtroAsilo === "todos" || inscricao.asilo === filtroAsilo
-    const dataMatch = (!dataInicio || inscricao.data >= dataInicio) && 
-                     (!dataFim || inscricao.data <= dataFim)
-    
+    const dataMatch = (!dataInicio || inscricao.data >= dataInicio) && (!dataFim || inscricao.data <= dataFim)
+
     return statusMatch && asiloMatch && dataMatch
   })
 
   // Obter asilos únicos para o filtro
-  const asilosUnicos = [...new Set(inscricoes.map(i => i.asilo))]
+  const asilosUnicos = [...new Set(inscricoes.map((i) => i.asilo))]
 
   const abrirModal = (item, tipo) => {
     setItemSelecionado(item)
@@ -228,15 +231,15 @@ const MinhasInscricoes = () => {
     }
 
     setCancelando(true)
-    
+
     try {
       // Simular chamada à API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      setInscricoes(prev => prev.map(inscricao => 
-        inscricao.id === id ? { ...inscricao, status: "cancelado" } : inscricao
-      ))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      setInscricoes((prev) =>
+        prev.map((inscricao) => (inscricao.id === id ? { ...inscricao, status: "cancelado" } : inscricao)),
+      )
+
       alert("Inscrição cancelada com sucesso!")
     } catch (error) {
       alert("Erro ao cancelar inscrição. Tente novamente.")
@@ -247,14 +250,14 @@ const MinhasInscricoes = () => {
 
   const confirmarPresenca = async (id) => {
     setCancelando(true)
-    
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 800))
-      
-      setInscricoes(prev => prev.map(inscricao => 
-        inscricao.id === id ? { ...inscricao, status: "confirmado" } : inscricao
-      ))
-      
+      await new Promise((resolve) => setTimeout(resolve, 800))
+
+      setInscricoes((prev) =>
+        prev.map((inscricao) => (inscricao.id === id ? { ...inscricao, status: "confirmado" } : inscricao)),
+      )
+
       alert("Presença confirmada com sucesso!")
     } catch (error) {
       alert("Erro ao confirmar presença. Tente novamente.")
@@ -265,23 +268,19 @@ const MinhasInscricoes = () => {
 
   const toggleCurtirAsilo = async (asiloId) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      setAsilosCurtidos(prev => 
-        prev.map(asilo => 
-          asilo.id === asiloId 
-            ? { ...asilo, curtido: !asilo.curtido }
-            : asilo
-        ).filter(asilo => asilo.curtido)
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      setAsilosCurtidos((prev) =>
+        prev
+          .map((asilo) => (asilo.id === asiloId ? { ...asilo, curtido: !asilo.curtido } : asilo))
+          .filter((asilo) => asilo.curtido),
       )
-      
+
       // Atualizar também nas inscrições
-      setInscricoes(prev =>
-        prev.map(inscricao =>
-          inscricao.asiloId === asiloId
-            ? { ...inscricao, curtido: !inscricao.curtido }
-            : inscricao
-        )
+      setInscricoes((prev) =>
+        prev.map((inscricao) =>
+          inscricao.asiloId === asiloId ? { ...inscricao, curtido: !inscricao.curtido } : inscricao,
+        ),
       )
     } catch (error) {
       alert("Erro ao atualizar curtida. Tente novamente.")
@@ -291,11 +290,11 @@ const MinhasInscricoes = () => {
   const handleUploadVideo = async (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
-    const titulo = formData.get('titulo')
-    const descricao = formData.get('descricao')
-    const url = formData.get('url')
-    const asilo = formData.get('asilo')
-    const evento = formData.get('evento')
+    const titulo = formData.get("titulo")
+    const descricao = formData.get("descricao")
+    const url = formData.get("url")
+    const asilo = formData.get("asilo")
+    const evento = formData.get("evento")
 
     if (!titulo || !url) {
       alert("Preencha pelo menos o título e URL do vídeo")
@@ -303,10 +302,10 @@ const MinhasInscricoes = () => {
     }
 
     setUploadingVideo(true)
-    
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
       const novoVideo = {
         id: videos.length + 1,
         titulo,
@@ -314,12 +313,12 @@ const MinhasInscricoes = () => {
         url,
         asilo,
         evento,
-        dataUpload: new Date().toISOString().split('T')[0],
+        dataUpload: new Date().toISOString().split("T")[0],
         visualizacoes: 0,
-        curtidas: 0
+        curtidas: 0,
       }
-      
-      setVideos(prev => [novoVideo, ...prev])
+
+      setVideos((prev) => [novoVideo, ...prev])
       event.target.reset()
       alert("Vídeo enviado com sucesso!")
     } catch (error) {
@@ -335,8 +334,8 @@ const MinhasInscricoes = () => {
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 800))
-      setVideos(prev => prev.filter(video => video.id !== videoId))
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      setVideos((prev) => prev.filter((video) => video.id !== videoId))
       alert("Vídeo excluído com sucesso!")
     } catch (error) {
       alert("Erro ao excluir vídeo. Tente novamente.")
@@ -348,7 +347,7 @@ const MinhasInscricoes = () => {
   }
 
   const formatarData = (data) => {
-    return new Date(data + "T00:00:00").toLocaleDateString('pt-BR')
+    return new Date(data + "T00:00:00").toLocaleDateString("pt-BR")
   }
 
   const getStatusInfo = (status) => {
@@ -358,7 +357,7 @@ const MinhasInscricoes = () => {
       confirmado: { texto: "Confirmado", classe: "mi-status-confirmado", icone: "📅" },
       concluido: { texto: "Concluído", classe: "mi-status-concluido", icone: "🎉" },
       recusado: { texto: "Recusado", classe: "mi-status-recusado", icone: "❌" },
-      cancelado: { texto: "Cancelado", classe: "mi-status-cancelado", icone: "🚫" }
+      cancelado: { texto: "Cancelado", classe: "mi-status-cancelado", icone: "🚫" },
     }
     return statusMap[status] || { texto: status, classe: "mi-status-default", icone: "❓" }
   }
@@ -415,7 +414,7 @@ const MinhasInscricoes = () => {
               <div className="mi-profile-header">
                 <div className="mi-avatar">
                   {DADOS_VOLUNTARIO.foto ? (
-                    <img src={DADOS_VOLUNTARIO.foto} alt={DADOS_VOLUNTARIO.nome} />
+                    <img src={DADOS_VOLUNTARIO.foto || "/placeholder.svg"} alt={DADOS_VOLUNTARIO.nome} />
                   ) : (
                     <span>{DADOS_VOLUNTARIO.nome.substring(0, 2).toUpperCase()}</span>
                   )}
@@ -429,18 +428,18 @@ const MinhasInscricoes = () => {
 
             <div className="mi-stats-card">
               <h3 className="mi-stats-title">Estatísticas</h3>
-              
+
               <div className="mi-stats-grid">
                 <div className="mi-stat-item">
                   <span className="mi-stat-number">{estatisticas.totalInscricoes}</span>
                   <span className="mi-stat-label">Inscrições</span>
                 </div>
-                
+
                 <div className="mi-stat-item">
                   <span className="mi-stat-number">{estatisticas.asilosCurtidos}</span>
                   <span className="mi-stat-label">Asilos</span>
                 </div>
-                
+
                 <div className="mi-stat-item">
                   <span className="mi-stat-number">{estatisticas.videosUpload}</span>
                   <span className="mi-stat-label">Vídeos</span>
@@ -451,19 +450,14 @@ const MinhasInscricoes = () => {
                 <div className="mi-stat-detail">
                   <span className="mi-stat-detail-label">Taxa de Aprovação</span>
                   <div className="mi-progress-bar">
-                    <div 
-                      className="mi-progress-fill" 
-                      style={{ width: `${estatisticas.taxaAprovacao}%` }}
-                    ></div>
+                    <div className="mi-progress-fill" style={{ width: `${estatisticas.taxaAprovacao}%` }}></div>
                   </div>
                   <span className="mi-stat-percentage">{estatisticas.taxaAprovacao}%</span>
                 </div>
 
                 <div className="mi-stat-detail">
                   <span className="mi-stat-detail-label">Nível de Engajamento</span>
-                  <div className={`mi-badge ${badgeNivel.classe}`}>
-                    {badgeNivel.texto}
-                  </div>
+                  <div className={`mi-badge ${badgeNivel.classe}`}>{badgeNivel.texto}</div>
                   <span className="mi-stat-percentage">{estatisticas.engajamento}%</span>
                 </div>
               </div>
@@ -471,17 +465,11 @@ const MinhasInscricoes = () => {
 
             <div className="mi-quick-actions">
               <h4 className="mi-actions-title">Ações Rápidas</h4>
-              <button 
-                className="mi-action-btn mi-btn-primary"
-                onClick={() => navigate("/asilos")}
-              >
+              <button className="mi-action-btn mi-btn-primary" onClick={() => navigate("/asilos")}>
                 <span className="mi-icon">🔍</span>
                 Buscar Eventos
               </button>
-              <button 
-                className="mi-action-btn mi-btn-outline"
-                onClick={() => navigate("/perfil")}
-              >
+              <button className="mi-action-btn mi-btn-outline" onClick={() => navigate("/perfil")}>
                 <span className="mi-icon">👤</span>
                 Meu Perfil
               </button>
@@ -492,18 +480,16 @@ const MinhasInscricoes = () => {
           <div className="mi-main">
             {/* Abas de Navegação */}
             <div className="mi-tabs">
-              <button 
+              <button
                 className={`mi-tab ${abaAtiva === "inscricoes" ? "mi-tab-active" : ""}`}
                 onClick={() => setAbaAtiva("inscricoes")}
               >
                 <span className="mi-tab-icon">📋</span>
                 Inscrições
-                {estatisticas.pendentes > 0 && (
-                  <span className="mi-tab-badge">{estatisticas.pendentes}</span>
-                )}
+                {estatisticas.pendentes > 0 && <span className="mi-tab-badge">{estatisticas.pendentes}</span>}
               </button>
-              
-              <button 
+
+              <button
                 className={`mi-tab ${abaAtiva === "asilos" ? "mi-tab-active" : ""}`}
                 onClick={() => setAbaAtiva("asilos")}
               >
@@ -511,8 +497,8 @@ const MinhasInscricoes = () => {
                 Asilos Curtidos
                 <span className="mi-tab-badge">{estatisticas.asilosCurtidos}</span>
               </button>
-              
-              <button 
+
+              <button
                 className={`mi-tab ${abaAtiva === "videos" ? "mi-tab-active" : ""}`}
                 onClick={() => setAbaAtiva("videos")}
               >
@@ -528,11 +514,11 @@ const MinhasInscricoes = () => {
                 {/* Filtros */}
                 <div className="mi-filters-card">
                   <h3 className="mi-filters-title">Filtrar Inscrições</h3>
-                  
+
                   <div className="mi-filters-grid">
                     <div className="mi-filter-group">
                       <label className="mi-filter-label">Status</label>
-                      <select 
+                      <select
                         className="mi-filter-select"
                         value={filtroStatus}
                         onChange={(e) => setFiltroStatus(e.target.value)}
@@ -548,14 +534,16 @@ const MinhasInscricoes = () => {
 
                     <div className="mi-filter-group">
                       <label className="mi-filter-label">Asilo</label>
-                      <select 
+                      <select
                         className="mi-filter-select"
                         value={filtroAsilo}
                         onChange={(e) => setFiltroAsilo(e.target.value)}
                       >
                         <option value="todos">Todos os Asilos</option>
-                        {asilosUnicos.map(asilo => (
-                          <option key={asilo} value={asilo}>{asilo}</option>
+                        {asilosUnicos.map((asilo) => (
+                          <option key={asilo} value={asilo}>
+                            {asilo}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -582,7 +570,7 @@ const MinhasInscricoes = () => {
                   </div>
 
                   <div className="mi-filters-actions">
-                    <button 
+                    <button
                       className="mi-btn mi-btn-outline"
                       onClick={() => {
                         setFiltroStatus("todos")
@@ -600,9 +588,7 @@ const MinhasInscricoes = () => {
                 {/* Lista de Inscrições */}
                 <div className="mi-inscricoes-section">
                   <div className="mi-section-header">
-                    <h3 className="mi-section-title">
-                      Minhas Inscrições ({inscricoesFiltradas.length})
-                    </h3>
+                    <h3 className="mi-section-title">Minhas Inscrições ({inscricoesFiltradas.length})</h3>
                   </div>
 
                   {inscricoesFiltradas.length === 0 ? (
@@ -610,16 +596,12 @@ const MinhasInscricoes = () => {
                       <div className="mi-empty-icon">📋</div>
                       <h4 className="mi-empty-title">Nenhuma inscrição encontrada</h4>
                       <p className="mi-empty-text">
-                        {inscricoes.length === 0 
+                        {inscricoes.length === 0
                           ? "Você ainda não possui inscrições. Que tal buscar por eventos disponíveis?"
-                          : "Nenhuma inscrição corresponde aos filtros aplicados."
-                        }
+                          : "Nenhuma inscrição corresponde aos filtros aplicados."}
                       </p>
                       {inscricoes.length === 0 && (
-                        <button 
-                          className="mi-btn mi-btn-primary"
-                          onClick={() => navigate("/asilos")}
-                        >
+                        <button className="mi-btn mi-btn-primary" onClick={() => navigate("/asilos")}>
                           <span className="mi-icon">🔍</span>
                           Buscar Eventos
                         </button>
@@ -627,9 +609,9 @@ const MinhasInscricoes = () => {
                     </div>
                   ) : (
                     <div className="mi-inscricoes-grid">
-                      {inscricoesFiltradas.map(inscricao => {
+                      {inscricoesFiltradas.map((inscricao) => {
                         const statusInfo = getStatusInfo(inscricao.status)
-                        
+
                         return (
                           <div key={inscricao.id} className="mi-inscricao-card">
                             <div className="mi-card-header">
@@ -639,7 +621,7 @@ const MinhasInscricoes = () => {
                                   <span className="mi-status-icon">{statusInfo.icone}</span>
                                   {statusInfo.texto}
                                 </span>
-                                <button 
+                                <button
                                   className={`mi-btn-curtir ${inscricao.curtido ? "mi-curtido" : ""}`}
                                   onClick={() => toggleCurtirAsilo(inscricao.asiloId)}
                                   title={inscricao.curtido ? "Descurtir asilo" : "Curtir asilo"}
@@ -655,14 +637,14 @@ const MinhasInscricoes = () => {
                                   <span className="mi-info-icon">🏠</span>
                                   <span className="mi-info-text">{inscricao.asilo}</span>
                                 </div>
-                                
+
                                 <div className="mi-info-item">
                                   <span className="mi-info-icon">📅</span>
                                   <span className="mi-info-text">
                                     {formatarData(inscricao.data)} às {inscricao.hora}
                                   </span>
                                 </div>
-                                
+
                                 <div className="mi-info-item">
                                   <span className="mi-info-icon">📍</span>
                                   <span className="mi-info-text">{inscricao.local}</span>
@@ -681,15 +663,13 @@ const MinhasInscricoes = () => {
                                       <span className="mi-rating-value">{inscricao.avaliacao.nota}</span>
                                     </div>
                                   </div>
-                                  <p className="mi-avaliacao-comentario">
-                                    "{inscricao.avaliacao.comentario}"
-                                  </p>
+                                  <p className="mi-avaliacao-comentario">"{inscricao.avaliacao.comentario}"</p>
                                 </div>
                               )}
                             </div>
 
                             <div className="mi-card-actions">
-                              <button 
+                              <button
                                 className="mi-action mi-action-details"
                                 onClick={() => abrirModal(inscricao, "inscricao")}
                                 title="Ver detalhes"
@@ -699,7 +679,7 @@ const MinhasInscricoes = () => {
                               </button>
 
                               {inscricao.status === "pendente" && (
-                                <button 
+                                <button
                                   className="mi-action mi-action-cancel"
                                   onClick={() => cancelarInscricao(inscricao.id)}
                                   disabled={cancelando}
@@ -711,7 +691,7 @@ const MinhasInscricoes = () => {
                               )}
 
                               {inscricao.status === "aprovado" && (
-                                <button 
+                                <button
                                   className="mi-action mi-action-confirm"
                                   onClick={() => confirmarPresenca(inscricao.id)}
                                   disabled={cancelando}
@@ -734,33 +714,26 @@ const MinhasInscricoes = () => {
             {abaAtiva === "asilos" && (
               <div className="mi-asilos-section">
                 <div className="mi-section-header">
-                  <h3 className="mi-section-title">
-                    Asilos Curtidos ({asilosCurtidos.length})
-                  </h3>
+                  <h3 className="mi-section-title">Asilos Curtidos ({asilosCurtidos.length})</h3>
                 </div>
 
                 {asilosCurtidos.length === 0 ? (
                   <div className="mi-empty-state">
                     <div className="mi-empty-icon">🏠</div>
                     <h4 className="mi-empty-title">Nenhum asilo curtido</h4>
-                    <p className="mi-empty-text">
-                      Comece a curtir asilos para acompanhar suas atividades e eventos!
-                    </p>
-                    <button 
-                      className="mi-btn mi-btn-primary"
-                      onClick={() => navigate("/asilos")}
-                    >
+                    <p className="mi-empty-text">Comece a curtir asilos para acompanhar suas atividades e eventos!</p>
+                    <button className="mi-btn mi-btn-primary" onClick={() => navigate("/asilos")}>
                       <span className="mi-icon">🔍</span>
                       Explorar Asilos
                     </button>
                   </div>
                 ) : (
                   <div className="mi-asilos-grid">
-                    {asilosCurtidos.map(asilo => (
+                    {asilosCurtidos.map((asilo) => (
                       <div key={asilo.id} className="mi-asilo-card">
                         <div className="mi-asilo-header">
                           <h4 className="mi-asilo-title">{asilo.nome}</h4>
-                          <button 
+                          <button
                             className="mi-btn-curtir mi-curtido"
                             onClick={() => toggleCurtirAsilo(asilo.id)}
                             title="Descurtir asilo"
@@ -768,18 +741,20 @@ const MinhasInscricoes = () => {
                             ❤️
                           </button>
                         </div>
-                        
+
                         <div className="mi-asilo-info">
                           <div className="mi-info-item">
                             <span className="mi-info-icon">📍</span>
                             <span className="mi-info-text">{asilo.endereco}</span>
                           </div>
-                          
+
                           <div className="mi-info-item">
                             <span className="mi-info-icon">🏙️</span>
-                            <span className="mi-info-text">{asilo.cidade} - {asilo.estado}</span>
+                            <span className="mi-info-text">
+                              {asilo.cidade} - {asilo.estado}
+                            </span>
                           </div>
-                          
+
                           <div className="mi-info-item">
                             <span className="mi-info-icon">🎯</span>
                             <span className="mi-info-text">{asilo.eventosAtivos} eventos ativos</span>
@@ -789,15 +764,12 @@ const MinhasInscricoes = () => {
                         <p className="mi-asilo-descricao">{asilo.descricao}</p>
 
                         <div className="mi-asilo-actions">
-                          <button 
-                            className="mi-btn mi-btn-outline"
-                            onClick={() => navigate(`/asilos/${asilo.id}`)}
-                          >
+                          <button className="mi-btn mi-btn-outline" onClick={() => navigate(`/asilos/${asilo.id}`)}>
                             <span className="mi-icon">👁️</span>
                             Ver Detalhes
                           </button>
-                          
-                          <button 
+
+                          <button
                             className="mi-btn mi-btn-primary"
                             onClick={() => navigate(`/asilos/${asilo.id}#eventos`)}
                           >
@@ -815,12 +787,10 @@ const MinhasInscricoes = () => {
             {abaAtiva === "videos" && (
               <div className="mi-videos-section">
                 <div className="mi-section-header">
-                  <h3 className="mi-section-title">
-                    Meus Vídeos ({videos.length})
-                  </h3>
-                  <button 
+                  <h3 className="mi-section-title">Meus Vídeos ({videos.length})</h3>
+                  <button
                     className="mi-btn mi-btn-primary"
-                    onClick={() => document.getElementById('mi-upload-form').scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => document.getElementById("mi-upload-form").scrollIntoView({ behavior: "smooth" })}
                   >
                     <span className="mi-icon">📤</span>
                     Novo Vídeo
@@ -842,7 +812,7 @@ const MinhasInscricoes = () => {
                           required
                         />
                       </div>
-                      
+
                       <div className="mi-form-group">
                         <label className="mi-form-label">URL do Vídeo (YouTube) *</label>
                         <input
@@ -853,27 +823,24 @@ const MinhasInscricoes = () => {
                           required
                         />
                       </div>
-                      
+
                       <div className="mi-form-group">
                         <label className="mi-form-label">Asilo</label>
                         <select name="asilo" className="mi-form-select">
                           <option value="">Selecione o asilo</option>
-                          {asilosCurtidos.map(asilo => (
-                            <option key={asilo.id} value={asilo.nome}>{asilo.nome}</option>
+                          {asilosCurtidos.map((asilo) => (
+                            <option key={asilo.id} value={asilo.nome}>
+                              {asilo.nome}
+                            </option>
                           ))}
                         </select>
                       </div>
-                      
+
                       <div className="mi-form-group">
                         <label className="mi-form-label">Evento</label>
-                        <input
-                          type="text"
-                          name="evento"
-                          className="mi-form-input"
-                          placeholder="Nome do evento"
-                        />
+                        <input type="text" name="evento" className="mi-form-input" placeholder="Nome do evento" />
                       </div>
-                      
+
                       <div className="mi-form-group mi-full-width">
                         <label className="mi-form-label">Descrição</label>
                         <textarea
@@ -884,16 +851,10 @@ const MinhasInscricoes = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="mi-form-actions">
-                      <button 
-                        type="submit" 
-                        className="mi-btn mi-btn-success"
-                        disabled={uploadingVideo}
-                      >
-                        <span className="mi-icon">
-                          {uploadingVideo ? "⏳" : "📤"}
-                        </span>
+                      <button type="submit" className="mi-btn mi-btn-success" disabled={uploadingVideo}>
+                        <span className="mi-icon">{uploadingVideo ? "⏳" : "📤"}</span>
                         {uploadingVideo ? "Enviando..." : "Enviar Vídeo"}
                       </button>
                     </div>
@@ -911,11 +872,11 @@ const MinhasInscricoes = () => {
                   </div>
                 ) : (
                   <div className="mi-videos-grid">
-                    {videos.map(video => (
+                    {videos.map((video) => (
                       <div key={video.id} className="mi-video-card">
                         <div className="mi-video-header">
                           <h4 className="mi-video-title">{video.titulo}</h4>
-                          <button 
+                          <button
                             className="mi-btn mi-btn-danger mi-btn-sm"
                             onClick={() => excluirVideo(video.id)}
                             title="Excluir vídeo"
@@ -923,7 +884,7 @@ const MinhasInscricoes = () => {
                             🗑️
                           </button>
                         </div>
-                        
+
                         <div className="mi-video-preview">
                           <div className="mi-video-placeholder">
                             <span className="mi-video-icon">🎬</span>
@@ -931,35 +892,28 @@ const MinhasInscricoes = () => {
                             <small>{video.url}</small>
                           </div>
                         </div>
-                        
+
                         <div className="mi-video-info">
                           <div className="mi-video-meta">
                             <span className="mi-video-asilo">🏠 {video.asilo}</span>
                             <span className="mi-video-data">📅 {formatarData(video.dataUpload)}</span>
                           </div>
-                          
+
                           <p className="mi-video-descricao">{video.descricao}</p>
-                          
+
                           <div className="mi-video-stats">
-                            <span className="mi-video-stat">
-                              👁️ {video.visualizacoes} visualizações
-                            </span>
-                            <span className="mi-video-stat">
-                              ❤️ {video.curtidas} curtidas
-                            </span>
+                            <span className="mi-video-stat">👁️ {video.visualizacoes} visualizações</span>
+                            <span className="mi-video-stat">❤️ {video.curtidas} curtidas</span>
                           </div>
                         </div>
-                        
+
                         <div className="mi-video-actions">
-                          <button 
-                            className="mi-btn mi-btn-outline"
-                            onClick={() => abrirModalVideo(video)}
-                          >
+                          <button className="mi-btn mi-btn-outline" onClick={() => abrirModalVideo(video)}>
                             <span className="mi-icon">👁️</span>
                             Assistir
                           </button>
-                          
-                          <button 
+
+                          <button
                             className="mi-btn mi-btn-outline"
                             onClick={() => navigator.clipboard.writeText(video.url)}
                           >
@@ -1023,9 +977,7 @@ const MinhasInscricoes = () => {
                       </span>
                       <span className="mi-rating-value-large">{itemSelecionado.avaliacao.nota}/5</span>
                     </div>
-                    <p className="mi-avaliacao-comentario-large">
-                      "{itemSelecionado.avaliacao.comentario}"
-                    </p>
+                    <p className="mi-avaliacao-comentario-large">"{itemSelecionado.avaliacao.comentario}"</p>
                   </div>
                 )}
               </div>
@@ -1034,9 +986,9 @@ const MinhasInscricoes = () => {
                 <button className="mi-btn mi-btn-outline" onClick={fecharModal}>
                   Fechar
                 </button>
-                
+
                 {itemSelecionado.status === "pendente" && (
-                  <button 
+                  <button
                     className="mi-btn mi-btn-danger"
                     onClick={() => {
                       cancelarInscricao(itemSelecionado.id)
@@ -1049,7 +1001,7 @@ const MinhasInscricoes = () => {
                 )}
 
                 {itemSelecionado.status === "aprovado" && (
-                  <button 
+                  <button
                     className="mi-btn mi-btn-success"
                     onClick={() => {
                       confirmarPresenca(itemSelecionado.id)
@@ -1085,9 +1037,9 @@ const MinhasInscricoes = () => {
                     <p>Player de Vídeo</p>
                     <small>URL: {videoSelecionado.url}</small>
                     <div className="mi-video-actions-large">
-                      <button 
+                      <button
                         className="mi-btn mi-btn-primary"
-                        onClick={() => window.open(videoSelecionado.url, '_blank')}
+                        onClick={() => window.open(videoSelecionado.url, "_blank")}
                       >
                         <span className="mi-icon">▶️</span>
                         Assistir no YouTube
@@ -1110,12 +1062,8 @@ const MinhasInscricoes = () => {
                   </div>
 
                   <div className="mi-video-stats-large">
-                    <span className="mi-video-stat-large">
-                      👁️ {videoSelecionado.visualizacoes} visualizações
-                    </span>
-                    <span className="mi-video-stat-large">
-                      ❤️ {videoSelecionado.curtidas} curtidas
-                    </span>
+                    <span className="mi-video-stat-large">👁️ {videoSelecionado.visualizacoes} visualizações</span>
+                    <span className="mi-video-stat-large">❤️ {videoSelecionado.curtidas} curtidas</span>
                   </div>
 
                   <div className="mi-video-descricao-large">
@@ -1129,7 +1077,7 @@ const MinhasInscricoes = () => {
                 <button className="mi-btn mi-btn-outline" onClick={fecharModalVideo}>
                   Fechar
                 </button>
-                <button 
+                <button
                   className="mi-btn mi-btn-primary"
                   onClick={() => navigator.clipboard.writeText(videoSelecionado.url)}
                 >

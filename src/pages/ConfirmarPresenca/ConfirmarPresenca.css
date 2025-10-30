@@ -1,14 +1,30 @@
-/* ConfirmarPresenca.css - Página de confirmação de presença em eventos */
+/* ConfirmarPresenca.css - Design Moderno e Profissional */
 
-/* Base page styles */
+/* ===== BASE & LAYOUT ===== */
 .confirmacao-page {
   font-family: "Nunito", sans-serif;
   min-height: 100vh;
-  background: #1a1a1a;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
   color: #ffffff;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* Loading State */
+/* Added animated background pattern for modern look */
+.confirmacao-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(36, 74, 150, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(90, 143, 216, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== LOADING STATE ===== */
 .confirmacao-loading {
   min-height: 60vh;
   display: flex;
@@ -16,15 +32,18 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .confirmacao-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(36, 74, 150, 0.2);
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(36, 74, 150, 0.15);
   border-top: 4px solid #244a96;
   border-radius: 50%;
-  animation: confirmacao-spin 1s linear infinite;
+  animation: confirmacao-spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow: 0 0 30px rgba(36, 74, 150, 0.3);
 }
 
 @keyframes confirmacao-spin {
@@ -39,15 +58,19 @@
 .confirmacao-loading p {
   color: #b0b0b0;
   font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-/* Main Content */
+/* ===== MAIN CONTENT ===== */
 .confirmacao-main {
   padding: 6rem 0 4rem;
   min-height: calc(100vh - 200px);
+  position: relative;
+  z-index: 1;
 }
 
-/* Header Section */
+/* ===== HEADER SECTION ===== */
 .confirmacao-header {
   display: flex;
   justify-content: space-between;
@@ -62,348 +85,793 @@
 }
 
 .confirmacao-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2.75rem;
+  font-weight: 800;
   color: #ffffff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   line-height: 1.2;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
 
 .confirmacao-subtitle {
-  font-size: 1.1rem;
-  color: #b0b0b0;
+  font-size: 1.15rem;
+  color: #9ca3af;
   margin: 0;
   line-height: 1.6;
+  font-weight: 500;
 }
 
+/* Enhanced back button with glassmorphism effect */
 .confirmacao-back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
-  background: rgba(36, 74, 150, 0.15);
-  border: 2px solid rgba(36, 74, 150, 0.3);
-  border-radius: 12px;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem;
+  background: rgba(36, 74, 150, 0.12);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(90, 143, 216, 0.25);
+  border-radius: 14px;
   color: #5a8fd8;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .confirmacao-back-btn:hover {
-  background: #244a96;
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
   border-color: #244a96;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(36, 74, 150, 0.35);
 }
 
-/* Statistics Cards */
+.confirmacao-back-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.confirmacao-back-btn:hover svg {
+  transform: translateX(-4px);
+}
+
+/* ===== STATISTICS CARDS ===== */
 .confirmacao-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.75rem;
+  margin-bottom: 3rem;
 }
 
+/* Modern stat cards with gradient borders and glassmorphism */
 .stat-card {
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 16px;
-  padding: 1.5rem;
+  background: rgba(42, 42, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(90, 143, 216, 0.15);
+  border-radius: 20px;
+  padding: 1.75rem;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  transition: all 0.3s ease;
+  gap: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(36, 74, 150, 0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border-color: #244a96;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(90, 143, 216, 0.3);
+  border-color: rgba(90, 143, 216, 0.4);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.stat-icon::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.stat-card:hover .stat-icon::after {
+  opacity: 1;
 }
 
 .stat-icon-pending {
-  background: rgba(255, 193, 7, 0.15);
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 193, 7, 0.05) 100%);
   color: #ffc107;
+  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.15);
 }
 
 .stat-icon-confirmed {
-  background: rgba(40, 167, 69, 0.15);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(40, 167, 69, 0.05) 100%);
   color: #28a745;
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.15);
 }
 
 .stat-icon-total {
-  background: rgba(36, 74, 150, 0.15);
+  background: linear-gradient(135deg, rgba(90, 143, 216, 0.2) 0%, rgba(36, 74, 150, 0.05) 100%);
   color: #5a8fd8;
+  box-shadow: 0 8px 20px rgba(36, 74, 150, 0.15);
 }
 
 .stat-content h3 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.25rem;
+  font-weight: 800;
   color: #ffffff;
   margin: 0;
   line-height: 1;
+  letter-spacing: -1px;
 }
 
 .stat-content p {
   font-size: 0.95rem;
-  color: #888;
-  margin: 0.25rem 0 0;
-}
-
-/* Filters */
-.confirmacao-filters {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  padding: 0.75rem 1.5rem;
-  background: #2a2a2a;
-  border: 2px solid #3a3a3a;
-  border-radius: 12px;
-  color: #888;
-  font-family: "Nunito", sans-serif;
-  font-size: 1rem;
+  color: #9ca3af;
+  margin: 0.5rem 0 0;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
 }
 
-.filter-btn:hover {
-  border-color: #244a96;
+/* ===== SECTION STYLES ===== */
+.confirmacao-section {
+  margin-bottom: 4rem;
+}
+
+/* Modern section header with gradient accent */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid transparent;
+  background: linear-gradient(90deg, rgba(36, 74, 150, 0.3) 0%, transparent 100%) bottom / 100% 2px no-repeat;
+  position: relative;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.section-title svg {
   color: #5a8fd8;
-  background: rgba(36, 74, 150, 0.1);
+  filter: drop-shadow(0 0 8px rgba(90, 143, 216, 0.4));
 }
 
-.filter-active {
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
-  border-color: #244a96;
-  color: white !important;
-  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
+.section-badge {
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.25) 0%, rgba(36, 74, 150, 0.1) 100%);
+  color: #5a8fd8;
+  border-radius: 25px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border: 1px solid rgba(90, 143, 216, 0.2);
+  box-shadow: 0 4px 12px rgba(36, 74, 150, 0.15);
+  letter-spacing: 0.5px;
 }
 
-/* Events Grid */
+/* ===== EVENT CARDS GRID ===== */
 .confirmacao-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2.25rem;
   margin-bottom: 3rem;
 }
 
-/* Event Card */
+/* Ultra-modern event cards with glassmorphism and animations */
 .confirmacao-card {
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 20px;
+  background: rgba(42, 42, 42, 0.5);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(90, 143, 216, 0.12);
+  border-radius: 24px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.confirmacao-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #244a96, #5a8fd8, #244a96);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .confirmacao-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-  border-color: #244a96;
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(90, 143, 216, 0.3), 0 0 40px rgba(36, 74, 150, 0.2);
+  border-color: rgba(90, 143, 216, 0.4);
+}
+
+.confirmacao-card:hover::before {
+  opacity: 1;
+}
+
+/* Urgent card styling with pulsing animation */
+.confirmacao-card.prazo-urgente {
+  border-color: rgba(255, 193, 7, 0.4);
+  box-shadow: 0 0 30px rgba(255, 193, 7, 0.15);
+}
+
+.confirmacao-card.prazo-urgente::before {
+  background: linear-gradient(90deg, #ffc107, #ffeb3b, #ffc107);
+  opacity: 1;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .confirmacao-card-header {
-  padding: 1.5rem;
+  padding: 1.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid rgba(90, 143, 216, 0.1);
+  background: linear-gradient(180deg, rgba(36, 74, 150, 0.05) 0%, transparent 100%);
 }
 
+/* Modern badges with gradient backgrounds */
 .evento-tipo-badge {
-  padding: 0.5rem 1rem;
-  background: rgba(36, 74, 150, 0.15);
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.2) 0%, rgba(36, 74, 150, 0.05) 100%);
   color: #5a8fd8;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid rgba(90, 143, 216, 0.2);
+  box-shadow: 0 2px 8px rgba(36, 74, 150, 0.1);
+}
+
+.prazo-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.2) 0%, rgba(36, 74, 150, 0.05) 100%);
+  color: #5a8fd8;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 1px solid rgba(90, 143, 216, 0.2);
+  box-shadow: 0 2px 8px rgba(36, 74, 150, 0.1);
+}
+
+.prazo-badge.prazo-urgente {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.25) 0%, rgba(255, 193, 7, 0.08) 100%);
+  color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.3);
+  box-shadow: 0 2px 12px rgba(255, 193, 7, 0.2);
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
 }
 
 .status-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  border: 1px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .status-pendente {
-  background: rgba(255, 193, 7, 0.15);
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 193, 7, 0.05) 100%);
   color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.3);
 }
 
 .status-confirmado {
-  background: rgba(40, 167, 69, 0.15);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(40, 167, 69, 0.05) 100%);
   color: #28a745;
+  border-color: rgba(40, 167, 69, 0.3);
 }
 
 .status-ausente {
-  background: rgba(220, 53, 69, 0.15);
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.2) 0%, rgba(220, 53, 69, 0.05) 100%);
   color: #dc3545;
+  border-color: rgba(220, 53, 69, 0.3);
 }
 
 .confirmacao-card-body {
-  padding: 1.5rem;
+  padding: 1.75rem;
   flex: 1;
 }
 
 .evento-titulo {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #ffffff;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   line-height: 1.3;
+  letter-spacing: -0.3px;
 }
 
 .evento-descricao {
-  color: #b0b0b0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
+  color: #9ca3af;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
 }
 
 .evento-info {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #888;
-  font-size: 0.95rem;
+  gap: 1rem;
+  color: #9ca3af;
+  font-size: 0.98rem;
+  font-weight: 600;
+  padding: 0.75rem;
+  background: rgba(36, 74, 150, 0.05);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background: rgba(36, 74, 150, 0.1);
+  transform: translateX(4px);
 }
 
 .info-item svg {
   flex-shrink: 0;
   color: #5a8fd8;
+  filter: drop-shadow(0 0 4px rgba(90, 143, 216, 0.3));
+}
+
+.info-asilo {
+  font-weight: 800;
+  color: #5a8fd8;
+  text-shadow: 0 0 10px rgba(90, 143, 216, 0.3);
 }
 
 .info-item-full {
   grid-column: 1 / -1;
 }
 
-.confirmacao-card-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #3a3a3a;
+/* Modern alert box with gradient border */
+.alerta-prazo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.12) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border: 2px solid rgba(255, 193, 7, 0.35);
+  border-radius: 14px;
+  color: #ffc107;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  animation: pulse-alert 2s ease-in-out infinite;
 }
 
+@keyframes pulse-alert {
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(255, 193, 7, 0.25);
+  }
+}
+
+.alerta-prazo svg {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.4));
+}
+
+.confirmacao-card-footer {
+  padding: 1.75rem;
+  border-top: 1px solid rgba(90, 143, 216, 0.1);
+  background: linear-gradient(0deg, rgba(36, 74, 150, 0.03) 0%, transparent 100%);
+}
+
+/* Ultra-modern confirm button with gradient and animations */
 .btn-confirmar {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  gap: 0.875rem;
+  padding: 1.25rem 1.75rem;
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   color: white;
   font-family: "Nunito", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+}
+
+.btn-confirmar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn-confirmar:hover::before {
+  left: 100%;
 }
 
 .btn-confirmar:hover {
-  background: linear-gradient(135deg, #1a3a7a, #112a63);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.4);
+  background: linear-gradient(135deg, #1a3a7a 0%, #112a63 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.5);
 }
 
+.btn-confirmar:active {
+  transform: translateY(-1px);
+}
+
+/* Success message with modern styling */
 .confirmacao-success-message {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(40, 167, 69, 0.15);
-  border: 2px solid rgba(40, 167, 69, 0.3);
-  border-radius: 12px;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(40, 167, 69, 0.05) 100%);
+  border: 2px solid rgba(40, 167, 69, 0.35);
+  border-radius: 14px;
   color: #28a745;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
+}
+
+.confirmacao-success-message svg {
+  filter: drop-shadow(0 0 6px rgba(40, 167, 69, 0.4));
+}
+
+/* ===== HISTORICO SECTION ===== */
+.historico-section {
+  background: rgba(42, 42, 42, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(90, 143, 216, 0.12);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.historico-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Modern history items with hover effects */
+.historico-item {
+  display: flex;
+  gap: 1.75rem;
+  padding: 1.75rem;
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(90, 143, 216, 0.1);
+  border-radius: 18px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.historico-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #244a96, #5a8fd8);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.historico-item:hover {
+  border-color: rgba(90, 143, 216, 0.3);
+  transform: translateX(8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.historico-item:hover::before {
+  opacity: 1;
+}
+
+.historico-icon-wrapper {
+  flex-shrink: 0;
+}
+
+.historico-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.historico-item:hover .historico-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.historico-icon-success {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(40, 167, 69, 0.05) 100%);
+  color: #28a745;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+.historico-icon-error {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.2) 0%, rgba(220, 53, 69, 0.05) 100%);
+  color: #dc3545;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+}
+
+.historico-icon-warning {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 193, 7, 0.05) 100%);
+  color: #ffc107;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+
+.historico-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.historico-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.historico-titulo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+.historico-data {
+  padding: 0.5rem 1rem;
+  background: rgba(36, 74, 150, 0.15);
+  color: #9ca3af;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid rgba(90, 143, 216, 0.2);
+}
+
+.historico-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #9ca3af;
+  font-size: 1rem;
   font-weight: 600;
 }
 
-.confirmacao-info-message {
-  text-align: center;
-  padding: 1rem;
-  color: #888;
-  font-style: italic;
+.historico-asilo {
+  font-weight: 800;
+  color: #5a8fd8;
+  text-shadow: 0 0 10px rgba(90, 143, 216, 0.3);
 }
 
-/* Empty State */
+.historico-separador {
+  color: #555;
+  font-weight: 400;
+}
+
+.historico-horario {
+  color: #9ca3af;
+}
+
+.historico-status {
+  margin-top: 0.5rem;
+}
+
+.status-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.status-text.status-success {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  border-color: rgba(40, 167, 69, 0.2);
+}
+
+.status-text.status-error {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.2);
+}
+
+.status-text.status-warning {
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.2);
+}
+
+/* ===== EMPTY STATES ===== */
 .confirmacao-empty {
   text-align: center;
-  padding: 4rem 2rem;
-  background: #2a2a2a;
-  border: 2px dashed #3a3a3a;
-  border-radius: 20px;
+  padding: 5rem 2rem;
+  background: rgba(42, 42, 42, 0.4);
+  backdrop-filter: blur(20px);
+  border: 2px dashed rgba(90, 143, 216, 0.2);
+  border-radius: 24px;
   margin: 2rem 0;
 }
 
 .empty-icon {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   color: #5a8fd8;
-  opacity: 0.5;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 20px rgba(90, 143, 216, 0.3));
 }
 
 .confirmacao-empty h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 1.85rem;
+  font-weight: 800;
   color: #ffffff;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
 }
 
 .confirmacao-empty p {
-  font-size: 1.1rem;
-  color: #888;
-  margin-bottom: 2rem;
+  font-size: 1.15rem;
+  color: #9ca3af;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
 }
 
 .confirmacao-empty .btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  gap: 0.75rem;
+  padding: 1.25rem 2.5rem;
+  background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   color: white;
   font-family: "Nunito", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 800;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .confirmacao-empty .btn-primary:hover {
-  background: linear-gradient(135deg, #1a3a7a, #112a63);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.4);
+  background: linear-gradient(135deg, #1a3a7a 0%, #112a63 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(36, 74, 150, 0.5);
+}
+
+.confirmacao-empty-small {
+  text-align: center;
+  padding: 2.5rem;
+  background: rgba(42, 42, 42, 0.4);
+  backdrop-filter: blur(10px);
+  border: 2px dashed rgba(90, 143, 216, 0.15);
+  border-radius: 18px;
+  color: #9ca3af;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
 /* ===== MODAL STYLES ===== */
@@ -413,8 +881,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,22 +900,24 @@
   }
 }
 
+/* Ultra-modern modal with glassmorphism */
 .confirmacao-modal-content {
-  background: #2a2a2a;
-  border-radius: 20px;
-  padding: 2.5rem;
-  max-width: 500px;
+  background: rgba(42, 42, 42, 0.95);
+  backdrop-filter: blur(30px);
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 520px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid #3a3a3a;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(90, 143, 216, 0.2);
+  border: 1px solid rgba(90, 143, 216, 0.15);
   position: relative;
-  animation: confirmacao-modal-slideUp 0.4s ease-out;
+  animation: confirmacao-modal-slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes confirmacao-modal-slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(40px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -457,25 +927,29 @@
 
 .confirmacao-modal-success {
   border-top: 4px solid #28a745;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(40, 167, 69, 0.2);
 }
 
 .confirmacao-modal-error {
   border-top: 4px solid #dc3545;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(220, 53, 69, 0.2);
 }
 
 .confirmacao-modal-warning {
   border-top: 4px solid #ffc107;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 193, 7, 0.2);
 }
 
 .confirmacao-modal-header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .confirmacao-modal-icon {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: center;
+  filter: drop-shadow(0 0 15px currentColor);
 }
 
 .confirmacao-modal-success .confirmacao-modal-icon {
@@ -491,92 +965,106 @@
 }
 
 .confirmacao-modal-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: 800;
   color: #ffffff;
   margin: 0;
   line-height: 1.3;
+  letter-spacing: -0.5px;
 }
 
 .confirmacao-modal-body {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   text-align: center;
 }
 
 .confirmacao-modal-message {
-  color: #b0b0b0;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  line-height: 1.7;
   margin: 0;
+  font-weight: 500;
 }
 
 .confirmacao-modal-footer {
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   justify-content: center;
 }
 
+/* Modern modal buttons with gradients */
 .confirmacao-modal-btn {
-  padding: 1rem 2rem;
+  padding: 1.25rem 2.5rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-family: "Nunito", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 140px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .confirmacao-modal-btn-success {
-  background: linear-gradient(135deg, #28a745, #1e7e34);
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
   color: white;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
 }
 
 .confirmacao-modal-btn-error {
-  background: linear-gradient(135deg, #dc3545, #c82333);
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   color: white;
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
 }
 
 .confirmacao-modal-btn-warning {
-  background: linear-gradient(135deg, #ffc107, #e0a800);
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
   color: #1a1a1a;
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
 }
 
 .confirmacao-modal-btn-secondary {
-  background: #3a3a3a;
-  color: #b0b0b0;
+  background: rgba(58, 58, 58, 0.8);
+  backdrop-filter: blur(10px);
+  color: #9ca3af;
+  border: 1px solid rgba(90, 143, 216, 0.2);
 }
 
 .confirmacao-modal-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
 }
 
 .confirmacao-modal-btn-success:hover {
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  box-shadow: 0 10px 30px rgba(40, 167, 69, 0.5);
 }
 
 .confirmacao-modal-btn-error:hover {
-  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+  box-shadow: 0 10px 30px rgba(220, 53, 69, 0.5);
 }
 
 .confirmacao-modal-btn-warning:hover {
-  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.5);
 }
 
-/* Responsive Design */
+.confirmacao-modal-btn-secondary:hover {
+  background: rgba(58, 58, 58, 1);
+  border-color: rgba(90, 143, 216, 0.4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .confirmacao-main {
     padding: 4rem 0 3rem;
   }
 
   .confirmacao-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .confirmacao-subtitle {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .confirmacao-header {
@@ -593,22 +1081,13 @@
     grid-template-columns: 1fr;
   }
 
-  .confirmacao-filters {
-    flex-direction: column;
-  }
-
-  .filter-btn {
-    width: 100%;
-    text-align: center;
-  }
-
   .confirmacao-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.75rem;
   }
 
   .confirmacao-modal-content {
-    padding: 2rem;
+    padding: 2.5rem;
   }
 
   .confirmacao-modal-footer {
@@ -618,46 +1097,94 @@
   .confirmacao-modal-btn {
     width: 100%;
   }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .historico-item {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .historico-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .historico-data {
+    align-self: flex-start;
+  }
+
+  .historico-info {
+    flex-wrap: wrap;
+  }
+
+  .historico-section {
+    padding: 1.75rem;
+  }
 }
 
 @media (max-width: 480px) {
   .confirmacao-title {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
   }
 
   .confirmacao-subtitle {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .stat-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
 
   .stat-content h3 {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
 
   .evento-titulo {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
   }
 
   .confirmacao-modal-title {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   .confirmacao-modal-message {
-    font-size: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+  }
+
+  .historico-titulo {
+    font-size: 1.2rem;
+  }
+
+  .alerta-prazo {
+    font-size: 0.9rem;
+  }
+
+  .confirmacao-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Reduced motion support */
+/* ===== ACCESSIBILITY ===== */
 @media (prefers-reduced-motion: reduce) {
-  .confirmacao-card,
-  .stat-card,
-  .filter-btn,
-  .btn-confirmar,
-  .confirmacao-back-btn {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 
   .confirmacao-spinner {
@@ -665,9 +1192,19 @@
     border: 4px solid #244a96;
     border-top: 4px solid transparent;
   }
+}
 
-  .confirmacao-modal-overlay,
-  .confirmacao-modal-content {
-    animation: none;
+/* ===== PRINT STYLES ===== */
+@media print {
+  .confirmacao-page::before,
+  .confirmacao-back-btn,
+  .btn-confirmar,
+  .confirmacao-modal-overlay {
+    display: none !important;
+  }
+
+  .confirmacao-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }

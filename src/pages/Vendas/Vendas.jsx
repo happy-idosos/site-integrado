@@ -302,7 +302,6 @@ function Vendas() {
             </div>
             <div className="vendas-processo-grid">
               <div className="vendas-processo-card" data-aos="fade-right" data-aos-delay="100">
-                <div className="vendas-processo-number">01</div>
                 <div className="vendas-processo-content">
                   <h3 className="vendas-processo-title text-balance">Seleção de Materiais</h3>
                   <p className="vendas-processo-description text-pretty">
@@ -312,7 +311,6 @@ function Vendas() {
                 </div>
               </div>
               <div className="vendas-processo-card" data-aos="fade-left" data-aos-delay="200">
-                <div className="vendas-processo-number">02</div>
                 <div className="vendas-processo-content">
                   <h3 className="vendas-processo-title text-balance">Design Exclusivo</h3>
                   <p className="vendas-processo-description text-pretty">
@@ -322,7 +320,6 @@ function Vendas() {
                 </div>
               </div>
               <div className="vendas-processo-card" data-aos="fade-right" data-aos-delay="300">
-                <div className="vendas-processo-number">03</div>
                 <div className="vendas-processo-content">
                   <h3 className="vendas-processo-title text-balance">Impressão de Qualidade</h3>
                   <p className="vendas-processo-description text-pretty">
@@ -332,7 +329,6 @@ function Vendas() {
                 </div>
               </div>
               <div className="vendas-processo-card" data-aos="fade-left" data-aos-delay="400">
-                <div className="vendas-processo-number">04</div>
                 <div className="vendas-processo-content">
                   <h3 className="vendas-processo-title text-balance">Controle de Qualidade</h3>
                   <p className="vendas-processo-description text-pretty">

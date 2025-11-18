@@ -352,7 +352,7 @@ const SobreProjeto = () => {
                 </p>
                 <div className="principios-grid">
                   <div className="principio-item" data-aos="fade-up" data-aos-delay="600">
-                    <div className="principio-icon">🌱</div>
+                    <div className="principio-icon"></div>
                     <div className="principio-content">
                       <h5>Sustentabilidade Social</h5>
                       <p>
@@ -362,7 +362,7 @@ const SobreProjeto = () => {
                     </div>
                   </div>
                   <div className="principio-item" data-aos="fade-up" data-aos-delay="700">
-                    <div className="principio-icon">💚</div>
+                    <div className="principio-icon"></div>
                     <div className="principio-content">
                       <h5>Viabilidade Econômica</h5>
                       <p>
@@ -372,7 +372,7 @@ const SobreProjeto = () => {
                     </div>
                   </div>
                   <div className="principio-item" data-aos="fade-up" data-aos-delay="800">
-                    <div className="principio-icon">🌍</div>
+                    <div className="principio-icon"></div>
                     <div className="principio-content">
                       <h5>Responsabilidade Ambiental</h5>
                       <p>

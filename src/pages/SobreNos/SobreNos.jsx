@@ -34,26 +34,31 @@ import heloysa from "../../assets/img/sobrenos_integrantes/Heloysa Beatriz.png"
 const teamMembers = [
   {
     name: "Ana Caroline da Silva Santos",
+    role: "Recursos Humanos",
     image: ana,
     instagram: "https://www.instagram.com/anacarolinessz_",
   },
   {
     name: "Evellyn Soares Ferreira",
+    role: "Recursos Humanos",
     image: evellyn,
     instagram: "https://www.instagram.com/srzevllyn_",
   },
   {
     name: "Giovanna Queiroz Carvalho",
+    role: "Recursos Humanos",
     image: giovanna,
     instagram: "https://www.instagram.com/gqueirozz__",
   },
   {
     name: "Heloisa Emanuele Gonçalves",
+    role: "Recursos Humanos",
     image: heloisa,
     instagram: "https://www.instagram.com/helo_por_um_dia",
   },
   {
     name: "Heloysa Beatriz Santos",
+    role: "Recursos Humanos",
     image: heloysa,
     instagram: "https://www.instagram.com/hel0_santos",
   },

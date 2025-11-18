@@ -45,62 +45,10 @@
   margin: 0 auto;
 }
 
-/* Filter Section - NEW */
-.vendas-filter-section {
-  background: #fff;
-  padding: 2rem 0;
-  border-bottom: 2px solid #f0f0f0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.vendas-filter-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.vendas-filter-btn {
-  padding: 0.75rem 1.5rem;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #6c757d;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.vendas-filter-btn:hover {
-  background: #e9ecef;
-  border-color: #244a96;
-  color: #244a96;
-  transform: translateY(-2px);
-}
-
-.vendas-filter-btn.active {
-  background: linear-gradient(135deg, #244a96, #1a3670);
-  border-color: #244a96;
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(36, 74, 150, 0.3);
-}
-
 /* Section Styles */
 .vendas-produtos-section {
   padding: 80px 0;
   background: #fff;
-}
-
-.vendas-produtos-section-alt {
-  background: #f8f9fa;
 }
 
 .vendas-section-header {
@@ -175,16 +123,17 @@
 
 .vendas-produto-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 50%;
+  left: 50%;
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .vendas-produto-card:hover .vendas-produto-image {
-  transform: scale(1.1);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .vendas-produto-badge {
@@ -241,6 +190,81 @@
   font-size: 1rem;
 }
 
+/* Color Variants */
+.vendas-produto-variants {
+  margin-bottom: 1.5rem;
+}
+
+.vendas-variant-label {
+  display: block;
+  font-weight: 600;
+  color: #244a96;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.vendas-variant-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.vendas-variant-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #e0e0e0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.vendas-variant-btn:hover {
+  border-color: #244a96;
+  transform: scale(1.1);
+}
+
+.vendas-variant-btn.active {
+  border-color: #244a96;
+  box-shadow: 0 0 0 2px rgba(36, 74, 150, 0.2);
+}
+
+.vendas-variant-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.vendas-variant-check {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: #244a96;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: vendas-check-pop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes vendas-check-pop {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Product Button */
 .vendas-produto-btn {
   width: 100%;
   padding: 14px 24px;
@@ -301,19 +325,17 @@
 
 .vendas-processo-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
 
 .vendas-processo-card {
   background: #fff;
-  border-radius: 20px;
   padding: 2.5rem;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -321,69 +343,37 @@
 .vendas-processo-card::before {
   content: "";
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  width: 5px;
+  left: 0;
+  right: 0;
+  height: 4px;
   background: linear-gradient(135deg, #244a96, #1a3670);
-  transform: scaleY(0);
-  transition: transform 0.4s ease;
 }
 
 .vendas-processo-card:hover {
-  transform: translateX(12px);
-  box-shadow: 0 12px 40px rgba(36, 74, 150, 0.2);
-}
-
-.vendas-processo-card:hover::before {
-  transform: scaleY(1);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(36, 74, 150, 0.15);
 }
 
 .vendas-processo-number {
-  flex-shrink: 0;
-  width: 90px;
-  height: 90px;
-  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.2rem;
-  font-weight: 700;
-  box-shadow: 0 6px 20px rgba(36, 74, 150, 0.3);
-  position: relative;
-}
-
-.vendas-processo-number::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 2px solid #244a96;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.vendas-processo-card:hover .vendas-processo-number::after {
-  opacity: 0.3;
-}
-
-.vendas-processo-content {
-  flex: 1;
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(36, 74, 150, 0.1);
+  margin-bottom: 1rem;
+  line-height: 1;
 }
 
 .vendas-processo-title {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #244a96;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .vendas-processo-description {
   color: #6c757d;
-  line-height: 1.8;
-  font-size: 1.05rem;
+  line-height: 1.7;
+  font-size: 1rem;
 }
 
 /* Impacto Section */
@@ -426,60 +416,6 @@
   color: #6c757d;
   line-height: 1.8;
   margin-bottom: 3rem;
-}
-
-.vendas-impacto-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.vendas-impacto-stat {
-  background: linear-gradient(135deg, #244a96 0%, #1a3670 100%);
-  padding: 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 6px 25px rgba(36, 74, 150, 0.25);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.vendas-impacto-stat::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  transition: transform 0.6s ease;
-}
-
-.vendas-impacto-stat:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(36, 74, 150, 0.35);
-}
-
-.vendas-impacto-stat:hover::before {
-  transform: translate(-25%, -25%);
-}
-
-.vendas-impacto-stat-number {
-  font-size: 3.5rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.vendas-impacto-stat-label {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 500;
-  position: relative;
-  z-index: 1;
 }
 
 /* CTA Section */
@@ -554,54 +490,6 @@
   box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
 }
 
-.vendas-btn-secondary {
-  background: #fff;
-  color: #244a96;
-  padding: 16px 36px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  border: 2px solid #fff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.vendas-btn-secondary:hover {
-  background: transparent;
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-}
-
-/* Loading Animation - NEW */
-.vendas-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 0;
-}
-
-.vendas-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #244a96;
-  border-radius: 50%;
-  animation: vendas-spin 1s linear infinite;
-}
-
-@keyframes vendas-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .vendas-hero {
@@ -629,28 +517,13 @@
     gap: 2rem;
   }
 
-  .vendas-filter-container {
-    padding: 0 1rem;
-  }
-
-  .vendas-filter-btn {
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
+  .vendas-processo-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .vendas-processo-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem;
     padding: 2rem;
-  }
-
-  .vendas-processo-card:hover {
-    transform: translateY(-8px);
-  }
-
-  .vendas-processo-number {
-    margin: 0 auto;
   }
 
   .vendas-impacto-title {
@@ -659,11 +532,6 @@
 
   .vendas-impacto-description {
     font-size: 1.1rem;
-  }
-
-  .vendas-impacto-stats {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 
   .vendas-cta-title {
@@ -679,8 +547,7 @@
     align-items: stretch;
   }
 
-  .vendas-btn-whatsapp,
-  .vendas-btn-secondary {
+  .vendas-btn-whatsapp {
     width: 100%;
     justify-content: center;
   }
@@ -699,27 +566,37 @@
     grid-template-columns: 1fr;
   }
 
-  .vendas-processo-title {
-    font-size: 1.35rem;
-  }
-
-  .vendas-impacto-stat-number {
-    font-size: 2.8rem;
-  }
-
   .vendas-produto-badge {
     font-size: 1rem;
     padding: 8px 16px;
+  }
+
+  .vendas-variant-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .vendas-variant-color {
+    width: 35px;
+    height: 35px;
+  }
+
+  .vendas-processo-card {
+    padding: 1.5rem;
+  }
+
+  .vendas-processo-number {
+    font-size: 2.5rem;
   }
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .vendas-produto-card,
-  .vendas-processo-card,
-  .vendas-impacto-stat,
   .vendas-produto-image,
-  .vendas-impacto-icon {
+  .vendas-impacto-icon,
+  .vendas-variant-check,
+  .vendas-processo-card {
     transition: none;
     animation: none;
   }
@@ -727,7 +604,6 @@
 
 /* Print Styles */
 @media print {
-  .vendas-filter-section,
   .vendas-cta {
     display: none;
   }

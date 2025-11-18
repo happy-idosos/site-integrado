@@ -8,17 +8,17 @@ import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./Vendas.css"
 
-// Camisetas
-import camiseta1 from "../../assets/img/Vendas/Camiseta Fundo Branco.png"
-import camiseta2 from "../../assets/img/Vendas/Camiseta Fundo Preto.png"
+// Camisetas - MODELOS DIFERENTES para cada cor
+import camisetaBranca from "../../assets/img/Vendas/Camiseta Fundo Branco.png"
+import camisetaPreta from "../../assets/img/Vendas/Camiseta Fundo Preto.png"
 
-// Canecas Clássicas
-import caneca1branco from "../../assets/img/Vendas/Caneca1 Fundo Branco.png"
-import caneca1preto from "../../assets/img/Vendas/Caneca1 Fundo Preto.png"
+// Canecas Clássicas - MODELOS DIFERENTES para cada cor
+import canecaClassicaBranca from "../../assets/img/Vendas/Caneca1 Fundo Branco.png"
+import canecaClassicaPreta from "../../assets/img/Vendas/Caneca1 Fundo Preto.png"
 
-// Canecas Premium
-import caneca2branco from "../../assets/img/Vendas/Caneca2 Fundo Branco.png"
-import caneca2preto from "../../assets/img/Vendas/Caneca2 Fundo Preto.png"
+// Canecas Premium - MODELOS DIFERENTES para cada cor
+import canecaPremiumBranca from "../../assets/img/Vendas/Caneca2 Fundo Branco.png"
+import canecaPremiumPreta from "../../assets/img/Vendas/Caneca2 Fundo Preto.png"
 
 function Vendas() {
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -49,13 +49,13 @@ function Vendas() {
           { 
             id: "white", 
             name: "Branca", 
-            image: camiseta1, // Imagem específica para camiseta branca
+            image: camisetaBranca, // MODELO BRANCO
             color: "#ffffff" 
           },
           { 
             id: "black", 
             name: "Preta", 
-            image: camiseta2, // Imagem específica para camiseta preta
+            image: camisetaPreta, // MODELO PRETO (IMAGEM DIFERENTE)
             color: "#1a1a1a" 
           },
         ],
@@ -73,13 +73,13 @@ function Vendas() {
           { 
             id: "white", 
             name: "Branca", 
-            image: caneca1branco, // Imagem específica para caneca branca
+            image: canecaClassicaBranca, // MODELO BRANCO
             color: "#ffffff" 
           },
           { 
             id: "black", 
             name: "Preta", 
-            image: caneca1preto, // Imagem específica para caneca preta
+            image: canecaClassicaPreta, // MODELO PRETO (IMAGEM DIFERENTE)
             color: "#1a1a1a" 
           },
         ],
@@ -95,13 +95,13 @@ function Vendas() {
           { 
             id: "white", 
             name: "Branca", 
-            image: caneca2branco, // Imagem específica para caneca branca
+            image: canecaPremiumBranca, // MODELO BRANCO
             color: "#ffffff" 
           },
           { 
             id: "black", 
             name: "Preta", 
-            image: caneca2preto, // Imagem específica para caneca preta
+            image: canecaPremiumPreta, // MODELO PRETO (IMAGEM DIFERENTE)
             color: "#1a1a1a" 
           },
         ],
@@ -124,15 +124,12 @@ function Vendas() {
     }))
   }
 
-  const handleWhatsAppClick = (product = null, variantIndex = null) => {
-    const productToUse = product || selectedProduct
-    const variant = variantIndex !== null ? product.variants[variantIndex] : product?.variants[getSelectedVariant(product.id)]
+  const handleWhatsAppClick = (product) => {
+    const selectedColor = selectedVariants[product.id] || 0
+    const variant = product.variants[selectedColor]
     
-    const message = productToUse
-      ? `Olá! Gostaria de comprar: ${productToUse.name} - ${variant?.name || ''} - R$ ${productToUse.price},00`
-      : "Olá! Gostaria de saber mais sobre os produtos do Happy Idosos!"
-
-    const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(message)}`
+    const message = `Olá! Gostaria de comprar: ${product.name} - Cor ${variant.name} - R$ ${product.price},00`
+    const whatsappUrl = `https://wa.me/5511974731651?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
   }
 
@@ -218,7 +215,7 @@ function Vendas() {
                   <div key={product.id} className="vendas-produto-card" data-aos="zoom-in" data-aos-delay={index * 100}>
                     <div className="vendas-produto-image-wrapper">
                       <img
-                        src={currentVariant.image || "/placeholder.svg"}
+                        src={currentVariant.image}
                         alt={`${product.name} - ${currentVariant.name}`}
                         className="vendas-produto-image"
                         loading="lazy"
@@ -268,10 +265,7 @@ function Vendas() {
                       
                       <button
                         className="vendas-produto-btn"
-                        onClick={() => {
-                          setSelectedProduct(product)
-                          handleWhatsAppClick(product, selectedVariantIndex)
-                        }}
+                        onClick={() => handleWhatsAppClick(product)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -379,15 +373,15 @@ function Vendas() {
           </div>
         </section>
 
-        <section className="vendas-cta" data-aos="fade-up">
+       <section className="vendas-cta" data-aos="fade-up">
           <div className="container">
             <div className="vendas-cta-content">
-              <h2 className="vendas-cta-title text-balance">Faça Seu Pedido Agora</h2>
-              <p className="vendas-cta-subtitle text-balance">
-                Entre em contato conosco pelo WhatsApp ou através do nosso formulário de contato para fazer seu pedido
+              <h2 className="vendas-cta-title">Faça Seu Pedido Agora</h2>
+              <p className="vendas-cta-subtitle">
+                Entre em contato conosco pelo WhatsApp para fazer seu pedido
               </p>
               <div className="vendas-cta-buttons" data-aos="zoom-in" data-aos-delay="200">
-                <button className="vendas-btn-whatsapp" onClick={() => handleWhatsAppClick()}>
+                <button className="vendas-btn-whatsapp" onClick={() => window.open('https://wa.me/5511974731651', '_blank')}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -399,23 +393,6 @@ function Vendas() {
                   </svg>
                   Comprar pelo WhatsApp
                 </button>
-                <Link to="/contato" className="vendas-btn-secondary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                  Página de Contato
-                </Link>
               </div>
             </div>
           </div>

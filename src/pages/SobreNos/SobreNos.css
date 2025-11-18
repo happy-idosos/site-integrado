@@ -251,20 +251,20 @@
 /* Premium circular grid layout - CENTERED & PERFECTLY ALIGNED */
 .sobre-nos-page .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
   justify-items: center;
-  align-items: start; /* ALINHAMENTO PERFEITO NO TOPO */
+  align-items: stretch; /* Garante altura uniforme entre cards */
 }
 
 /* Perfect circular team member card */
 .sobre-nos-page .team-member-card {
   background: white;
   border-radius: 24px;
-  padding: 40px 30px 30px;
+  padding: 40px 30px 35px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -277,7 +277,7 @@
   overflow: hidden;
   width: 100%;
   max-width: 320px;
-  height: fit-content; /* ALTURA AUTOMÁTICA PERFEITA */
+  min-height: 420px; /* Altura mínima consistente */
 }
 
 .sobre-nos-page .team-member-card::before {
@@ -307,18 +307,19 @@
 /* Perfect circular image container - CENTRALIZADO PERFEITAMENTE */
 .sobre-nos-page .member-image-container {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   margin: 0 auto 25px;
   border-radius: 50%;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f9fb 0%, #e8eaf0 100%);
   box-shadow: 0 12px 35px rgba(36, 74, 150, 0.15);
-  border: 6px solid white;
+  border: 5px solid white;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
 .sobre-nos-page .team-member-card:hover .member-image-container {
@@ -331,7 +332,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center; /* CENTRALIZADA PERFEITAMENTE */
+  object-position: center center;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   filter: grayscale(0%);
 }
@@ -402,24 +403,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-grow: 1; /* Ocupa espaço disponível */
+  margin-top: auto; /* Empurra para baixo se necessário */
 }
 
 .sobre-nos-page .member-name {
   color: #1a1a1a;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin: 0;
   line-height: 1.4;
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0 10px;
   text-align: center;
   width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .sobre-nos-page .team-member-card:hover .member-name {
@@ -428,18 +430,19 @@
 
 .sobre-nos-page .member-role {
   color: #6c757d;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.2px;
   margin: 0;
   transition: all 0.3s ease;
-  padding: 10px 20px;
+  padding: 8px 18px;
   background: linear-gradient(135deg, rgba(36, 74, 150, 0.05), rgba(26, 58, 122, 0.08));
-  border-radius: 25px;
+  border-radius: 20px;
   display: inline-block;
   border: 1px solid rgba(36, 74, 150, 0.1);
   text-align: center;
+  min-width: 120px;
 }
 
 .sobre-nos-page .team-member-card:hover .member-role {
@@ -629,8 +632,12 @@
 @media (min-width: 1600px) {
   .sobre-nos-page .team-grid {
     grid-template-columns: repeat(5, 1fr);
-    gap: 35px;
-    max-width: 1600px;
+    gap: 40px;
+    max-width: 1700px;
+  }
+  
+  .sobre-nos-page .team-member-card {
+    min-height: 440px;
   }
 }
 
@@ -639,6 +646,10 @@
   .sobre-nos-page .team-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 35px;
+  }
+  
+  .sobre-nos-page .team-member-card {
+    min-height: 420px;
   }
 }
 
@@ -649,9 +660,19 @@
     gap: 30px;
   }
   
+  .sobre-nos-page .team-member-card {
+    min-height: 410px;
+    padding: 35px 25px 30px;
+  }
+  
   .sobre-nos-page .member-image-container {
-    width: 180px;
-    height: 180px;
+    width: 170px;
+    height: 170px;
+    margin-bottom: 22px;
+  }
+  
+  .sobre-nos-page .member-name {
+    font-size: 1.15rem;
   }
 }
 
@@ -662,15 +683,25 @@
     gap: 30px;
   }
 
+  .sobre-nos-page .team-member-card {
+    min-height: 400px;
+    padding: 35px 25px 30px;
+  }
+
   .sobre-nos-page .member-image-container {
-    width: 170px;
-    height: 170px;
+    width: 160px;
+    height: 160px;
     margin-bottom: 20px;
+    border-width: 4px;
   }
 
   .sobre-nos-page .member-name {
     font-size: 1.15rem;
-    min-height: 52px;
+  }
+  
+  .sobre-nos-page .member-role {
+    font-size: 0.85rem;
+    padding: 7px 16px;
   }
 }
 
@@ -684,24 +715,25 @@
 
   .sobre-nos-page .team-member-card {
     padding: 30px 20px 25px;
+    min-height: 380px;
+    max-width: 100%;
   }
 
   .sobre-nos-page .member-image-container {
-    width: 150px;
-    height: 150px;
-    border-width: 5px;
+    width: 140px;
+    height: 140px;
+    border-width: 4px;
     margin-bottom: 18px;
   }
 
   .sobre-nos-page .member-name {
-    font-size: 1.1rem;
-    min-height: 48px;
-    margin-bottom: 10px;
+    font-size: 1.05rem;
   }
 
   .sobre-nos-page .member-role {
-    font-size: 0.9rem;
-    padding: 8px 16px;
+    font-size: 0.8rem;
+    padding: 7px 14px;
+    letter-spacing: 1px;
   }
 
   .sobre-nos-page .member-social-link {
@@ -714,12 +746,13 @@
 @media (max-width: 575.98px) {
   .sobre-nos-page .team-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
-    max-width: 400px;
+    gap: 30px;
+    max-width: 380px;
   }
 
   .sobre-nos-page .team-member-card {
     padding: 35px 25px 30px;
+    min-height: 390px;
   }
 
   .sobre-nos-page .member-image-container {
@@ -730,15 +763,25 @@
 
   .sobre-nos-page .member-name {
     font-size: 1.15rem;
-    min-height: auto;
   }
 
   .sobre-nos-page .member-role {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+  }
+  
+  .sobre-nos-page .member-social-link {
+    width: 52px;
+    height: 52px;
   }
 }
 
+/* Extra Small Mobile */
 @media (max-width: 375px) {
+  .sobre-nos-page .team-grid {
+    max-width: 320px;
+  }
+  
   .sobre-nos-page .member-image-container {
     width: 140px;
     height: 140px;
@@ -747,6 +790,11 @@
   
   .sobre-nos-page .team-member-card {
     padding: 30px 20px 25px;
+    min-height: 370px;
+  }
+  
+  .sobre-nos-page .member-name {
+    font-size: 1.05rem;
   }
 }
 
@@ -811,7 +859,7 @@
   }
 
   .sobre-nos-page .carousel-caption p {
-    font-size: 1rem;
+    font
   }
 
   .sobre-nos-page .carousel-caption .btn {

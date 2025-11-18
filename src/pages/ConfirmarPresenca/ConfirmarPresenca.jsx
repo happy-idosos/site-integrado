@@ -21,13 +21,13 @@ const ConfirmacaoModal = ({ show, type, title, message, onClose, onConfirm }) =>
   if (!show) return null
 
   return (
-    <div className="confirmacao-modal-overlay" onClick={onClose}>
+    <div className="cp-modal-overlay" onClick={onClose}>
       <div
-        className={`confirmacao-modal-content confirmacao-modal-${type}`}
+        className={`cp-modal-content cp-modal-${type}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="confirmacao-modal-header">
-          <div className="confirmacao-modal-icon">
+        <div className="cp-modal-header">
+          <div className="cp-modal-icon">
             {type === "success" ? (
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -47,25 +47,25 @@ const ConfirmacaoModal = ({ show, type, title, message, onClose, onConfirm }) =>
               </svg>
             )}
           </div>
-          <h3 className="confirmacao-modal-title">{title}</h3>
+          <h3 className="cp-modal-title">{title}</h3>
         </div>
 
-        <div className="confirmacao-modal-body">
-          <p className="confirmacao-modal-message">{message}</p>
+        <div className="cp-modal-body">
+          <p className="cp-modal-message">{message}</p>
         </div>
 
-        <div className="confirmacao-modal-footer">
+        <div className="cp-modal-footer">
           {type === "warning" ? (
             <>
-              <button className="confirmacao-modal-btn confirmacao-modal-btn-secondary" onClick={onClose}>
+              <button className="cp-modal-btn cp-modal-btn-secondary" onClick={onClose}>
                 Cancelar
               </button>
-              <button className="confirmacao-modal-btn confirmacao-modal-btn-warning" onClick={onConfirm}>
+              <button className="cp-modal-btn cp-modal-btn-warning" onClick={onConfirm}>
                 Confirmar Presença
               </button>
             </>
           ) : (
-            <button className={`confirmacao-modal-btn confirmacao-modal-btn-${type}`} onClick={onClose}>
+            <button className={`cp-modal-btn cp-modal-btn-${type}`} onClick={onClose}>
               Entendido
             </button>
           )}
@@ -400,10 +400,10 @@ const ConfirmarPresenca = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="confirmacao-page">
+      <div className="confirmar-presenca-page">
         <Header />
-        <div className="confirmacao-loading">
-          <div className="confirmacao-spinner"></div>
+        <div className="cp-loading">
+          <div className="cp-spinner"></div>
           <p>Carregando eventos...</p>
         </div>
         <Footer />
@@ -412,21 +412,21 @@ const ConfirmarPresenca = () => {
   }
 
   return (
-    <div className="confirmacao-page">
+    <div className="confirmar-presenca-page">
       <Header />
 
-      <main className="confirmacao-main">
+      <main className="cp-main">
         <div className="container">
           {/* Header da Página */}
-          <div className="confirmacao-header" data-aos="fade-down">
-            <div className="confirmacao-header-content">
-              <h1 className="confirmacao-title">Confirmar Presença</h1>
-              <p className="confirmacao-subtitle">
+          <div className="cp-header" data-aos="fade-down">
+            <div className="cp-header-content">
+              <h1 className="cp-title">Confirmar Presença</h1>
+              <p className="cp-subtitle">
                 Confirme sua presença nos eventos aprovados pelos asilos e mantenha seu histórico atualizado
               </p>
             </div>
             <button 
-              className="confirmacao-back-btn"
+              className="cp-back-btn"
               onClick={() => window.history.back()}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -437,33 +437,33 @@ const ConfirmarPresenca = () => {
           </div>
 
           {/* Estatísticas */}
-          <div className="confirmacao-stats" data-aos="fade-up">
-            <div className="stat-card">
-              <div className="stat-icon stat-icon-pending">
+          <div className="cp-stats" data-aos="fade-up">
+            <div className="cp-stat-card">
+              <div className="cp-stat-icon cp-stat-icon-pending">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
               </div>
-              <div className="stat-content">
+              <div className="cp-stat-content">
                 <h3>{eventosAguardando.length}</h3>
                 <p>Aguardando Confirmação</p>
               </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon stat-icon-confirmed">
+            <div className="cp-stat-card">
+              <div className="cp-stat-icon cp-stat-icon-confirmed">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
               </div>
-              <div className="stat-content">
+              <div className="cp-stat-content">
                 <h3>{eventosConfirmados.length}</h3>
                 <p>Confirmados</p>
               </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon stat-icon-total">
+            <div className="cp-stat-card">
+              <div className="cp-stat-icon cp-stat-icon-total">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
@@ -471,31 +471,31 @@ const ConfirmarPresenca = () => {
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </div>
-              <div className="stat-content">
+              <div className="cp-stat-content">
                 <h3>{eventosFuturos.length}</h3>
                 <p>Eventos Futuros</p>
               </div>
             </div>
           </div>
 
-          <div className="confirmacao-section" data-aos="fade-up">
-            <div className="section-header">
-              <h2 className="section-title">
+          <div className="cp-section" data-aos="fade-up">
+            <div className="cp-section-header">
+              <h2 className="cp-section-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
                 Aguardando Confirmação
               </h2>
-              <span className="section-badge">{eventosAguardando.length}</span>
+              <span className="cp-section-badge">{eventosAguardando.length}</span>
             </div>
 
             {eventosAguardando.length === 0 ? (
-              <div className="confirmacao-empty-small">
+              <div className="cp-empty-small">
                 <p>Você não possui eventos aguardando confirmação.</p>
               </div>
             ) : (
-              <div className="confirmacao-grid">
+              <div className="cp-grid">
                 {eventosAguardando.map((evento, index) => {
                   const prazoHoras = calcularPrazoHoras(evento.data, evento.horario)
                   const prazoExpirado = prazoHoras < 48
@@ -503,7 +503,7 @@ const ConfirmarPresenca = () => {
                   return (
                     <div
                       key={evento.id}
-                      className={`confirmacao-card ${prazoExpirado ? "prazo-urgente" : ""}`}
+                      className={`cp-card ${prazoExpirado ? "cp-card-urgent" : ""}`}
                       data-aos="fade-up"
                       data-aos-delay={index * 100}
                       style={{
@@ -512,9 +512,9 @@ const ConfirmarPresenca = () => {
                         animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
                       }}
                     >
-                      <div className="confirmacao-card-header">
-                        <div className="evento-tipo-badge">{evento.tipoEvento || "Evento"}</div>
-                        <div className={`prazo-badge ${prazoExpirado ? "prazo-urgente" : ""}`}>
+                      <div className="cp-card-header">
+                        <div className="cp-event-type">{evento.tipoEvento || "Evento"}</div>
+                        <div className={`cp-deadline-badge ${prazoExpirado ? "cp-deadline-urgent" : ""}`}>
                           <svg
                             width="16"
                             height="16"
@@ -530,12 +530,12 @@ const ConfirmarPresenca = () => {
                         </div>
                       </div>
 
-                      <div className="confirmacao-card-body">
-                        <h3 className="evento-titulo">{evento.titulo}</h3>
-                        {evento.descricao && <p className="evento-descricao">{evento.descricao}</p>}
+                      <div className="cp-card-body">
+                        <h3 className="cp-event-title">{evento.titulo}</h3>
+                        {evento.descricao && <p className="cp-event-description">{evento.descricao}</p>}
 
-                        <div className="evento-info">
-                          <div className="info-item">
+                        <div className="cp-event-info">
+                          <div className="cp-info-item">
                             <svg
                               width="18"
                               height="18"
@@ -546,9 +546,9 @@ const ConfirmarPresenca = () => {
                             >
                               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             </svg>
-                            <span className="info-asilo">{evento.asilo}</span>
+                            <span className="cp-info-nursing-home">{evento.asilo}</span>
                           </div>
-                          <div className="info-item">
+                          <div className="cp-info-item">
                             <svg
                               width="18"
                               height="18"
@@ -564,7 +564,7 @@ const ConfirmarPresenca = () => {
                             </svg>
                             <span>{formatarData(evento.data)}</span>
                           </div>
-                          <div className="info-item">
+                          <div className="cp-info-item">
                             <svg
                               width="18"
                               height="18"
@@ -578,7 +578,7 @@ const ConfirmarPresenca = () => {
                             </svg>
                             <span>{evento.horario}</span>
                           </div>
-                          <div className="info-item">
+                          <div className="cp-info-item">
                             <svg
                               width="18"
                               height="18"
@@ -593,7 +593,7 @@ const ConfirmarPresenca = () => {
                             <span>{evento.local}</span>
                           </div>
                           {evento.endereco && (
-                            <div className="info-item info-item-full">
+                            <div className="cp-info-item cp-info-full">
                               <svg
                                 width="18"
                                 height="18"
@@ -611,7 +611,7 @@ const ConfirmarPresenca = () => {
                         </div>
 
                         {prazoExpirado && (
-                          <div className="alerta-prazo">
+                          <div className="cp-deadline-alert">
                             <svg
                               width="20"
                               height="20"
@@ -629,8 +629,8 @@ const ConfirmarPresenca = () => {
                         )}
                       </div>
 
-                      <div className="confirmacao-card-footer">
-                        <button className="btn-confirmar" onClick={() => handleConfirmarClick(evento)}>
+                      <div className="cp-card-footer">
+                        <button className="cp-confirm-btn" onClick={() => handleConfirmarClick(evento)}>
                           <svg
                             width="20"
                             height="20"
@@ -653,23 +653,23 @@ const ConfirmarPresenca = () => {
           </div>
 
           {eventosConfirmados.length > 0 && (
-            <div className="confirmacao-section" data-aos="fade-up">
-              <div className="section-header">
-                <h2 className="section-title">
+            <div className="cp-section" data-aos="fade-up">
+              <div className="cp-section-header">
+                <h2 className="cp-section-title">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                   Presença Confirmada
                 </h2>
-                <span className="section-badge">{eventosConfirmados.length}</span>
+                <span className="cp-section-badge">{eventosConfirmados.length}</span>
               </div>
 
-              <div className="confirmacao-grid">
+              <div className="cp-grid">
                 {eventosConfirmados.map((evento, index) => (
                   <div 
                     key={evento.id} 
-                    className="confirmacao-card" 
+                    className="cp-card" 
                     data-aos="fade-up" 
                     data-aos-delay={index * 100}
                     style={{
@@ -678,17 +678,17 @@ const ConfirmarPresenca = () => {
                       animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
                     }}
                   >
-                    <div className="confirmacao-card-header">
-                      <div className="evento-tipo-badge">{evento.tipoEvento || "Evento"}</div>
-                      <div className="status-badge status-confirmado">Confirmado</div>
+                    <div className="cp-card-header">
+                      <div className="cp-event-type">{evento.tipoEvento || "Evento"}</div>
+                      <div className="cp-status-badge cp-status-confirmed">Confirmado</div>
                     </div>
 
-                    <div className="confirmacao-card-body">
-                      <h3 className="evento-titulo">{evento.titulo}</h3>
-                      {evento.descricao && <p className="evento-descricao">{evento.descricao}</p>}
+                    <div className="cp-card-body">
+                      <h3 className="cp-event-title">{evento.titulo}</h3>
+                      {evento.descricao && <p className="cp-event-description">{evento.descricao}</p>}
 
-                      <div className="evento-info">
-                        <div className="info-item">
+                      <div className="cp-event-info">
+                        <div className="cp-info-item">
                           <svg
                             width="18"
                             height="18"
@@ -699,9 +699,9 @@ const ConfirmarPresenca = () => {
                           >
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                           </svg>
-                          <span className="info-asilo">{evento.asilo}</span>
+                          <span className="cp-info-nursing-home">{evento.asilo}</span>
                         </div>
-                        <div className="info-item">
+                        <div className="cp-info-item">
                           <svg
                             width="18"
                             height="18"
@@ -717,7 +717,7 @@ const ConfirmarPresenca = () => {
                           </svg>
                           <span>{formatarData(evento.data)}</span>
                         </div>
-                        <div className="info-item">
+                        <div className="cp-info-item">
                           <svg
                             width="18"
                             height="18"
@@ -731,7 +731,7 @@ const ConfirmarPresenca = () => {
                           </svg>
                           <span>{evento.horario}</span>
                         </div>
-                        <div className="info-item">
+                        <div className="cp-info-item">
                           <svg
                             width="18"
                             height="18"
@@ -748,8 +748,8 @@ const ConfirmarPresenca = () => {
                       </div>
                     </div>
 
-                    <div className="confirmacao-card-footer">
-                      <div className="confirmacao-success-message">
+                    <div className="cp-card-footer">
+                      <div className="cp-success-message">
                         <svg
                           width="20"
                           height="20"
@@ -771,23 +771,23 @@ const ConfirmarPresenca = () => {
           )}
 
           {eventosPassados.length > 0 && (
-            <div className="confirmacao-section historico-section" data-aos="fade-up">
-              <div className="section-header">
-                <h2 className="section-title">
+            <div className="cp-section cp-history-section" data-aos="fade-up">
+              <div className="cp-section-header">
+                <h2 className="cp-section-title">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 8 10" />
                   </svg>
                   Histórico de Eventos
                 </h2>
-                <span className="section-badge">{eventosPassados.length}</span>
+                <span className="cp-section-badge">{eventosPassados.length}</span>
               </div>
 
-              <div className="historico-lista">
+              <div className="cp-history-list">
                 {eventosPassados.map((evento, index) => (
                   <div 
                     key={evento.id} 
-                    className="historico-item" 
+                    className="cp-history-item" 
                     data-aos="fade-up" 
                     data-aos-delay={index * 50}
                     style={{
@@ -796,9 +796,9 @@ const ConfirmarPresenca = () => {
                       animation: `fadeInLeft 0.6s ease-out ${index * 0.05}s forwards`
                     }}
                   >
-                    <div className="historico-icon-wrapper">
+                    <div className="cp-history-icon-wrapper">
                       {evento.confirmacao_presenca && evento.compareceu && (
-                        <div className="historico-icon historico-icon-success">
+                        <div className="cp-history-icon cp-history-icon-success">
                           <svg
                             width="24"
                             height="24"
@@ -813,7 +813,7 @@ const ConfirmarPresenca = () => {
                         </div>
                       )}
                       {evento.confirmacao_presenca && !evento.compareceu && (
-                        <div className="historico-icon historico-icon-error">
+                        <div className="cp-history-icon cp-history-icon-error">
                           <svg
                             width="24"
                             height="24"
@@ -829,7 +829,7 @@ const ConfirmarPresenca = () => {
                         </div>
                       )}
                       {!evento.confirmacao_presenca && (
-                        <div className="historico-icon historico-icon-warning">
+                        <div className="cp-history-icon cp-history-icon-warning">
                           <svg
                             width="24"
                             height="24"
@@ -845,25 +845,25 @@ const ConfirmarPresenca = () => {
                       )}
                     </div>
 
-                    <div className="historico-content">
-                      <div className="historico-header">
-                        <h4 className="historico-titulo">{evento.titulo}</h4>
-                        <span className="historico-data">{formatarDataCurta(evento.data)}</span>
+                    <div className="cp-history-content">
+                      <div className="cp-history-header">
+                        <h4 className="cp-history-title">{evento.titulo}</h4>
+                        <span className="cp-history-date">{formatarDataCurta(evento.data)}</span>
                       </div>
-                      <div className="historico-info">
-                        <span className="historico-asilo">{evento.asilo}</span>
-                        <span className="historico-separador">•</span>
-                        <span className="historico-horario">{evento.horario}</span>
+                      <div className="cp-history-info">
+                        <span className="cp-history-nursing-home">{evento.asilo}</span>
+                        <span className="cp-history-separator">•</span>
+                        <span className="cp-history-time">{evento.horario}</span>
                       </div>
-                      <div className="historico-status">
+                      <div className="cp-history-status">
                         {evento.confirmacao_presenca && evento.compareceu && (
-                          <span className="status-text status-success">Confirmado e compareceu</span>
+                          <span className="cp-status-text cp-status-text-success">Confirmado e compareceu</span>
                         )}
                         {evento.confirmacao_presenca && !evento.compareceu && (
-                          <span className="status-text status-error">Confirmado mas ausente</span>
+                          <span className="cp-status-text cp-status-text-error">Confirmado mas ausente</span>
                         )}
                         {!evento.confirmacao_presenca && (
-                          <span className="status-text status-warning">Não confirmou presença</span>
+                          <span className="cp-status-text cp-status-text-warning">Não confirmou presença</span>
                         )}
                       </div>
                     </div>
@@ -875,8 +875,8 @@ const ConfirmarPresenca = () => {
 
           {/* Empty State - Nenhum evento */}
           {eventos.length === 0 && (
-            <div className="confirmacao-empty" data-aos="fade-up">
-              <div className="empty-icon">
+            <div className="cp-empty" data-aos="fade-up">
+              <div className="cp-empty-icon">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
@@ -887,7 +887,7 @@ const ConfirmarPresenca = () => {
               <h3>Nenhum evento aprovado</h3>
               <p>Você ainda não foi aprovado em nenhum evento. Inscreva-se em eventos disponíveis!</p>
               <button 
-                className="btn-primary"
+                className="cp-primary-btn"
                 onClick={() => window.location.href = '/eventos'}
               >
                 Explorar Eventos

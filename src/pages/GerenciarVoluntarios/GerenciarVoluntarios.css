@@ -1,40 +1,41 @@
 /* ========================================
    GERENCIAR VOLUNTÁRIOS PAGE - DASHBOARD COMPLETO
+   CLASSES ÚNICAS E ESPECÍFICAS
    ======================================== */
 
-.gerenciar-voluntarios-page {
+.gvp-page {
   background: #f8f9fa;
   min-height: 100vh;
 }
 
 /* Header da Página */
-.page-header {
+.gvp-page-header {
   background: linear-gradient(135deg, #244a96 0%, #1a3a7a 100%);
   color: white;
   padding: 60px 0 40px;
 }
 
-.page-title {
+.gvp-page-title {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 10px 0;
 }
 
-.page-subtitle {
+.gvp-page-subtitle {
   font-size: 1.1rem;
   opacity: 0.9;
   margin: 0;
 }
 
 /* Seções */
-.stats-section,
-.filters-section,
-.inscricoes-section {
+.gvp-stats-section,
+.gvp-filters-section,
+.gvp-inscricoes-section {
   padding: 40px 0;
 }
 
 /* Cartões de Estatísticas */
-.stat-card {
+.gvp-stat-card {
   background: white;
   padding: 25px;
   border-radius: 12px;
@@ -45,11 +46,11 @@
   transition: transform 0.2s ease;
 }
 
-.stat-card:hover {
+.gvp-stat-card:hover {
   transform: translateY(-2px);
 }
 
-.stat-icon {
+.gvp-stat-icon {
   width: 60px;
   height: 60px;
   border-radius: 12px;
@@ -60,48 +61,48 @@
   color: white;
 }
 
-.stat-icon.pending {
+.gvp-stat-icon-pending {
   background: #f59e0b;
 }
 
-.stat-icon.approved {
+.gvp-stat-icon-approved {
   background: #10b981;
 }
 
-.stat-icon.rate {
+.gvp-stat-icon-rate {
   background: #3b82f6;
 }
 
-.stat-icon.confirmed {
+.gvp-stat-icon-confirmed {
   background: #8b5cf6;
 }
 
-.stat-content h3 {
+.gvp-stat-content h3 {
   font-size: 2rem;
   font-weight: 700;
   margin: 0;
   color: #1a1a1a;
 }
 
-.stat-content p {
+.gvp-stat-content p {
   margin: 5px 0 0 0;
   color: #6c757d;
   font-weight: 500;
 }
 
 /* Filtros */
-.filters-card {
+.gvp-filters-card {
   background: white;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.search-input-wrapper {
+.gvp-search-input-wrapper {
   position: relative;
 }
 
-.search-input-wrapper .search-icon {
+.gvp-search-input-wrapper .gvp-search-icon {
   position: absolute;
   left: 12px;
   top: 50%;
@@ -109,43 +110,43 @@
   color: #6c757d;
 }
 
-.search-input-wrapper .form-control {
+.gvp-search-input-wrapper .form-control {
   padding-left: 35px;
 }
 
-.results-count {
+.gvp-results-count {
   text-align: center;
   padding: 10px;
   background: #f8f9fa;
   border-radius: 8px;
 }
 
-.results-count .count {
+.gvp-results-count .gvp-count {
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
   color: #244a96;
 }
 
-.results-count .label {
+.gvp-results-count .gvp-label {
   font-size: 0.875rem;
   color: #6c757d;
 }
 
 /* Tabela de Inscrições */
-.inscricoes-table-container {
+.gvp-inscricoes-table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
 }
 
-.inscricoes-table {
+.gvp-inscricoes-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.inscricoes-table th {
+.gvp-inscricoes-table th {
   background: #f8f9fa;
   padding: 15px 20px;
   text-align: left;
@@ -154,38 +155,38 @@
   border-bottom: 1px solid #dee2e6;
 }
 
-.inscricoes-table td {
+.gvp-inscricoes-table td {
   padding: 15px 20px;
   border-bottom: 1px solid #dee2e6;
 }
 
-.inscricoes-table tr:last-child td {
+.gvp-inscricoes-table tr:last-child td {
   border-bottom: none;
 }
 
-.inscricoes-table tr:hover {
+.gvp-inscricoes-table tr:hover {
   background: #f8f9fa;
 }
 
 /* Informações do Voluntário */
-.volunteer-info {
+.gvp-volunteer-info {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.volunteer-info.clickable {
+.gvp-volunteer-info-clickable {
   cursor: pointer;
   transition: background-color 0.2s ease;
   padding: 8px;
   border-radius: 8px;
 }
 
-.volunteer-info.clickable:hover {
+.gvp-volunteer-info-clickable:hover {
   background: #e9ecef;
 }
 
-.volunteer-avatar {
+.gvp-volunteer-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -197,40 +198,40 @@
   font-size: 1rem;
 }
 
-.volunteer-avatar.large {
+.gvp-volunteer-avatar-large {
   width: 80px;
   height: 80px;
   font-size: 2rem;
 }
 
-.volunteer-name {
+.gvp-volunteer-name {
   font-weight: 600;
   color: #1a1a1a;
 }
 
-.volunteer-email {
+.gvp-volunteer-email {
   font-size: 0.875rem;
   color: #6c757d;
 }
 
 /* Informações do Evento */
-.evento-info {
+.gvp-evento-info {
   display: flex;
   flex-direction: column;
 }
 
-.evento-titulo {
+.gvp-evento-titulo {
   font-weight: 600;
   color: #1a1a1a;
 }
 
-.evento-data {
+.gvp-evento-data {
   font-size: 0.875rem;
   color: #6c757d;
 }
 
 /* Status Badges */
-.status-badge {
+.gvp-status-badge {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -238,44 +239,44 @@
   text-transform: uppercase;
 }
 
-.status-pendente {
+.gvp-status-pendente {
   background: #fef3c7;
   color: #92400e;
 }
 
-.status-aprovado {
+.gvp-status-aprovado {
   background: #d1fae5;
   color: #065f46;
 }
 
-.status-recusado {
+.gvp-status-recusado {
   background: #fee2e2;
   color: #991b1b;
 }
 
-.status-confirmado {
+.gvp-status-confirmado {
   background: #e0e7ff;
   color: #3730a3;
 }
 
-.status-ausente {
+.gvp-status-ausente {
   background: #f3f4f6;
   color: #374151;
 }
 
 /* Ações */
-.actions {
+.gvp-actions {
   display: flex;
   gap: 5px;
 }
 
-.actions .btn {
+.gvp-actions .btn {
   padding: 6px 10px;
   font-size: 0.875rem;
 }
 
 /* Modal */
-.modal-overlay {
+.gvp-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -289,7 +290,7 @@
   padding: 20px;
 }
 
-.modal-container {
+.gvp-modal-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -297,10 +298,10 @@
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  animation: modalSlideUp 0.3s ease-out;
+  animation: gvpModalSlideUp 0.3s ease-out;
 }
 
-@keyframes modalSlideUp {
+@keyframes gvpModalSlideUp {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -311,7 +312,7 @@
   }
 }
 
-.modal-header {
+.gvp-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -323,12 +324,12 @@
   z-index: 1;
 }
 
-.modal-header h3 {
+.gvp-modal-header h3 {
   margin: 0;
   font-weight: 600;
 }
 
-.modal-close {
+.gvp-modal-close {
   background: none;
   border: none;
   font-size: 1.25rem;
@@ -339,16 +340,16 @@
   transition: all 0.2s ease;
 }
 
-.modal-close:hover {
+.gvp-modal-close:hover {
   background: #f8f9fa;
   color: #495057;
 }
 
-.modal-body {
+.gvp-modal-body {
   padding: 25px;
 }
 
-.modal-footer {
+.gvp-modal-footer {
   padding: 20px 25px;
   border-top: 1px solid #dee2e6;
   display: flex;
@@ -360,33 +361,33 @@
 }
 
 /* Modal de Ação Específico */
-.action-modal {
+.gvp-action-modal {
   max-width: 500px;
 }
 
-.inscricao-info {
+.gvp-inscricao-info {
   background: #f8f9fa;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
-.inscricao-info h5 {
+.gvp-inscricao-info h5 {
   margin: 0 0 10px 0;
   color: #495057;
 }
 
-.inscricao-info p {
+.gvp-inscricao-info p {
   margin: 5px 0;
   color: #6c757d;
 }
 
 /* Modal de Perfil */
-.perfil-modal {
+.gvp-perfil-modal {
   max-width: 700px;
 }
 
-.perfil-header {
+.gvp-perfil-header {
   display: flex;
   align-items: flex-start;
   gap: 20px;
@@ -395,29 +396,29 @@
   border-bottom: 1px solid #dee2e6;
 }
 
-.perfil-info h4 {
+.gvp-perfil-info h4 {
   margin: 0 0 5px 0;
   color: #1a1a1a;
 }
 
-.volunteer-age {
+.gvp-volunteer-age {
   color: #6c757d;
   margin: 0 0 10px 0;
 }
 
-.volunteer-description {
+.gvp-volunteer-description {
   color: #495057;
   line-height: 1.5;
   margin: 0;
 }
 
-.perfil-details h5 {
+.gvp-perfil-details h5 {
   color: #495057;
   margin-bottom: 15px;
   font-weight: 600;
 }
 
-.contact-info p {
+.gvp-contact-info p {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -425,13 +426,13 @@
   color: #6c757d;
 }
 
-.skills-list {
+.gvp-skills-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.skill-tag {
+.gvp-skill-tag {
   background: #e3f2fd;
   color: #244a96;
   padding: 6px 12px;
@@ -440,26 +441,26 @@
   font-weight: 500;
 }
 
-.motivation-message {
+.gvp-motivation-message {
   background: #f8f9fa;
   padding: 15px;
   border-radius: 8px;
   border-left: 4px solid #244a96;
 }
 
-.motivation-message p {
+.gvp-motivation-message p {
   margin: 0;
   line-height: 1.6;
   color: #495057;
 }
 
-.historico-list {
+.gvp-historico-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.historico-item {
+.gvp-historico-item {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -468,23 +469,23 @@
   border-radius: 8px;
 }
 
-.evento-name {
+.gvp-evento-name {
   flex: 1;
   font-weight: 500;
   color: #1a1a1a;
 }
 
-.evento-date {
+.gvp-evento-date {
   color: #6c757d;
   font-size: 0.875rem;
 }
 
 /* Form Groups */
-.form-group {
+.gvp-form-group {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.gvp-form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
@@ -492,77 +493,77 @@
 }
 
 /* Estados de Loading e Vazio */
-.loading-state,
-.empty-state {
+.gvp-loading-state,
+.gvp-empty-state {
   background: white;
   padding: 60px 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .page-header {
-    padding: 40px 0 30px;
-    text-align: center;
-  }
-  
-  .page-title {
-    font-size: 2rem;
-  }
-  
-  .stat-card {
-    padding: 20px;
-  }
-  
-  .inscricoes-table {
-    font-size: 0.875rem;
-  }
-  
-  .inscricoes-table th,
-  .inscricoes-table td {
-    padding: 10px 15px;
-  }
-  
-  .actions {
-    flex-direction: column;
-    gap: 3px;
-  }
-  
-  .perfil-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .historico-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  .modal-container {
-    margin: 20px;
-  }
-}
-
 /* Utilitários */
-.section-header {
+.gvp-section-header {
   margin-bottom: 30px;
 }
 
-.section-title {
+.gvp-section-title {
   font-size: 1.75rem;
   font-weight: 600;
   margin: 0 0 8px 0;
   color: #1a1a1a;
 }
 
-.section-subtitle {
+.gvp-section-subtitle {
   color: #6c757d;
   margin: 0;
 }
 
-.data-inscricao {
+.gvp-data-inscricao {
   color: #6c757d;
   font-size: 0.875rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .gvp-page-header {
+    padding: 40px 0 30px;
+    text-align: center;
+  }
+  
+  .gvp-page-title {
+    font-size: 2rem;
+  }
+  
+  .gvp-stat-card {
+    padding: 20px;
+  }
+  
+  .gvp-inscricoes-table {
+    font-size: 0.875rem;
+  }
+  
+  .gvp-inscricoes-table th,
+  .gvp-inscricoes-table td {
+    padding: 10px 15px;
+  }
+  
+  .gvp-actions {
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .gvp-perfil-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .gvp-historico-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .gvp-modal-container {
+    margin: 20px;
+  }
 }

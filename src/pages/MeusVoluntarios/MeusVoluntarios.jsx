@@ -1,4 +1,4 @@
-"use client"
+  "use client"
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -49,40 +49,6 @@ function MeusVoluntarios() {
         setAccessChecked(true)
         carregarDadosIniciais()
       }, 1000)
-      
-      /* 
-      // CÓDIGO PARA PRODUÇÃO (descomente quando tiver backend)
-      const userData = JSON.parse(localStorage.getItem('user_data') || '{}')
-      const token = localStorage.getItem('auth_token')
-      
-      if (!token) {
-        console.log('❌ Token não encontrado, redirecionando para login...')
-        navigate('/login')
-        return
-      }
-
-      // Simulação de verificação
-      try {
-        const response = await fetch('/api/auth/verificar-asilo', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-
-        if (response.ok) {
-          setIsAsilo(true)
-          carregarDadosIniciais()
-        } else {
-          console.log('❌ Acesso negado, redirecionando...')
-          navigate('/')
-        }
-      } catch (error) {
-        console.error('Erro na verificação:', error)
-        // Em caso de erro, permitir acesso para desenvolvimento
-        setIsAsilo(true)
-        carregarDadosIniciais()
-      }
-      */
       
     } catch (error) {
       console.error('Erro ao verificar acesso:', error)
@@ -296,7 +262,7 @@ function MeusVoluntarios() {
   // Mostrar loading enquanto verifica acesso
   if (!accessChecked) {
     return (
-      <div className="meus-voluntarios-page">
+      <div className="mvp-page">
         <Header />
         <div className="container text-center py-5">
           <div className="spinner-border text-primary" role="status">
@@ -312,7 +278,7 @@ function MeusVoluntarios() {
   // Se não for asilo (em desenvolvimento isso não deve acontecer)
   if (!isAsilo) {
     return (
-      <div className="meus-voluntarios-page">
+      <div className="mvp-page">
         <Header />
         <div className="container text-center py-5">
           <div className="alert alert-warning">
@@ -332,16 +298,16 @@ function MeusVoluntarios() {
   }
 
   return (
-    <div className="meus-voluntarios-page">
+    <div className="mvp-page">
       <Header />
 
       {/* Header da Página */}
-      <section className="page-header">
+      <section className="mvp-page-header">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-8">
-              <h1 className="page-title">Gestão de Voluntários</h1>
-              <p className="page-subtitle">
+              <h1 className="mvp-page-title">Gestão de Voluntários</h1>
+              <p className="mvp-page-subtitle">
                 Gerencie sua equipe de voluntários, organize equipes e acompanhe o desempenho
               </p>
             </div>
@@ -364,48 +330,48 @@ function MeusVoluntarios() {
 
       <main>
         {/* Métricas */}
-        <section className="metrics-section">
+        <section className="mvp-metrics-section">
           <div className="container">
             <div className="row g-3">
               <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-icon">
+                <div className="mvp-metric-card">
+                  <div className="mvp-metric-icon">
                     <i className="fas fa-users"></i>
                   </div>
-                  <div className="metric-content">
+                  <div className="mvp-metric-content">
                     <h3>{voluntarios.filter(v => v.status === 'ativo').length}</h3>
                     <p>Voluntários Ativos</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-icon">
+                <div className="mvp-metric-card">
+                  <div className="mvp-metric-icon">
                     <i className="fas fa-layer-group"></i>
                   </div>
-                  <div className="metric-content">
+                  <div className="mvp-metric-content">
                     <h3>{equipes.length}</h3>
                     <p>Equipes Formadas</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-icon">
+                <div className="mvp-metric-card">
+                  <div className="mvp-metric-icon">
                     <i className="fas fa-calendar-check"></i>
                   </div>
-                  <div className="metric-content">
+                  <div className="mvp-metric-content">
                     <h3>{voluntarios.reduce((acc, v) => acc + v.participacoes, 0)}</h3>
                     <p>Participações Totais</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-icon">
+                <div className="mvp-metric-card">
+                  <div className="mvp-metric-icon">
                     <i className="fas fa-star"></i>
                   </div>
-                  <div className="metric-content">
+                  <div className="mvp-metric-content">
                     <h3>4.8</h3>
                     <p>Avaliação Média</p>
                   </div>
@@ -416,13 +382,13 @@ function MeusVoluntarios() {
         </section>
 
         {/* Filtros e Busca */}
-        <section className="filters-section">
+        <section className="mvp-filters-section">
           <div className="container">
-            <div className="filters-card">
+            <div className="mvp-filters-card">
               <div className="row g-3 align-items-end">
                 <div className="col-md-3">
                   <label className="form-label fw-semibold">Buscar</label>
-                  <div className="search-input-wrapper">
+                  <div className="mvp-search-input-wrapper">
                     <input
                       type="text"
                       className="form-control"
@@ -430,7 +396,7 @@ function MeusVoluntarios() {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <i className="fas fa-search search-icon"></i>
+                    <i className="fas fa-search mvp-search-icon"></i>
                   </div>
                 </div>
                 <div className="col-md-2">
@@ -496,31 +462,31 @@ function MeusVoluntarios() {
         </section>
 
         {/* Lista de Voluntários */}
-        <section className="volunteers-section">
+        <section className="mvp-volunteers-section">
           <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Voluntários</h2>
-              <p className="section-subtitle">
+            <div className="mvp-section-header">
+              <h2 className="mvp-section-title">Voluntários</h2>
+              <p className="mvp-section-subtitle">
                 {filteredVoluntarios.length} {filteredVoluntarios.length === 1 ? 'voluntário encontrado' : 'voluntários encontrados'}
               </p>
             </div>
 
             {loading ? (
-              <div className="loading-state text-center py-5">
+              <div className="mvp-loading-state text-center py-5">
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Carregando...</span>
                 </div>
                 <p className="mt-3">Carregando voluntários...</p>
               </div>
             ) : filteredVoluntarios.length === 0 ? (
-              <div className="empty-state text-center py-5">
+              <div className="mvp-empty-state text-center py-5">
                 <i className="fas fa-users fa-3x text-muted mb-3"></i>
                 <h4 className="text-muted">Nenhum voluntário encontrado</h4>
                 <p className="text-muted">Tente ajustar os filtros de busca.</p>
               </div>
             ) : (
-              <div className="volunteers-table-container">
-                <table className="volunteers-table">
+              <div className="mvp-volunteers-table-container">
+                <table className="mvp-volunteers-table">
                   <thead>
                     <tr>
                       <th>Voluntário</th>
@@ -536,13 +502,13 @@ function MeusVoluntarios() {
                     {filteredVoluntarios.map((voluntario) => (
                       <tr key={voluntario.id}>
                         <td>
-                          <div className="volunteer-info">
-                            <div className="volunteer-avatar">
+                          <div className="mvp-volunteer-info">
+                            <div className="mvp-volunteer-avatar">
                               <i className="fas fa-user"></i>
                             </div>
                             <div>
-                              <div className="volunteer-name">{voluntario.nome}</div>
-                              <div className="volunteer-email">{voluntario.email}</div>
+                              <div className="mvp-volunteer-name">{voluntario.nome}</div>
+                              <div className="mvp-volunteer-email">{voluntario.email}</div>
                             </div>
                           </div>
                         </td>
@@ -552,9 +518,9 @@ function MeusVoluntarios() {
                         <td>{voluntario.equipe}</td>
                         <td>{voluntario.telefone}</td>
                         <td>
-                          <div className="participations">
-                            <span className="count">{voluntario.participacoes}</span>
-                            <div className="rating">
+                          <div className="mvp-participations">
+                            <span className="mvp-count">{voluntario.participacoes}</span>
+                            <div className="mvp-rating">
                               {Array.from({ length: 5 }, (_, i) => (
                                 <i
                                   key={i}
@@ -565,12 +531,12 @@ function MeusVoluntarios() {
                           </div>
                         </td>
                         <td>
-                          <span className={`status-badge ${voluntario.status}`}>
+                          <span className={`mvp-status-badge ${voluntario.status === 'ativo' ? 'mvp-status-badge-ativo' : 'mvp-status-badge-inativo'}`}>
                             {voluntario.status === 'ativo' ? 'Ativo' : 'Inativo'}
                           </span>
                         </td>
                         <td>
-                          <div className="actions">
+                          <div className="mvp-actions">
                             <button 
                               className="btn btn-sm btn-outline-primary"
                               onClick={() => setSelectedVoluntario(voluntario)}
@@ -595,21 +561,21 @@ function MeusVoluntarios() {
         </section>
 
         {/* Gestão de Equipes */}
-        <section className="teams-section">
+        <section className="mvp-teams-section">
           <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">Equipes</h2>
-              <p className="section-subtitle">Organize seus voluntários em equipes especializadas</p>
+            <div className="mvp-section-header">
+              <h2 className="mvp-section-title">Equipes</h2>
+              <p className="mvp-section-subtitle">Organize seus voluntários em equipes especializadas</p>
             </div>
 
             <div className="row g-4">
               {equipes.map((equipe) => (
                 <div key={equipe.id} className="col-lg-4">
-                  <div className="team-card">
-                    <div className="team-header">
-                      <div className="team-color" style={{ backgroundColor: equipe.cor }}></div>
-                      <h3 className="team-name">{equipe.nome}</h3>
-                      <div className="team-actions">
+                  <div className="mvp-team-card">
+                    <div className="mvp-team-header">
+                      <div className="mvp-team-color" style={{ backgroundColor: equipe.cor }}></div>
+                      <h3 className="mvp-team-name">{equipe.nome}</h3>
+                      <div className="mvp-team-actions">
                         <button 
                           className="btn btn-sm btn-outline-secondary"
                           onClick={() => {
@@ -627,22 +593,22 @@ function MeusVoluntarios() {
                         </button>
                       </div>
                     </div>
-                    <div className="team-description">
+                    <div className="mvp-team-description">
                       <p>{equipe.descricao}</p>
                     </div>
-                    <div className="team-members">
+                    <div className="mvp-team-members">
                       <h6>Membros ({equipe.voluntarios.length})</h6>
-                      <div className="members-list">
+                      <div className="mvp-members-list">
                         {voluntarios
                           .filter(v => equipe.voluntarios.includes(v.id))
                           .map(voluntario => (
-                            <div key={voluntario.id} className="member-item">
-                              <div className="member-avatar">
+                            <div key={voluntario.id} className="mvp-member-item">
+                              <div className="mvp-member-avatar">
                                 <i className="fas fa-user"></i>
                               </div>
                               <span>{voluntario.nome}</span>
                               <button
-                                className="btn-remove"
+                                className="mvp-btn-remove"
                                 onClick={() => removerVoluntarioEquipe(voluntario.id, equipe.id)}
                               >
                                 <i className="fas fa-times"></i>
@@ -658,10 +624,10 @@ function MeusVoluntarios() {
               {/* Card para nova equipe */}
               <div className="col-lg-4">
                 <div 
-                  className="team-card new-team-card"
+                  className="mvp-team-card mvp-new-team-card"
                   onClick={() => setShowEquipeModal(true)}
                 >
-                  <div className="new-team-content">
+                  <div className="mvp-new-team-content">
                     <i className="fas fa-plus"></i>
                     <h4>Nova Equipe</h4>
                     <p>Criar nova equipe especializada</p>
@@ -675,12 +641,12 @@ function MeusVoluntarios() {
 
       {/* Modal Nova Equipe */}
       {showEquipeModal && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <div className="modal-header">
+        <div className="mvp-modal-overlay">
+          <div className="mvp-modal-container">
+            <div className="mvp-modal-header">
               <h3>{equipeEditando ? 'Editar Equipe' : 'Nova Equipe'}</h3>
               <button 
-                className="modal-close"
+                className="mvp-modal-close"
                 onClick={() => {
                   setShowEquipeModal(false)
                   setEquipeEditando(null)
@@ -690,8 +656,8 @@ function MeusVoluntarios() {
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="modal-body">
-              <div className="form-group">
+            <div className="mvp-modal-body">
+              <div className="mvp-form-group">
                 <label>Nome da Equipe</label>
                 <input
                   type="text"
@@ -703,7 +669,7 @@ function MeusVoluntarios() {
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="mvp-form-group">
                 <label>Descrição</label>
                 <textarea
                   className="form-control"
@@ -715,7 +681,7 @@ function MeusVoluntarios() {
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="mvp-form-group">
                 <label>Cor de Identificação</label>
                 <input
                   type="color"
@@ -728,7 +694,7 @@ function MeusVoluntarios() {
                 />
               </div>
             </div>
-            <div className="modal-footer">
+            <div className="mvp-modal-footer">
               <button 
                 className="btn btn-secondary"
                 onClick={() => {

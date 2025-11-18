@@ -1,4 +1,4 @@
-/* LogoutModal.css - CSS EXCLUSIVO HAPPY MAPA LOGOUT */
+/* LogoutModal.css - Padronizado com tema Home HAPPYIDOSOS */
 /* Prefixo único: happy-map-logout- para evitar conflitos */
 
 .happy-map-logout-overlay {
@@ -22,18 +22,19 @@
 }
 
 .happy-map-logout-content {
-  background: linear-gradient(145deg, #fff5f5 0%, #fff0f0 50%, #ffe6e6 100%);
+  /* Updated to match Home.css theme: white background with blue accents */
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
   border-radius: 24px;
-  padding: 3rem 2.5rem 2.5rem;
+  padding: 2.5rem 2rem 2rem;
   width: 95%;
   max-width: 480px;
   box-shadow: 
-    0 30px 60px -12px rgba(220, 38, 38, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 0 60px rgba(220, 38, 38, 0.1);
+    0 30px 60px -12px rgba(36, 74, 150, 0.15),
+    0 0 0 1px rgba(36, 74, 150, 0.1),
+    0 0 60px rgba(36, 74, 150, 0.08);
   position: relative;
   animation: happy-map-logout-slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(36, 74, 150, 0.15);
   overflow: hidden;
 }
 
@@ -43,8 +44,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6px;
-  background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+  height: 5px;
+  /* Blue gradient instead of red/orange */
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
   border-radius: 24px 24px 0 0;
 }
 
@@ -67,7 +69,7 @@
 .happy-map-logout-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 8px 16px rgba(220, 38, 38, 0.3));
+  filter: drop-shadow(0 8px 16px rgba(36, 74, 150, 0.2));
   animation: happy-map-logout-bounce 2s ease-in-out infinite;
 }
 
@@ -77,15 +79,20 @@
 }
 
 .happy-map-logout-title {
-  color: #dc2626;
+  /* Blue gradient text instead of red */
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+  text-shadow: none;
 }
 
 .happy-map-logout-subtitle {
-  color: #7f1d1d;
+  /* Dark text for white background */
+  color: #4a5568;
   font-size: 1.1rem;
   margin: 0;
   font-weight: 500;
@@ -93,8 +100,9 @@
 }
 
 .happy-map-user-info {
-  background: rgba(255, 255, 255, 0.8);
-  border: 2px solid #fecaca;
+  /* Light blue background with white surface */
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.06), rgba(26, 58, 122, 0.04));
+  border: 2px solid rgba(36, 74, 150, 0.15);
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -109,15 +117,16 @@
 
 .happy-map-user-avatar {
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  /* Blue gradient avatar background */
+  background: linear-gradient(135deg, rgba(36, 74, 150, 0.15), rgba(26, 58, 122, 0.1));
   border-radius: 50%;
   width: 70px;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #fca5a5;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+  border: 3px solid rgba(36, 74, 150, 0.25);
+  box-shadow: 0 4px 12px rgba(36, 74, 150, 0.12);
 }
 
 .happy-map-user-details {
@@ -126,7 +135,7 @@
 
 .happy-map-user-name {
   display: block;
-  color: #7f1d1d;
+  color: #1a1a1a;
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 0.3rem;
@@ -134,7 +143,7 @@
 
 .happy-map-user-type {
   display: inline-block;
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
   color: white;
   padding: 0.3rem 1rem;
   border-radius: 20px;
@@ -145,8 +154,9 @@
 }
 
 .happy-map-logout-warning {
-  background: rgba(254, 226, 226, 0.6);
-  border: 2px solid #fecaca;
+  /* Blue warning styling instead of orange */
+  background: rgba(36, 74, 150, 0.08);
+  border: 2px solid rgba(36, 74, 150, 0.2);
   border-radius: 12px;
   padding: 1.2rem;
   margin-bottom: 2rem;
@@ -159,10 +169,11 @@
   font-size: 1.5rem;
   flex-shrink: 0;
   margin-top: 0.1rem;
+  color: #244a96;
 }
 
 .happy-map-logout-warning p {
-  color: #7f1d1d;
+  color: #4a5568;
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -191,6 +202,7 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .happy-map-logout-btn::before {
@@ -209,27 +221,30 @@
 }
 
 .happy-map-logout-cancel {
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  /* Neutral gray button for cancel */
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
   color: #475569;
   border: 2px solid #cbd5e1;
 }
 
 .happy-map-logout-cancel:hover {
   background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-color: #94a3b8;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(71, 85, 105, 0.3);
+  box-shadow: 0 8px 25px rgba(71, 85, 105, 0.15);
 }
 
 .happy-map-logout-confirm {
-  background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+  /* Blue gradient for confirm button matching Home.css */
+  background: linear-gradient(135deg, #244a96, #1a3a7a);
   color: white;
-  border: 2px solid transparent;
+  border: none;
 }
 
 .happy-map-logout-confirm:hover {
-  background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+  background: linear-gradient(135deg, #1a3a7a, #112a63);
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+  box-shadow: 0 8px 30px rgba(36, 74, 150, 0.3);
 }
 
 .happy-map-btn-icon {
@@ -244,18 +259,17 @@
 .happy-map-logout-footer {
   text-align: center;
   padding-top: 1.5rem;
-  border-top: 1px solid #fecaca;
+  border-top: 1px solid rgba(36, 74, 150, 0.1);
 }
 
 .happy-map-logout-footer p {
-  color: #7f1d1d;
+  color: #888;
   margin: 0;
   font-size: 0.9rem;
   opacity: 0.8;
   font-weight: 500;
 }
 
-/* Responsividade Exclusiva */
 @media (max-width: 768px) {
   .happy-map-logout-content {
     margin: 1rem;
@@ -317,7 +331,6 @@
   }
 }
 
-/* Animações de entrada para elementos */
 .happy-map-logout-header,
 .happy-map-user-info,
 .happy-map-logout-warning,
@@ -326,25 +339,11 @@
   animation: happy-map-logout-fadeInUp 0.6s ease-out forwards;
 }
 
-.happy-map-logout-header {
-  animation-delay: 0.1s;
-}
-
-.happy-map-user-info {
-  animation-delay: 0.2s;
-}
-
-.happy-map-logout-warning {
-  animation-delay: 0.3s;
-}
-
-.happy-map-logout-actions {
-  animation-delay: 0.4s;
-}
-
-.happy-map-logout-footer {
-  animation-delay: 0.5s;
-}
+.happy-map-logout-header { animation-delay: 0.1s; }
+.happy-map-user-info { animation-delay: 0.2s; }
+.happy-map-logout-warning { animation-delay: 0.3s; }
+.happy-map-logout-actions { animation-delay: 0.4s; }
+.happy-map-logout-footer { animation-delay: 0.5s; }
 
 @keyframes happy-map-logout-fadeInUp {
   from {
@@ -357,14 +356,12 @@
   }
 }
 
-/* Garantir que não haja conflito */
 .happy-map-logout-overlay * {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Estilos de foco para acessibilidade */
 .happy-map-logout-btn:focus {
-  outline: 3px solid #3b82f6;
+  outline: 3px solid #244a96;
   outline-offset: 2px;
 }

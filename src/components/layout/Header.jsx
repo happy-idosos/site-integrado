@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react"
 import { useAuth } from "../../hooks/useAuth"
 import "./Header.css"
 import logoHappyIdosos from "../../assets/img/happyidosos.png"
-import LoginModal from "./LoginModal"
 import LogoutModal from "./LogoutModal"
 
 function Header() {
@@ -19,13 +18,11 @@ function Header() {
     userPhoto, 
     getUserInitials, 
     getAvatarColor, 
-    logout,
-    reloadAuth 
+    logout
   } = useAuth()
 
   const [scrolled, setScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [avatarError, setAvatarError] = useState(false)
   const navbarRef = useRef(null)
@@ -58,17 +55,10 @@ function Header() {
     }
   }, [])
 
-  // ✅ NOVO: Resetar estado de erro quando a foto mudar
+  // Resetar estado de erro quando a foto mudar
   useEffect(() => {
     setAvatarError(false)
   }, [userPhoto])
-
-  // ✅ NOVO: Recarregar auth quando o modal de login fechar
-  useEffect(() => {
-    if (!isLoginModalOpen && isAuthenticated) {
-      reloadAuth()
-    }
-  }, [isLoginModalOpen, isAuthenticated, reloadAuth])
 
   const isActive = (path) => {
     return location.pathname === path ? "active" : ""
@@ -94,8 +84,9 @@ function Header() {
     setIsMobileMenuOpen(false)
   }
 
-  const handleOpenLoginModal = () => {
-    setIsLoginModalOpen(true)
+  // ✅ NOVO: Redirecionar direto para página de Login
+  const handleLoginClick = () => {
+    navigate("/login")
     setIsMobileMenuOpen(false)
   }
 
@@ -132,13 +123,13 @@ function Header() {
     }
   }
 
-  // ✅ NOVO: Função para lidar com erro no carregamento da foto
+  // Função para lidar com erro no carregamento da foto
   const handleAvatarError = () => {
     console.error("❌ Erro ao carregar avatar no Header:", userPhoto)
     setAvatarError(true)
   }
 
-  // ✅ NOVO: Função para verificar se a foto é válida
+  // Função para verificar se a foto é válida
   const isValidPhoto = userPhoto && !avatarError
 
   return (
@@ -172,7 +163,7 @@ function Header() {
                   <div className="user-type badge">{getUserTypeText()}</div>
                 </div>
 
-                {/* ✅ CORREÇÃO: Botão de perfil com avatar */}
+                {/* Botão de perfil com avatar */}
                 <Link to={getProfileRoute()} className="btn-profile" title="Gerenciar Perfil">
                   {isValidPhoto ? (
                     <img
@@ -216,7 +207,8 @@ function Header() {
               </div>
             ) : (
               <div className="d-flex align-items-center gap-2">
-                <button onClick={handleOpenLoginModal} className="btn btn-outline-primary btn-sm">
+                {/* ✅ CORRIGIDO: Botão Entrar redireciona para página Login */}
+                <button onClick={handleLoginClick} className="btn btn-outline-primary btn-sm">
                   Entrar
                 </button>
                 <Link to="/cadastrovoluntario" className="btn btn-outline-primary btn-sm">
@@ -290,7 +282,7 @@ function Header() {
                     display: 'flex'
                   }}
                 >
-                  <span style={{ color: 'white', fontSize: '18px' }}>👤</span>
+                  <span style={{ color: 'white', fontSize: '18px' }}></span>
                 </div>
               </div>
               <div className="drawer-user-details">
@@ -356,7 +348,8 @@ function Header() {
               </>
             ) : (
               <>
-                <button className="nav-item nav-button" onClick={handleOpenLoginModal}>
+                {/* ✅ CORRIGIDO: Botão Entrar no mobile redireciona para página Login */}
+                <button className="nav-item nav-button" onClick={handleLoginClick}>
                   <span className="nav-icon"></span>
                   <span className="nav-text">Entrar</span>
                 </button>
@@ -382,10 +375,7 @@ function Header() {
         </div>
       </div>
 
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
-      />
+      {/* ✅ REMOVIDO: LoginModal foi removido */}
 
       <LogoutModal
         isOpen={isLogoutModalOpen}

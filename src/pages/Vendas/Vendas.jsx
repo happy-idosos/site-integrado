@@ -8,19 +8,24 @@ import Header from "../../components/layout/Header"
 import Footer from "../../components/layout/Footer"
 import "./Vendas.css"
 
+// Camisetas
 import camiseta1 from "../../assets/img/Vendas/Camiseta Fundo Branco.png"
 import camiseta2 from "../../assets/img/Vendas/Camiseta Fundo Preto.png"
+
+// Canecas Clássicas
 import caneca1branco from "../../assets/img/Vendas/Caneca1 Fundo Branco.png"
 import caneca1preto from "../../assets/img/Vendas/Caneca1 Fundo Preto.png"
+
+// Canecas Premium
 import caneca2branco from "../../assets/img/Vendas/Caneca2 Fundo Branco.png"
 import caneca2preto from "../../assets/img/Vendas/Caneca2 Fundo Preto.png"
 
 function Vendas() {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [activeFilter, setActiveFilter] = useState("todos")
+  const [selectedVariants, setSelectedVariants] = useState({})
 
   useEffect(() => {
-    // Initialize AOS animations
     AOS.init({
       duration: 1000,
       easing: "ease-out-cubic",
@@ -28,8 +33,6 @@ function Vendas() {
       offset: 120,
       delay: 100,
     })
-
-    // Scroll to top on mount
     window.scrollTo(0, 0)
   }, [])
 
@@ -37,59 +40,71 @@ function Vendas() {
     camisetas: [
       {
         id: 1,
-        name: "Camiseta Happy Idosos - Branca",
+        name: "Camiseta Happy Idosos",
         price: 60,
-        image: camiseta1,
         description: "Camiseta 100% algodão com estampa exclusiva do projeto Happy Idosos",
         category: "camiseta",
         tag: "Mais Vendida",
-      },
-      {
-        id: 2,
-        name: "Camiseta Happy Idosos - Preta",
-        price: 60,
-        image: camiseta2,
-        description: "Camiseta premium com design elegante e minimalista",
-        category: "camiseta",
-        tag: "Novidade",
+        variants: [
+          { 
+            id: "white", 
+            name: "Branca", 
+            image: camiseta1, // Imagem específica para camiseta branca
+            color: "#ffffff" 
+          },
+          { 
+            id: "black", 
+            name: "Preta", 
+            image: camiseta2, // Imagem específica para camiseta preta
+            color: "#1a1a1a" 
+          },
+        ],
       },
     ],
     canecas: [
       {
         id: 3,
-        name: "Caneca Happy Idosos - Clássica Branca",
+        name: "Caneca Happy Idosos - Clássica",
         price: 50,
-        image: caneca1branco,
         description: "Caneca de porcelana 325ml com estampa durável e design clássico",
         category: "caneca",
         tag: "Clássica",
-      },
-      {
-        id: 4,
-        name: "Caneca Happy Idosos - Clássica Preta",
-        price: 50,
-        image: caneca1preto,
-        description: "Caneca elegante com fundo preto e estampa de alta qualidade",
-        category: "caneca",
-        tag: "Elegante",
+        variants: [
+          { 
+            id: "white", 
+            name: "Branca", 
+            image: caneca1branco, // Imagem específica para caneca branca
+            color: "#ffffff" 
+          },
+          { 
+            id: "black", 
+            name: "Preta", 
+            image: caneca1preto, // Imagem específica para caneca preta
+            color: "#1a1a1a" 
+          },
+        ],
       },
       {
         id: 5,
-        name: "Caneca Happy Idosos - Premium Branca",
+        name: "Caneca Happy Idosos - Premium",
         price: 50,
-        image: caneca2branco,
         description: "Caneca premium com acabamento especial e design exclusivo",
         category: "caneca",
         tag: "Premium",
-      },
-      {
-        id: 6,
-        name: "Caneca Happy Idosos - Premium Preta",
-        price: 50,
-        image: caneca2preto,
-        description: "Caneca premium com fundo preto e acabamento sofisticado",
-        category: "caneca",
-        tag: "Premium",
+        variants: [
+          { 
+            id: "white", 
+            name: "Branca", 
+            image: caneca2branco, // Imagem específica para caneca branca
+            color: "#ffffff" 
+          },
+          { 
+            id: "black", 
+            name: "Preta", 
+            image: caneca2preto, // Imagem específica para caneca preta
+            color: "#1a1a1a" 
+          },
+        ],
       },
     ],
   }
@@ -98,10 +113,23 @@ function Vendas() {
   const filteredProducts =
     activeFilter === "todos" ? allProducts : allProducts.filter((p) => p.category === activeFilter)
 
-  const handleWhatsAppClick = (product = null) => {
+  const getSelectedVariant = (productId) => {
+    return selectedVariants[productId] || 0
+  }
+
+  const handleVariantSelect = (productId, variantIndex) => {
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: variantIndex,
+    }))
+  }
+
+  const handleWhatsAppClick = (product = null, variantIndex = null) => {
     const productToUse = product || selectedProduct
+    const variant = variantIndex !== null ? product.variants[variantIndex] : product?.variants[getSelectedVariant(product.id)]
+    
     const message = productToUse
-      ? `Olá! Gostaria de comprar: ${productToUse.name} - R$ ${productToUse.price},00`
+      ? `Olá! Gostaria de comprar: ${productToUse.name} - ${variant?.name || ''} - R$ ${productToUse.price},00`
       : "Olá! Gostaria de saber mais sobre os produtos do Happy Idosos!"
 
     const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(message)}`
@@ -112,7 +140,6 @@ function Vendas() {
     <div className="vendas-page">
       <Header />
 
-      {/* Hero Section */}
       <section className="vendas-hero" data-aos="fade-up">
         <div className="container">
           <div className="vendas-hero-content">
@@ -183,53 +210,94 @@ function Vendas() {
               </p>
             </div>
             <div className="vendas-produtos-grid">
-              {filteredProducts.map((product, index) => (
-                <div key={product.id} className="vendas-produto-card" data-aos="zoom-in" data-aos-delay={index * 100}>
-                  <div className="vendas-produto-image-wrapper">
-                    <img
-                      src={product.image || "/placeholder.svg"}
-                      alt={product.name}
-                      className="vendas-produto-image"
-                      loading="lazy"
-                    />
-                    <div className="vendas-produto-badge">R$ {product.price},00</div>
-                    {product.tag && <div className="vendas-produto-tag">{product.tag}</div>}
-                  </div>
-                  <div className="vendas-produto-content">
-                    <h3 className="vendas-produto-name text-balance">{product.name}</h3>
-                    <p className="vendas-produto-description text-pretty">{product.description}</p>
-                    <button
-                      className="vendas-produto-btn"
-                      onClick={() => {
-                        setSelectedProduct(product)
-                        handleWhatsAppClick(product)
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+              {filteredProducts.map((product, index) => {
+                const selectedVariantIndex = getSelectedVariant(product.id)
+                const currentVariant = product.variants[selectedVariantIndex]
+                
+                return (
+                  <div key={product.id} className="vendas-produto-card" data-aos="zoom-in" data-aos-delay={index * 100}>
+                    <div className="vendas-produto-image-wrapper">
+                      <img
+                        src={currentVariant.image || "/placeholder.svg"}
+                        alt={`${product.name} - ${currentVariant.name}`}
+                        className="vendas-produto-image"
+                        loading="lazy"
+                      />
+                      <div className="vendas-produto-badge">R$ {product.price},00</div>
+                      {product.tag && <div className="vendas-produto-tag">{product.tag}</div>}
+                    </div>
+                    <div className="vendas-produto-content">
+                      <h3 className="vendas-produto-name text-balance">{product.name}</h3>
+                      <p className="vendas-produto-description text-pretty">{product.description}</p>
+                      
+                      <div className="vendas-produto-variants">
+                        <span className="vendas-variant-label">Cor: {currentVariant.name}</span>
+                        <div className="vendas-variant-options">
+                          {product.variants.map((variant, variantIndex) => (
+                            <button
+                              key={variant.id}
+                              className={`vendas-variant-btn ${selectedVariantIndex === variantIndex ? "active" : ""}`}
+                              onClick={() => handleVariantSelect(product.id, variantIndex)}
+                              aria-label={`Selecionar cor ${variant.name}`}
+                              title={variant.name}
+                            >
+                              <span 
+                                className="vendas-variant-color" 
+                                style={{ 
+                                  backgroundColor: variant.color,
+                                  border: variant.color === '#ffffff' ? '2px solid #e0e0e0' : 'none'
+                                }}
+                              />
+                              {selectedVariantIndex === variantIndex && (
+                                <svg 
+                                  className="vendas-variant-check" 
+                                  width="16" 
+                                  height="16" 
+                                  viewBox="0 0 24 24" 
+                                  fill="none" 
+                                  stroke="currentColor" 
+                                  strokeWidth="3"
+                                >
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <button
+                        className="vendas-produto-btn"
+                        onClick={() => {
+                          setSelectedProduct(product)
+                          handleWhatsAppClick(product, selectedVariantIndex)
+                        }}
                       >
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                      </svg>
-                      <span>Comprar Agora</span>
-                    </button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle cx="9" cy="21" r="1" />
+                          <circle cx="20" cy="21" r="1" />
+                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                        <span>Comprar Agora</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
 
-        {/* Como São Feitas Section */}
         <section className="vendas-processo-section" data-aos="fade-up">
           <div className="container">
             <div className="vendas-section-header">
@@ -283,7 +351,6 @@ function Vendas() {
           </div>
         </section>
 
-        {/* Impacto Social Section */}
         <section className="vendas-impacto-section" data-aos="fade-up">
           <div className="container">
             <div className="vendas-impacto-content">
@@ -304,28 +371,14 @@ function Vendas() {
               </div>
               <h2 className="vendas-impacto-title text-balance">Seu Impacto Social</h2>
               <p className="vendas-impacto-description text-balance">
-                100% do lucro das vendas é revertido para nossos projetos sociais. Ao comprar nossos produtos, você está
-                contribuindo diretamente para melhorar a qualidade de vida dos idosos em todo o Brasil.
+                90% do lucro das vendas é revertido para nossos projetos sociais. Ao comprar nossos produtos, você está
+                contribuindo diretamente para melhorar a qualidade de vida dos idosos em todo o Brasil. Os demais 10% são 
+                revertidos para manter os custos operacionais mensais do projeto.              
               </p>
-              <div className="vendas-impacto-stats">
-                <div className="vendas-impacto-stat" data-aos="zoom-in" data-aos-delay="100">
-                  <div className="vendas-impacto-stat-number">500+</div>
-                  <div className="vendas-impacto-stat-label">Idosos Beneficiados</div>
-                </div>
-                <div className="vendas-impacto-stat" data-aos="zoom-in" data-aos-delay="200">
-                  <div className="vendas-impacto-stat-number">50+</div>
-                  <div className="vendas-impacto-stat-label">Instituições Parceiras</div>
-                </div>
-                <div className="vendas-impacto-stat" data-aos="zoom-in" data-aos-delay="300">
-                  <div className="vendas-impacto-stat-number">1000+</div>
-                  <div className="vendas-impacto-stat-label">Produtos Vendidos</div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="vendas-cta" data-aos="fade-up">
           <div className="container">
             <div className="vendas-cta-content">

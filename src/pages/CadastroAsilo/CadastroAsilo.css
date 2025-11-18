@@ -1,10 +1,12 @@
+/* Alterando tema escuro para branco claro com modernidade */
+
 /* CadastroAsilo.css - Modern responsive layout matching Login design */
 
 /* Base page styles with HAPPYIDOSOS brand colors */
 .cadastro-asilo-page {
   font-family: "Nunito", sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  background: #ffffff;
   color: #333;
   line-height: 1.6;
   position: relative;
@@ -14,9 +16,9 @@
 /* Mobile Header */
 .cadastro-asilo-mobile-header {
   display: none;
-  background: #1a1a1a;
+  background: #f8f8f8;
   padding: 1rem;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid #e0e0e0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -25,9 +27,9 @@
 }
 
 .cadastro-asilo-mobile-back-btn {
-  background: rgba(36, 74, 150, 0.15);
+  background: rgba(36, 74, 150, 0.1);
   border: 2px solid rgba(36, 74, 150, 0.3);
-  color: #5a8fd8;
+  color: #244a96;
   padding: 0.6rem 1rem;
   border-radius: 20px;
   font-family: "Nunito", sans-serif;
@@ -48,7 +50,7 @@
 }
 
 .cadastro-asilo-mobile-title {
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
@@ -63,9 +65,9 @@
   position: fixed;
   top: 2rem;
   left: 2rem;
-  background: rgba(36, 74, 150, 0.15);
+  background: rgba(36, 74, 150, 0.1);
   border: 2px solid rgba(36, 74, 150, 0.3);
-  color: #5a8fd8;
+  color: #244a96;
   padding: 0.75rem 1.25rem;
   border-radius: 25px;
   font-family: "Nunito", sans-serif;
@@ -132,7 +134,7 @@
 }
 
 .cadastro-asilo-logo-section h1 {
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
@@ -140,7 +142,7 @@
 }
 
 .cadastro-asilo-logo-section p {
-  color: #b0b0b0;
+  color: #666;
   font-size: 1.05rem;
   line-height: 1.6;
   max-width: 320px;
@@ -150,18 +152,18 @@
 .cadastro-asilo-form-container {
   flex: 1;
   max-width: 700px;
-  background: #2a2a2a;
+  background: #ffffff;
   border-radius: 24px;
   padding: 3rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  border: 1px solid #3a3a3a;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
 }
 
 /* Form Sections */
 .cadastro-asilo-form-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .cadastro-asilo-form-section:last-of-type {
@@ -170,7 +172,7 @@
 }
 
 .cadastro-asilo-form-section h3 {
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
@@ -202,7 +204,7 @@
 
 .cadastro-asilo-form-group label {
   font-weight: 600;
-  color: #ffffff;
+  color: #1a1a1a;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
 }
@@ -210,13 +212,13 @@
 .cadastro-asilo-form-group input,
 .cadastro-asilo-form-group select {
   padding: 1rem 1.25rem;
-  border: 2px solid #3a3a3a;
+  border: 2px solid #e0e0e0;
   border-radius: 12px;
   font-family: "Nunito", sans-serif;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #1a1a1a;
-  color: #ffffff;
+  background: #f9f9f9;
+  color: #333;
   width: 100%;
 }
 
@@ -225,11 +227,11 @@
   outline: none;
   border-color: #244a96;
   box-shadow: 0 0 0 4px rgba(36, 74, 150, 0.2);
-  background: #222222;
+  background: #ffffff;
 }
 
 .cadastro-asilo-form-group input::placeholder {
-  color: #666;
+  color: #999;
   font-style: italic;
 }
 
@@ -249,7 +251,7 @@
   right: 1rem;
   background: none;
   border: none;
-  color: #888;
+  color: #999;
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 6px;
@@ -261,20 +263,20 @@
 
 .cadastro-asilo-toggle-password:hover {
   color: #244a96;
-  background: rgba(36, 74, 150, 0.15);
+  background: rgba(36, 74, 150, 0.1);
 }
 
 /* Password Requirements */
 .cadastro-asilo-password-requirements {
   margin-top: 0.75rem;
   padding: 1rem;
-  background: rgba(36, 74, 150, 0.1);
+  background: rgba(36, 74, 150, 0.05);
   border-radius: 10px;
   border: 1px solid rgba(36, 74, 150, 0.2);
 }
 
 .cadastro-asilo-password-requirements strong {
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 0.9rem;
   display: block;
   margin-bottom: 0.5rem;
@@ -287,7 +289,7 @@
 }
 
 .cadastro-asilo-password-requirements li {
-  color: #888;
+  color: #666;
   font-size: 0.85rem;
   padding: 0.25rem 0;
   padding-left: 1.5rem;
@@ -299,7 +301,7 @@
   content: "○";
   position: absolute;
   left: 0;
-  color: #666;
+  color: #ccc;
   transition: all 0.3s ease;
 }
 
@@ -315,7 +317,7 @@
 
 /* Terms Section */
 .cadastro-asilo-terms-section {
-  background: rgba(36, 74, 150, 0.05);
+  background: rgba(36, 74, 150, 0.04);
   padding: 1.5rem;
   border-radius: 15px;
   border: 1px solid rgba(36, 74, 150, 0.2);
@@ -329,7 +331,7 @@
 }
 
 .cadastro-asilo-terms-header h4 {
-  color: #ffffff;
+  color: #1a1a1a;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
@@ -353,7 +355,7 @@
 }
 
 .cadastro-asilo-checkbox-group span {
-  color: #b0b0b0;
+  color: #666;
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -361,7 +363,7 @@
 .cadastro-asilo-link-button {
   background: none;
   border: none;
-  color: #5a8fd8;
+  color: #244a96;
   text-decoration: none;
   font-weight: 600;
   cursor: pointer;
@@ -371,19 +373,19 @@
 }
 
 .cadastro-asilo-link-button:hover {
-  color: #7aa8e8;
+  color: #1a3a7a;
   text-decoration: underline;
 }
 
 .cadastro-asilo-terms-notice {
-  color: #ffc107;
+  color: #d48806;
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
   padding: 0.75rem;
-  background: rgba(255, 193, 7, 0.1);
+  background: rgba(212, 136, 6, 0.08);
   border-radius: 8px;
-  border-left: 3px solid #ffc107;
+  border-left: 3px solid #d48806;
 }
 
 /* Submit Button */
@@ -459,36 +461,36 @@
 .cadastro-asilo-login-link {
   text-align: center;
   padding-top: 1.5rem;
-  border-top: 1px solid #3a3a3a;
+  border-top: 1px solid #e0e0e0;
 }
 
 .cadastro-asilo-login-link p {
-  color: #888;
+  color: #666;
   font-size: 0.95rem;
   margin: 0;
 }
 
 .cadastro-asilo-link {
-  color: #5a8fd8;
+  color: #244a96;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .cadastro-asilo-link:hover {
-  color: #7aa8e8;
+  color: #1a3a7a;
   text-decoration: underline;
 }
 
 /* Form Validation */
 .cadastro-asilo-error {
   border-color: #dc3545 !important;
-  background-color: rgba(220, 53, 69, 0.1) !important;
+  background-color: rgba(220, 53, 69, 0.08) !important;
 }
 
 .cadastro-asilo-success {
   border-color: #28a745 !important;
-  background-color: rgba(40, 167, 69, 0.1) !important;
+  background-color: rgba(40, 167, 69, 0.08) !important;
 }
 
 .cadastro-asilo-error-message {

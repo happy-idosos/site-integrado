@@ -5,8 +5,6 @@ import Home from "../pages/Home/Home"
 import CadastroVoluntario from "../pages/CadastroVoluntario/CadastroVoluntario"
 import CadastroAsilo from "../pages/CadastroAsilo/CadastroAsilo"
 import Login from "../pages/Login/Login"
-import LoginVoluntario from "../pages/LoginVoluntario/LoginVoluntario"
-import LoginAsilo from "../pages/LoginAsilo/LoginAsilo"
 import Asilos from "../pages/Asilos/Asilos"
 import Eventos from "../pages/Eventos/Eventos"
 import Videos from "../pages/Videos/Videos"
@@ -56,8 +54,6 @@ function AppRoutes() {
       <Route path="/cadastrovoluntario" element={<CadastroVoluntario />} />
       <Route path="/cadastroasilo" element={<CadastroAsilo />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/loginvoluntario" element={<LoginVoluntario />} />
-      <Route path="/loginasilo" element={<LoginAsilo />} />
 
       {/* Fallback */}
       <Route path="*" element={<Home />} />

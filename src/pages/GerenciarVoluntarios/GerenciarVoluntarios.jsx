@@ -290,13 +290,13 @@ function GerenciarVoluntarios() {
 
   const getStatusBadgeClass = (status) => {
     const classes = {
-      pendente: "status-pendente",
-      aprovado: "status-aprovado",
-      recusado: "status-recusado",
-      confirmado: "status-confirmado",
-      ausente: "status-ausente"
+      pendente: "gvp-status-pendente",
+      aprovado: "gvp-status-aprovado",
+      recusado: "gvp-status-recusado",
+      confirmado: "gvp-status-confirmado",
+      ausente: "gvp-status-ausente"
     }
-    return classes[status] || "status-pendente"
+    return classes[status] || "gvp-status-pendente"
   }
 
   const getStatusText = (status) => {
@@ -311,16 +311,16 @@ function GerenciarVoluntarios() {
   }
 
   return (
-    <div className="gerenciar-voluntarios-page">
+    <div className="gvp-page">
       <Header />
 
       {/* Header da Página */}
-      <section className="page-header">
+      <section className="gvp-page-header">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-8">
-              <h1 className="page-title">Gerenciar Inscrições</h1>
-              <p className="page-subtitle">
+              <h1 className="gvp-page-title">Gerenciar Inscrições</h1>
+              <p className="gvp-page-subtitle">
                 Gerencie todas as inscrições de voluntários para seus eventos
               </p>
             </div>
@@ -336,48 +336,48 @@ function GerenciarVoluntarios() {
 
       <main>
         {/* Estatísticas Rápidas */}
-        <section className="stats-section">
+        <section className="gvp-stats-section">
           <div className="container">
             <div className="row g-3">
               <div className="col-md-3">
-                <div className="stat-card">
-                  <div className="stat-icon pending">
+                <div className="gvp-stat-card">
+                  <div className="gvp-stat-icon gvp-stat-icon-pending">
                     <i className="fas fa-clock"></i>
                   </div>
-                  <div className="stat-content">
+                  <div className="gvp-stat-content">
                     <h3>{stats.totalPendentes}</h3>
                     <p>Pendentes</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="stat-card">
-                  <div className="stat-icon approved">
+                <div className="gvp-stat-card">
+                  <div className="gvp-stat-icon gvp-stat-icon-approved">
                     <i className="fas fa-check-circle"></i>
                   </div>
-                  <div className="stat-content">
+                  <div className="gvp-stat-content">
                     <h3>{stats.aprovadosMes}</h3>
                     <p>Aprovados (Mês)</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="stat-card">
-                  <div className="stat-icon rate">
+                <div className="gvp-stat-card">
+                  <div className="gvp-stat-icon gvp-stat-icon-rate">
                     <i className="fas fa-chart-line"></i>
                   </div>
-                  <div className="stat-content">
+                  <div className="gvp-stat-content">
                     <h3>{stats.taxaAprovacao}%</h3>
                     <p>Taxa de Aprovação</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="stat-card">
-                  <div className="stat-icon confirmed">
+                <div className="gvp-stat-card">
+                  <div className="gvp-stat-icon gvp-stat-icon-confirmed">
                     <i className="fas fa-user-check"></i>
                   </div>
-                  <div className="stat-content">
+                  <div className="gvp-stat-content">
                     <h3>{stats.confirmados}</h3>
                     <p>Confirmados</p>
                   </div>
@@ -388,9 +388,9 @@ function GerenciarVoluntarios() {
         </section>
 
         {/* Filtros Avançados */}
-        <section className="filters-section">
+        <section className="gvp-filters-section">
           <div className="container">
-            <div className="filters-card">
+            <div className="gvp-filters-card">
               <div className="row g-3 align-items-end">
                 <div className="col-md-3">
                   <label className="form-label fw-semibold">
@@ -445,7 +445,7 @@ function GerenciarVoluntarios() {
                     <i className="fas fa-search me-2"></i>
                     Buscar Voluntário
                   </label>
-                  <div className="search-input-wrapper">
+                  <div className="gvp-search-input-wrapper">
                     <input
                       type="text"
                       className="form-control"
@@ -453,13 +453,13 @@ function GerenciarVoluntarios() {
                       value={buscaNome}
                       onChange={(e) => setBuscaNome(e.target.value)}
                     />
-                    <i className="fas fa-search search-icon"></i>
+                    <i className="fas fa-search gvp-search-icon"></i>
                   </div>
                 </div>
                 <div className="col-md-2">
-                  <div className="results-count">
-                    <span className="count">{inscricoesFiltradas.length}</span>
-                    <span className="label">resultados</span>
+                  <div className="gvp-results-count">
+                    <span className="gvp-count">{inscricoesFiltradas.length}</span>
+                    <span className="gvp-label">resultados</span>
                   </div>
                 </div>
               </div>
@@ -468,24 +468,24 @@ function GerenciarVoluntarios() {
         </section>
 
         {/* Lista de Inscrições */}
-        <section className="inscricoes-section">
+        <section className="gvp-inscricoes-section">
           <div className="container">
             {loading ? (
-              <div className="loading-state text-center py-5">
+              <div className="gvp-loading-state text-center py-5">
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Carregando...</span>
                 </div>
                 <p className="mt-3">Carregando inscrições...</p>
               </div>
             ) : inscricoesFiltradas.length === 0 ? (
-              <div className="empty-state text-center py-5">
+              <div className="gvp-empty-state text-center py-5">
                 <i className="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
                 <h4 className="text-muted">Nenhuma inscrição encontrada</h4>
                 <p className="text-muted">Tente ajustar os filtros de busca.</p>
               </div>
             ) : (
-              <div className="inscricoes-table-container">
-                <table className="inscricoes-table">
+              <div className="gvp-inscricoes-table-container">
+                <table className="gvp-inscricoes-table">
                   <thead>
                     <tr>
                       <th>Voluntário</th>
@@ -497,39 +497,39 @@ function GerenciarVoluntarios() {
                   </thead>
                   <tbody>
                     {inscricoesFiltradas.map((inscricao) => (
-                      <tr key={inscricao.id} className="inscricao-row">
+                      <tr key={inscricao.id} className="gvp-inscricao-row">
                         <td>
                           <div 
-                            className="volunteer-info clickable"
+                            className="gvp-volunteer-info gvp-volunteer-info-clickable"
                             onClick={() => abrirPerfilVoluntario(inscricao)}
                           >
-                            <div className="volunteer-avatar">
+                            <div className="gvp-volunteer-avatar">
                               <i className="fas fa-user"></i>
                             </div>
                             <div>
-                              <div className="volunteer-name">{inscricao.voluntario.nome}</div>
-                              <div className="volunteer-email">{inscricao.voluntario.email}</div>
+                              <div className="gvp-volunteer-name">{inscricao.voluntario.nome}</div>
+                              <div className="gvp-volunteer-email">{inscricao.voluntario.email}</div>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <div className="evento-info">
-                            <div className="evento-titulo">{inscricao.evento.titulo}</div>
-                            <div className="evento-data">{inscricao.evento.data}</div>
+                          <div className="gvp-evento-info">
+                            <div className="gvp-evento-titulo">{inscricao.evento.titulo}</div>
+                            <div className="gvp-evento-data">{inscricao.evento.data}</div>
                           </div>
                         </td>
                         <td>
-                          <div className="data-inscricao">
+                          <div className="gvp-data-inscricao">
                             {new Date(inscricao.data_inscricao).toLocaleDateString('pt-BR')}
                           </div>
                         </td>
                         <td>
-                          <span className={`status-badge ${getStatusBadgeClass(inscricao.status)}`}>
+                          <span className={`gvp-status-badge ${getStatusBadgeClass(inscricao.status)}`}>
                             {getStatusText(inscricao.status)}
                           </span>
                         </td>
                         <td>
-                          <div className="actions">
+                          <div className="gvp-actions">
                             <button 
                               className="btn btn-sm btn-outline-primary"
                               onClick={() => abrirPerfilVoluntario(inscricao)}
@@ -578,21 +578,21 @@ function GerenciarVoluntarios() {
 
       {/* Modal de Ação (Aprovar/Recusar) */}
       {showActionModal && selectedInscricao && (
-        <div className="modal-overlay">
-          <div className="modal-container action-modal">
-            <div className="modal-header">
+        <div className="gvp-modal-overlay">
+          <div className="gvp-modal-container gvp-action-modal">
+            <div className="gvp-modal-header">
               <h3>
                 {actionType === 'aprovar' ? 'Aprovar Inscrição' : 'Recusar Inscrição'}
               </h3>
               <button 
-                className="modal-close"
+                className="gvp-modal-close"
                 onClick={() => setShowActionModal(false)}
               >
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="modal-body">
-              <div className="inscricao-info">
+            <div className="gvp-modal-body">
+              <div className="gvp-inscricao-info">
                 <h5>Detalhes da Inscrição</h5>
                 <p><strong>Voluntário:</strong> {selectedInscricao.voluntario.nome}</p>
                 <p><strong>Evento:</strong> {selectedInscricao.evento.titulo}</p>
@@ -600,7 +600,7 @@ function GerenciarVoluntarios() {
               </div>
 
               {actionType === 'aprovar' && (
-                <div className="form-group">
+                <div className="gvp-form-group">
                   <label>Função Designada</label>
                   <select
                     className="form-select"
@@ -617,7 +617,7 @@ function GerenciarVoluntarios() {
                 </div>
               )}
 
-              <div className="form-group">
+              <div className="gvp-form-group">
                 <label>
                   {actionType === 'aprovar' ? 'Mensagem de Boas-Vindas' : 'Justificativa da Recusa'}
                 </label>
@@ -634,7 +634,7 @@ function GerenciarVoluntarios() {
                 />
               </div>
             </div>
-            <div className="modal-footer">
+            <div className="gvp-modal-footer">
               <button 
                 className="btn btn-secondary"
                 onClick={() => setShowActionModal(false)}
@@ -656,43 +656,43 @@ function GerenciarVoluntarios() {
 
       {/* Modal de Perfil do Voluntário */}
       {showPerfilModal && selectedInscricao && (
-        <div className="modal-overlay">
-          <div className="modal-container perfil-modal">
-            <div className="modal-header">
+        <div className="gvp-modal-overlay">
+          <div className="gvp-modal-container gvp-perfil-modal">
+            <div className="gvp-modal-header">
               <h3>Perfil do Voluntário</h3>
               <button 
-                className="modal-close"
+                className="gvp-modal-close"
                 onClick={() => setShowPerfilModal(false)}
               >
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="modal-body">
-              <div className="perfil-header">
-                <div className="volunteer-avatar large">
+            <div className="gvp-modal-body">
+              <div className="gvp-perfil-header">
+                <div className="gvp-volunteer-avatar gvp-volunteer-avatar-large">
                   <i className="fas fa-user"></i>
                 </div>
-                <div className="perfil-info">
+                <div className="gvp-perfil-info">
                   <h4>{selectedInscricao.voluntario.nome}</h4>
-                  <p className="volunteer-age">{selectedInscricao.voluntario.idade} anos</p>
-                  <p className="volunteer-description">{selectedInscricao.voluntario.descricao}</p>
+                  <p className="gvp-volunteer-age">{selectedInscricao.voluntario.idade} anos</p>
+                  <p className="gvp-volunteer-description">{selectedInscricao.voluntario.descricao}</p>
                 </div>
               </div>
 
-              <div className="perfil-details">
+              <div className="gvp-perfil-details">
                 <div className="row">
                   <div className="col-md-6">
                     <h5>Contato</h5>
-                    <div className="contact-info">
+                    <div className="gvp-contact-info">
                       <p><i className="fas fa-envelope"></i> {selectedInscricao.voluntario.email}</p>
                       <p><i className="fas fa-phone"></i> {selectedInscricao.voluntario.telefone}</p>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <h5>Habilidades</h5>
-                    <div className="skills-list">
+                    <div className="gvp-skills-list">
                       {selectedInscricao.voluntario.habilidades.map((habilidade, index) => (
-                        <span key={index} className="skill-tag">
+                        <span key={index} className="gvp-skill-tag">
                           {habilidade}
                         </span>
                       ))}
@@ -703,7 +703,7 @@ function GerenciarVoluntarios() {
                 <div className="row mt-4">
                   <div className="col-12">
                     <h5>Mensagem de Motivação</h5>
-                    <div className="motivation-message">
+                    <div className="gvp-motivation-message">
                       <p>{selectedInscricao.mensagem_motivacao}</p>
                     </div>
                   </div>
@@ -712,13 +712,13 @@ function GerenciarVoluntarios() {
                 <div className="row mt-4">
                   <div className="col-12">
                     <h5>Histórico de Participações</h5>
-                    <div className="historico-list">
+                    <div className="gvp-historico-list">
                       {selectedInscricao.voluntario.historico.length > 0 ? (
                         selectedInscricao.voluntario.historico.map((participacao, index) => (
-                          <div key={index} className="historico-item">
-                            <span className="evento-name">{participacao.evento}</span>
-                            <span className="evento-date">{participacao.data}</span>
-                            <span className={`status-badge ${getStatusBadgeClass(participacao.status)}`}>
+                          <div key={index} className="gvp-historico-item">
+                            <span className="gvp-evento-name">{participacao.evento}</span>
+                            <span className="gvp-evento-date">{participacao.data}</span>
+                            <span className={`gvp-status-badge ${getStatusBadgeClass(participacao.status)}`}>
                               {getStatusText(participacao.status)}
                             </span>
                           </div>
@@ -731,7 +731,7 @@ function GerenciarVoluntarios() {
                 </div>
               </div>
             </div>
-            <div className="modal-footer">
+            <div className="gvp-modal-footer">
               <button 
                 className="btn btn-primary"
                 onClick={() => enviarMensagem(selectedInscricao.voluntario)}
